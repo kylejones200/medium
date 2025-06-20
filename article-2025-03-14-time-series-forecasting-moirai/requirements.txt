@@ -1,1 +1,5 @@
-# Add required packages here
+pandas 
+matplotlib
+torch
+gluonts
+uni2ts
