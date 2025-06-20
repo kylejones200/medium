@@ -1,1 +1,2 @@
-# Add required packages here
+pandas
+sqlite3
