@@ -1,1 +1,5 @@
-# Add Python package requirements here
+pandas
+numpy
+matplotlib
+statsforecast
+utilsforecast
