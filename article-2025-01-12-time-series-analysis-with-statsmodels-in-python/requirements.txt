@@ -1,1 +1,4 @@
-# Add Python package requirements here
+matplotlib
+numpy
+pandas
+statsmodels
