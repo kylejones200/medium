@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Portfolio - Energy, Mining & Infrastructure Analytics</title>
+    <meta name="description" content="Collection of technical articles on energy systems, mining operations, and infrastructure analytics">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .search-box {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .filters {
+            padding: 20px 40px;
+            background: white;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #3b82f6;
+            background: white;
+            color: #3b82f6;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .articles {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+        }
+
+        .article-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .article-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .tag {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .tag.energy { background: #fef3c7; color: #92400e; }
+        .tag.mining { background: #d1fae5; color: #065f46; }
+        .tag.infrastructure { background: #e0e7ff; color: #3730a3; }
+        .tag.ml { background: #fce7f3; color: #9f1239; }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .articles {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            header {
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ Technical Portfolio</h1>
+            <p class="subtitle">Energy Systems • Mining Operations • Infrastructure Analytics</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search articles...">
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Articles</button>
+            <button class="filter-btn" data-filter="energy">Energy</button>
+            <button class="filter-btn" data-filter="mining">Mining</button>
+            <button class="filter-btn" data-filter="infrastructure">Infrastructure</button>
+            <button class="filter-btn" data-filter="ml">Machine Learning</button>
+        </div>
+
+        <div class="articles" id="articlesContainer"></div>
+
+        <footer>
+            <p>Technical Portfolio © 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        const articles = [
+            { title: "Load Forecasting", file: "01_load_forecasting_blog.html", tags: ["energy", "forecasting"] },
+            { title: "Load Forecasting with Machine Learning", file: "01_load_forecasting_machine_learning_blog.html", tags: ["energy", "ml"] },
+            { title: "Time Series Forecasting", file: "01_time_series_forecasting_blog.html", tags: ["forecasting", "ml"] },
+            { title: "Anomaly Detection", file: "02_anomaly_detection_blog.html", tags: ["ml", "monitoring"] },
+            { title: "Grid Infrastructure Analysis", file: "02_grid_infrastructure_analysis_blog.html", tags: ["energy", "infrastructure"] },
+            { title: "LMP Analysis", file: "02_lmp_analysis_blog.html", tags: ["energy", "markets"] },
+            { title: "Clustering Analysis", file: "03_clustering_blog.html", tags: ["ml", "analytics"] },
+            { title: "Generation Dispatch", file: "03_generation_dispatch_blog.html", tags: ["energy", "optimization"] },
+            { title: "Outage Detection Analysis", file: "03_outage_detection_analysis_blog.html", tags: ["energy", "ml"] },
+            { title: "Causal Inference", file: "04_causal_inference_blog.html", tags: ["ml", "analytics"] },
+            { title: "Power Options Analysis", file: "04_power_options_blog.html", tags: ["energy", "finance"] },
+            { title: "Multi-Task Learning", file: "05_multi_task_learning_blog.html", tags: ["ml", "deep-learning"] },
+            { title: "Risk Management", file: "05_risk_management_blog.html", tags: ["risk", "analytics"] },
+            { title: "Thermal Anomaly Detection", file: "06_thermal_anomaly_detection_blog.html", tags: ["energy", "ml"] },
+            { title: "Tailings Dam Monitoring", file: "07_tailings_dam_monitoring_blog.html", tags: ["mining", "monitoring"] },
+            { title: "Ore Grade Forecasting", file: "08_ore_grade_forecasting_blog.html", tags: ["mining", "forecasting"] },
+            { title: "Flow Assurance Risk", file: "09_flow_assurance_risk_blog.html", tags: ["infrastructure", "risk"] },
+            { title: "Pipeline SCADA Forecasting", file: "10_pipeline_scada_forecasting_blog.html", tags: ["infrastructure", "forecasting"] },
+            { title: "Ore Grade Machine Learning", file: "11_ore_grade_ml_blog.html", tags: ["mining", "ml"] },
+            { title: "Corrosion Risk Ranking", file: "12_corrosion_risk_ranking_blog.html", tags: ["infrastructure", "risk"] },
+            { title: "Metallurgical Recovery", file: "13_metallurgical_recovery_blog.html", tags: ["mining", "optimization"] },
+            { title: "Satellite Leak Detection", file: "14_satellite_leak_detection_blog.html", tags: ["infrastructure", "ml"] },
+            { title: "ROW Encroachment Detection with DINOv2", file: "15_row_encroachment_dinov2_blog.html", tags: ["infrastructure", "ml"] },
+            { title: "Thermal Anomaly Detection with MODIS", file: "16_thermal_anomaly_modis_blog.html", tags: ["energy", "remote-sensing"] },
+            { title: "Infrastructure Inspection with DINOv2", file: "17_infrastructure_inspection_dinov2_blog.html", tags: ["infrastructure", "ml"] },
+            { title: "Valve Failure Prediction", file: "18_valve_failure_prediction_blog.html", tags: ["infrastructure", "ml"] },
+            { title: "Drill Core Segmentation", file: "19_drill_core_segmentation_blog.html", tags: ["mining", "ml"] },
+            { title: "ESG Dashboard", file: "20_esg_dashboard_blog.html", tags: ["analytics", "esg"] },
+            { title: "Sedona Drillholes Analysis", file: "21_sedona_drillholes_blog.html", tags: ["mining", "analytics"] },
+            { title: "ANSYS FEA with Databricks", file: "22_ansys_fea_databricks_blog.html", tags: ["engineering", "analytics"] },
+            { title: "Pipeline Health Clustering", file: "23_pipeline_health_clustering_blog.html", tags: ["infrastructure", "ml"] },
+            { title: "Neural Mine Scheduling", file: "24_neural_mine_scheduling_blog.html", tags: ["mining", "ml"] },
+            { title: "Dendrogram Three Projects", file: "25_dendrogram_three_projects_blog.html", tags: ["analytics", "ml"] },
+            { title: "ROW Vegetation Clustering", file: "26_row_vegetation_clustering_blog.html", tags: ["infrastructure", "ml"] },
+            { title: "Third-Party Detection", file: "27_thirdparty_detection_blog.html", tags: ["infrastructure", "ml"] },
+            { title: "Surge Overpressure Analysis", file: "28_surge_overpressure_blog.html", tags: ["infrastructure", "engineering"] },
+            { title: "Ore Geomodeling", file: "29_ore_geomodeling_blog.html", tags: ["mining", "modeling"] },
+            { title: "Orebody Uncertainty", file: "30_orebody_uncertainty_blog.html", tags: ["mining", "analytics"] },
+            { title: "Sedona Deposit Clustering", file: "31_sedona_deposit_clustering_blog.html", tags: ["mining", "ml"] },
+            { title: "Tailings Deep Learning", file: "32_tailings_deep_learning_blog.html", tags: ["mining", "ml"] },
+            { title: "Solar Defect Detection", file: "33_solar_defect_detection_blog.html", tags: ["energy", "ml"] }
+        ];
+
+        let currentFilter = 'all';
+
+        function renderArticles(filteredArticles) {
+            const container = document.getElementById('articlesContainer');
+            
+            if (filteredArticles.length === 0) {
+                container.innerHTML = '<div class="no-results">No articles found matching your search.</div>';
+                return;
+            }
+
+            container.innerHTML = filteredArticles.map(article => `
+                <div class="article-card" onclick="window.location.href='${article.file}'">
+                    <div class="article-title">${article.title}</div>
+                    <div class="article-tags">
+                        ${article.tags.map(tag => {
+                            let tagClass = '';
+                            if (tag === 'energy') tagClass = 'energy';
+                            else if (tag === 'mining') tagClass = 'mining';
+                            else if (tag.includes('infrastructure')) tagClass = 'infrastructure';
+                            else if (tag === 'ml' || tag === 'deep-learning') tagClass = 'ml';
+                            return `<span class="tag ${tagClass}">${tag}</span>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterArticles() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = articles;
+            
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(article => 
+                    article.tags.some(tag => tag.includes(currentFilter))
+                );
+            }
+            
+            if (searchTerm) {
+                filtered = filtered.filter(article =>
+                    article.title.toLowerCase().includes(searchTerm) ||
+                    article.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            renderArticles(filtered);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filterArticles);
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                filterArticles();
+            });
+        });
+
+        renderArticles(articles);
+    </script>
+</body>
+</html>
