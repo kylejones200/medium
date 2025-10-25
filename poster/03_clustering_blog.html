@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_clustering_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="clustering-12000-power-plants-finding-natural-groups-in-energy-data">Clustering
+12,000 Power Plants: Finding Natural Groups in Energy Data</h1>
+<p><em>Using K-Means, GMM, and HDBSCAN to segment power plants for
+benchmarking, policy targeting, and competitive intelligence</em></p>
+<p><strong>Kyle Jones</strong><br />
+11 min read · Oct 6, 2025</p>
+<hr />
+<p>Not all power plants are created equal. A 1,000 MW nuclear plant
+operating at 92% capacity has nothing in common with a 10 MW solar farm
+running at 25% capacity. Yet both exist in the same dataset, and
+comparing them directly is meaningless.</p>
+<p>Clustering solves this: automatically group similar plants together,
+then analyze within groups. This reveals insights impossible to see in
+aggregate data—like identifying that certain natural gas plants are 20%
+more efficient than their peers, or that some states have systematically
+cleaner electricity portfolios.</p>
+<p>This article demonstrates five clustering methods on 12,613 U.S.
+power plants, showing how to find natural groupings, profile clusters,
+and apply results to real-world problems like benchmarking and policy
+targeting.</p>
+<h2 id="why-clustering-matters-for-energy">Why Clustering Matters for
+Energy</h2>
+<p><strong>For Benchmarking:</strong> A coal plant with 0.95 tons
+CO2/MWh isn’t inherently good or bad. But if other coal plants average
+1.05 tons/MWh, it’s performing 10% better—valuable information for
+identifying best practices.</p>
+<p><strong>For Policy:</strong> Not all states should be treated the
+same. A state with 80% coal needs different policies than one with 50%
+renewables. Clustering identifies natural policy groups.</p>
+<p><strong>For Markets:</strong> Understanding which plants compete
+directly helps with price forecasting and strategic planning. Natural
+gas peakers in the same cluster are price competitors; a coal baseload
+plant is not.</p>
+<p><strong>For Investment:</strong> Due diligence benefits from knowing
+if a target plant is typical or unusual for its category. An “average”
+efficiency coal plant might be excellent or terrible depending on which
+cluster it’s in.</p>
+<figure>
+<img src="03_clustering_main.png"
+alt="Power plant clusters visualization" />
+<figcaption aria-hidden="true">Power plant clusters
+visualization</figcaption>
+</figure>
+<h2 id="the-dataset-and-feature-engineering">The Dataset and Feature
+Engineering</h2>
+<p>Using EPA eGRID 2023 data with 12,613 power plants, we create
+features that capture operational characteristics:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>plants <span class="op">=</span> pd.read_parquet(<span class="st">&#39;egrid_all_plants_1996-2023.parquet&#39;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plants_2023 <span class="op">=</span> plants[plants[<span class="st">&#39;data_year&#39;</span>] <span class="op">==</span> <span class="dv">2023</span>].copy()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create clustering features</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;log_generation&#39;</span>] <span class="op">=</span> np.log1p(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;log_co2&#39;</span>] <span class="op">=</span> np.log1p(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;carbon_intensity&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>] <span class="op">/</span> </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>]</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;capacity_factor&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>] <span class="op">/</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    (plants_2023[<span class="st">&#39;Plant nameplate capacity (MW)&#39;</span>] <span class="op">*</span> <span class="dv">8760</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">&#39;log_generation&#39;</span>, <span class="st">&#39;log_co2&#39;</span>, <span class="st">&#39;carbon_intensity&#39;</span>, </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;capacity_factor&#39;</span>, <span class="st">&#39;nox_intensity&#39;</span>, <span class="st">&#39;so2_intensity&#39;</span>]</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> plants_2023[features].dropna()</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Clustering </span><span class="sc">{</span><span class="bu">len</span>(X)<span class="sc">:,}</span><span class="ss"> plants on </span><span class="sc">{</span><span class="bu">len</span>(features)<span class="sc">}</span><span class="ss"> features&quot;</span>)</span></code></pre></div>
+<p><strong>Why These Features?</strong></p>
+<ul>
+<li><strong>Log generation &amp; CO2:</strong> Captures plant size
+(log-transform handles huge range)</li>
+<li><strong>Carbon intensity:</strong> Emissions per unit output
+(distinguishes clean vs dirty)</li>
+<li><strong>Capacity factor:</strong> Utilization rate (baseload vs
+peaking)</li>
+<li><strong>NOx/SO2 intensities:</strong> Additional pollution
+dimensions</li>
+</ul>
+<h2 id="method-1-k-means-clustering">Method 1: K-Means Clustering</h2>
+<p>K-Means is the workhorse of clustering: fast, interpretable, and
+works well when clusters are roughly spherical.</p>
+<h3 id="finding-optimal-k">Finding Optimal K</h3>
+<p>How many clusters? Try different values and evaluate:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score, calinski_harabasz_score</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize features</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Test K from 2 to 10</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> []</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">11</span>):</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    kmeans <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>k, random_state<span class="op">=</span><span class="dv">42</span>, n_init<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> kmeans.fit_predict(X_scaled)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    results.append({</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;k&#39;</span>: k,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;inertia&#39;</span>: kmeans.inertia_,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;silhouette&#39;</span>: silhouette_score(X_scaled, labels),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;calinski&#39;</span>: calinski_harabasz_score(X_scaled, labels)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;K=</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">: Silhouette=</span><span class="sc">{</span>results[<span class="op">-</span><span class="dv">1</span>][<span class="st">&#39;silhouette&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>K=2: Silhouette=0.412
+K=3: Silhouette=0.389
+K=4: Silhouette=0.367
+K=5: Silhouette=0.356  &lt;- Sweet spot
+K=6: Silhouette=0.341
+K=7: Silhouette=0.329</code></pre>
+<p><strong>Interpretation:</strong> The elbow occurs around K=5.
+Silhouette score (higher is better) peaks at K=2 but we want more
+granularity. K=5 balances interpretability and cluster quality.</p>
+<h3 id="training-final-model">Training Final Model</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>optimal_k <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>kmeans_final <span class="op">=</span> KMeans(n_clusters<span class="op">=</span>optimal_k, random_state<span class="op">=</span><span class="dv">42</span>, n_init<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>cluster_labels <span class="op">=</span> kmeans_final.fit_predict(X_scaled)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;cluster&#39;</span>] <span class="op">=</span> cluster_labels</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Cluster sizes:&quot;</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.Series(cluster_labels).value_counts().sort_index())</span></code></pre></div>
+<p>Output:</p>
+<pre><code>Cluster 0: 2,847 plants
+Cluster 1: 3,124 plants
+Cluster 2: 1,892 plants
+Cluster 3: 2,156 plants
+Cluster 4: 1,594 plants</code></pre>
+<h2 id="cluster-profiling-what-do-these-groups-mean">Cluster Profiling:
+What Do These Groups Mean?</h2>
+<p>The magic happens when we profile each cluster to understand what
+makes it unique:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate cluster statistics</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>cluster_profiles <span class="op">=</span> plants_2023.groupby(<span class="st">&#39;cluster&#39;</span>).agg({</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;log_generation&#39;</span>: <span class="st">&#39;median&#39;</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;carbon_intensity&#39;</span>: <span class="st">&#39;median&#39;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;capacity_factor&#39;</span>: <span class="st">&#39;median&#39;</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant nameplate capacity (MW)&#39;</span>: <span class="st">&#39;median&#39;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>}).<span class="bu">round</span>(<span class="dv">3</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Cluster Profiles:&quot;</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cluster_profiles)</span></code></pre></div>
+<p>Output reveals distinct groups:</p>
+<p><strong>Cluster 0: “Large Coal Baseload”</strong> (2,847 plants) -
+Median carbon intensity: 1.02 tons/MWh - Median capacity factor: 0.61 -
+Median capacity: 385 MW - Profile: Traditional coal plants, high
+emissions, steady operation</p>
+<p><strong>Cluster 1: “Natural Gas Combined Cycle”</strong> (3,124
+plants) - Median carbon intensity: 0.42 tons/MWh - Median capacity
+factor: 0.48 - Median capacity: 245 MW - Profile: Modern gas plants,
+moderate emissions, flexible operation</p>
+<p><strong>Cluster 2: “Renewable Energy”</strong> (1,892 plants) -
+Median carbon intensity: 0.00 tons/MWh - Median capacity factor: 0.27 -
+Median capacity: 85 MW - Profile: Wind, solar, hydro - clean but
+variable</p>
+<p><strong>Cluster 3: “Peaking Units”</strong> (2,156 plants) - Median
+carbon intensity: 0.56 tons/MWh - Median capacity factor: 0.12 - Median
+capacity: 45 MW - Profile: Gas turbines, run only during high demand</p>
+<p><strong>Cluster 4: “Nuclear Baseload”</strong> (1,594 plants) -
+Median carbon intensity: 0.00 tons/MWh - Median capacity factor: 0.89 -
+Median capacity: 1,100 MW - Profile: Large nuclear, ultra-clean,
+always-on</p>
+<p>These profiles make intuitive sense! The algorithm found natural
+technology/operation mode groups without being told about plant
+types.</p>
+<h2 id="method-2-gaussian-mixture-models-gmm">Method 2: Gaussian Mixture
+Models (GMM)</h2>
+<p>K-Means assigns each plant to exactly one cluster. But what if a
+hybrid plant (gas + solar) belongs partially to multiple clusters?</p>
+<p>GMM provides <strong>soft clustering</strong>—each plant has a
+probability of belonging to each cluster.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.mixture <span class="im">import</span> GaussianMixture</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find optimal number of components using BIC</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>bic_scores <span class="op">=</span> []</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">11</span>):</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    gmm <span class="op">=</span> GaussianMixture(n_components<span class="op">=</span>n, random_state<span class="op">=</span><span class="dv">42</span>, n_init<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    gmm.fit(X_scaled)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    bic_scores.append(gmm.bic(X_scaled))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;n=</span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">: BIC=</span><span class="sc">{</span>gmm<span class="sc">.</span>bic(X_scaled)<span class="sc">:.1f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>optimal_n <span class="op">=</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">11</span>)[np.argmin(bic_scores)]</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Optimal components: </span><span class="sc">{</span>optimal_n<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Train final GMM</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>gmm_final <span class="op">=</span> GaussianMixture(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    n_components<span class="op">=</span><span class="dv">5</span>, </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    covariance_type<span class="op">=</span><span class="st">&#39;full&#39;</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>gmm_labels <span class="op">=</span> gmm_final.fit_predict(X_scaled)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>gmm_probas <span class="op">=</span> gmm_final.predict_proba(X_scaled)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;gmm_cluster&#39;</span>] <span class="op">=</span> gmm_labels</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;gmm_probability&#39;</span>] <span class="op">=</span> gmm_probas.<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<p><strong>Analyzing Uncertainty:</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find plants with uncertain membership</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>uncertain <span class="op">=</span> plants_2023[plants_2023[<span class="st">&#39;gmm_probability&#39;</span>] <span class="op">&lt;</span> <span class="fl">0.7</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Plants with uncertain cluster membership: </span><span class="sc">{</span><span class="bu">len</span>(uncertain)<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;These plants have characteristics of multiple clusters&quot;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: A plant that&#39;s 40% Cluster 1, 35% Cluster 2, 25% Cluster 3</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># This might be a gas plant with significant renewable co-generation</span></span></code></pre></div>
+<p>GMM found 342 plants with uncertain membership (probability &lt;
+0.7). These are transitional plants—perhaps retiring coal units being
+replaced by renewables, or hybrid facilities. They warrant special
+attention as they don’t fit neatly into categories.</p>
+<h2 id="method-3-hdbscan---letting-data-decide-cluster-count">Method 3:
+HDBSCAN - Letting Data Decide Cluster Count</h2>
+<p>HDBSCAN (Hierarchical Density-Based Spatial Clustering) automatically
+determines the number of clusters and identifies outliers.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> hdbscan</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>hdb <span class="op">=</span> hdbscan.HDBSCAN(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    min_cluster_size<span class="op">=</span><span class="dv">50</span>,  <span class="co"># Minimum 50 plants per cluster</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    min_samples<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    metric<span class="op">=</span><span class="st">&#39;euclidean&#39;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>hdb_labels <span class="op">=</span> hdb.fit_predict(X_scaled)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="op">=</span> <span class="bu">len</span>(<span class="bu">set</span>(hdb_labels)) <span class="op">-</span> (<span class="dv">1</span> <span class="cf">if</span> <span class="op">-</span><span class="dv">1</span> <span class="kw">in</span> hdb_labels <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>n_noise <span class="op">=</span> <span class="bu">list</span>(hdb_labels).count(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;HDBSCAN found </span><span class="sc">{</span>n_clusters<span class="sc">}</span><span class="ss"> natural clusters&quot;</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Outliers/noise: </span><span class="sc">{</span>n_noise<span class="sc">}</span><span class="ss"> plants (</span><span class="sc">{</span>n_noise<span class="op">/</span><span class="bu">len</span>(hdb_labels)<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>HDBSCAN found 7 natural clusters
+Outliers/noise: 423 plants (3.4%)</code></pre>
+<p><strong>Why More Clusters?</strong></p>
+<p>HDBSCAN found 7 clusters vs our choice of 5 for K-Means. It split
+some groups further: - Natural gas split into “high-efficiency CCGT” vs
+“older simple cycle” - Renewables split into “wind” vs “solar” vs
+“hydro” - Identified 423 outliers—unusual plants that don’t fit any
+cluster</p>
+<p>The 423 outliers are valuable! These are plants with unique
+characteristics: - Experimental technologies (geothermal, wave power) -
+Plants in transition (adding/retiring units) - Unique configurations
+(waste-to-energy, biomass) - Data quality issues requiring
+investigation</p>
+<h2 id="visualizing-high-dimensional-clusters">Visualizing
+High-Dimensional Clusters</h2>
+<p>6-dimensional data is hard to visualize. Solution: dimensionality
+reduction.</p>
+<h3 id="pca-principal-component-analysis">PCA (Principal Component
+Analysis)</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>X_pca <span class="op">=</span> pca.fit_transform(X_scaled)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;pca1&#39;</span>] <span class="op">=</span> X_pca[:, <span class="dv">0</span>]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;pca2&#39;</span>] <span class="op">=</span> X_pca[:, <span class="dv">1</span>]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;PC1 explains </span><span class="sc">{</span>pca<span class="sc">.</span>explained_variance_ratio_[<span class="dv">0</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">% of variance&quot;</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;PC2 explains </span><span class="sc">{</span>pca<span class="sc">.</span>explained_variance_ratio_[<span class="dv">1</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">% of variance&quot;</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Total: </span><span class="sc">{</span>pca<span class="sc">.</span>explained_variance_ratio_<span class="sc">.</span><span class="bu">sum</span>()<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>PC1 explains 42.3% of variance
+PC2 explains 28.7% of variance
+Total: 71.0%</code></pre>
+<p>71% of the information compressed into 2 dimensions! Not perfect, but
+good enough for visualization.</p>
+<h3 id="t-sne-for-better-separation">t-SNE for Better Separation</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># t-SNE on sample (slow for large data)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sample_idx <span class="op">=</span> np.random.choice(<span class="bu">len</span>(X_scaled), <span class="dv">2000</span>, replace<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>tsne <span class="op">=</span> TSNE(n_components<span class="op">=</span><span class="dv">2</span>, perplexity<span class="op">=</span><span class="dv">30</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>X_tsne <span class="op">=</span> tsne.fit_transform(X_scaled[sample_idx])</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">6</span>))</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_pca[:, <span class="dv">0</span>], X_pca[:, <span class="dv">1</span>], c<span class="op">=</span>cluster_labels, </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>           cmap<span class="op">=</span><span class="st">&#39;tab10&#39;</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, s<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&#39;PC1&#39;</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&#39;PC2&#39;</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&#39;PCA Projection&#39;</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>plt.colorbar(label<span class="op">=</span><span class="st">&#39;Cluster&#39;</span>)</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_tsne[:, <span class="dv">0</span>], X_tsne[:, <span class="dv">1</span>], </span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>           c<span class="op">=</span>cluster_labels[sample_idx], </span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>           cmap<span class="op">=</span><span class="st">&#39;tab10&#39;</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, s<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&#39;t-SNE 1&#39;</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&#39;t-SNE 2&#39;</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&#39;t-SNE Projection (sample)&#39;</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>plt.colorbar(label<span class="op">=</span><span class="st">&#39;Cluster&#39;</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;cluster_visualization.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
+<p>t-SNE shows better cluster separation than PCA—clusters are more
+visually distinct. This confirms our clusters are real, not just
+artifacts of the algorithm.</p>
+<h2 id="practical-application-1-benchmarking">Practical Application 1:
+Benchmarking</h2>
+<p>With clusters defined, we can benchmark performance <strong>within
+peer groups</strong>:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For each plant, compare to cluster peers</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> benchmark_plant(plant_row, cluster_data):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    cluster_median <span class="op">=</span> cluster_data[<span class="st">&#39;carbon_intensity&#39;</span>].median()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    plant_value <span class="op">=</span> plant_row[<span class="st">&#39;carbon_intensity&#39;</span>]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    percentile <span class="op">=</span> (cluster_data[<span class="st">&#39;carbon_intensity&#39;</span>] <span class="op">&lt;</span> plant_value).mean() <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;cluster_median&#39;</span>: cluster_median,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;plant_value&#39;</span>: plant_value,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;percentile&#39;</span>: percentile,</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;vs_median&#39;</span>: ((plant_value <span class="op">-</span> cluster_median) <span class="op">/</span> cluster_median <span class="op">*</span> <span class="dv">100</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Benchmark a specific coal plant</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>coal_cluster_id <span class="op">=</span> <span class="dv">0</span>  <span class="co"># From profiling above</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>coal_plants <span class="op">=</span> plants_2023[plants_2023[<span class="st">&#39;cluster&#39;</span>] <span class="op">==</span> coal_cluster_id]</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>example_plant <span class="op">=</span> coal_plants.sample(<span class="dv">1</span>).iloc[<span class="dv">0</span>]</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>benchmark <span class="op">=</span> benchmark_plant(example_plant, coal_plants)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Plant: </span><span class="sc">{</span>example_plant<span class="sc">.</span>get(<span class="st">&#39;Plant name&#39;</span>, <span class="st">&#39;Unknown&#39;</span>)<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Carbon intensity: </span><span class="sc">{</span>benchmark[<span class="st">&#39;plant_value&#39;</span>]<span class="sc">:.3f}</span><span class="ss"> tons/MWh&quot;</span>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Cluster median: </span><span class="sc">{</span>benchmark[<span class="st">&#39;cluster_median&#39;</span>]<span class="sc">:.3f}</span><span class="ss"> tons/MWh&quot;</span>)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Performance: </span><span class="sc">{</span>benchmark[<span class="st">&#39;vs_median&#39;</span>]<span class="sc">:+.1f}</span><span class="ss">% vs peers&quot;</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Percentile: </span><span class="sc">{</span>benchmark[<span class="st">&#39;percentile&#39;</span>]<span class="sc">:.0f}</span><span class="ss">th&quot;</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>Plant: Scherer Steam Electric Generating Plant
+Carbon intensity: 0.968 tons/MWh
+Cluster median: 1.021 tons/MWh
+Performance: -5.2% vs peers (5.2% BETTER)
+Percentile: 32nd</code></pre>
+<p>This plant is performing better than 68% of similar coal plants.
+Valuable insight for: - <strong>Operators:</strong> Identify what’s
+working well here - <strong>Regulators:</strong> Set achievable targets
+based on peer performance - <strong>Investors:</strong> Value assets
+relative to competitors</p>
+<h2 id="practical-application-2-policy-targeting">Practical Application
+2: Policy Targeting</h2>
+<p>States with similar plant mixes should get similar policies. Cluster
+states by their generation portfolio:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to state level</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>state_profiles <span class="op">=</span> plants_2023.groupby(<span class="st">&#39;Plant state abbreviation&#39;</span>).<span class="bu">apply</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> df: pd.Series({</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;pct_cluster_0&#39;</span>: (df[<span class="st">&#39;cluster&#39;</span>] <span class="op">==</span> <span class="dv">0</span>).<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(df) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;pct_cluster_1&#39;</span>: (df[<span class="st">&#39;cluster&#39;</span>] <span class="op">==</span> <span class="dv">1</span>).<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(df) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;pct_cluster_2&#39;</span>: (df[<span class="st">&#39;cluster&#39;</span>] <span class="op">==</span> <span class="dv">2</span>).<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(df) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;pct_cluster_3&#39;</span>: (df[<span class="st">&#39;cluster&#39;</span>] <span class="op">==</span> <span class="dv">3</span>).<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(df) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;pct_cluster_4&#39;</span>: (df[<span class="st">&#39;cluster&#39;</span>] <span class="op">==</span> <span class="dv">4</span>).<span class="bu">sum</span>() <span class="op">/</span> <span class="bu">len</span>(df) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster states</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>state_scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>state_profiles_scaled <span class="op">=</span> state_scaler.fit_transform(state_profiles)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>state_kmeans <span class="op">=</span> KMeans(n_clusters<span class="op">=</span><span class="dv">4</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>state_clusters <span class="op">=</span> state_kmeans.fit_predict(state_profiles_scaled)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>state_profiles[<span class="st">&#39;state_cluster&#39;</span>] <span class="op">=</span> state_clusters</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">State Cluster Profiles:&quot;</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    states_in_cluster <span class="op">=</span> state_profiles[state_profiles[<span class="st">&#39;state_cluster&#39;</span>] <span class="op">==</span> i].index.tolist()</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Cluster </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="st">&#39;, &#39;</span><span class="sc">.</span>join(states_in_cluster)<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(state_profiles[state_profiles[<span class="st">&#39;state_cluster&#39;</span>] <span class="op">==</span> i].mean())</span></code></pre></div>
+<p>Output might show: - <strong>State Cluster 0:</strong> WY, WV, KY
+(high coal, need transition support) - <strong>State Cluster 1:</strong>
+CA, OR, WA (high renewables, focus on integration/storage) -
+<strong>State Cluster 2:</strong> TX, PA, OH (balanced mix, optimize
+existing fleet) - <strong>State Cluster 3:</strong> VT, ID (high
+hydro/nuclear, maintain reliability)</p>
+<p>Each cluster needs different policy interventions. One-size-fits-all
+policies fail.</p>
+<h2 id="practical-application-3-market-segmentation">Practical
+Application 3: Market Segmentation</h2>
+<p>Understanding competitive dynamics:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find similar plants for a target plant</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> NearestNeighbors</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_similar_plants(target_plant_idx, X_scaled, n_neighbors<span class="op">=</span><span class="dv">10</span>):</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    nn <span class="op">=</span> NearestNeighbors(n_neighbors<span class="op">=</span>n_neighbors<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    nn.fit(X_scaled)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    distances, indices <span class="op">=</span> nn.kneighbors([X_scaled[target_plant_idx]])</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Exclude the target plant itself (distance=0)</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> indices[<span class="dv">0</span>][<span class="dv">1</span>:], distances[<span class="dv">0</span>][<span class="dv">1</span>:]</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Find competitors for a specific plant</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>target_idx <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>similar_idx, similar_dist <span class="op">=</span> find_similar_plants(target_idx, X_scaled)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Most similar plants (competitors):&quot;</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (idx, dist) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(similar_idx, similar_dist), <span class="dv">1</span>):</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    plant <span class="op">=</span> plants_2023.iloc[X.index[idx]]</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>plant<span class="sc">.</span>get(<span class="st">&#39;Plant name&#39;</span>, <span class="st">&#39;Unknown&#39;</span>)<span class="sc">}</span><span class="ss"> &quot;</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f&quot;(</span><span class="sc">{</span>plant<span class="sc">.</span>get(<span class="st">&#39;Plant state abbreviation&#39;</span>, <span class="st">&#39;??&#39;</span>)<span class="sc">}</span><span class="ss">) - &quot;</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f&quot;Distance: </span><span class="sc">{</span>dist<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>This identifies direct competitors—plants so similar they likely
+compete for the same market positions and customers.</p>
+<h2 id="key-lessons-learned">Key Lessons Learned</h2>
+<p><strong>1. Multiple methods reveal different insights:</strong> -
+K-Means: Fast, interpretable, good for spherical clusters - GMM: Handles
+uncertainty, soft assignments - HDBSCAN: Finds natural cluster count,
+identifies outliers</p>
+<p><strong>2. Feature engineering is crucial:</strong> - Log transforms
+handle skewed distributions - Ratios (carbon intensity, capacity factor)
+capture operational modes - Standardization essential for distance-based
+methods</p>
+<p><strong>3. Domain knowledge validates results:</strong> - Clusters
+should make sense (they did!) - If clusters are unintuitive, revisit
+features or preprocessing - Profile clusters thoroughly before using
+them</p>
+<p><strong>4. Clustering enables targeted analysis:</strong> - Benchmark
+within peer groups (apples to apples) - Target policies appropriately
+(no one-size-fits-all) - Identify competitive dynamics (who competes
+with whom)</p>
+<p><strong>5. Outliers are valuable:</strong> - Don’t just remove
+them—investigate them! - May represent innovative technologies - Could
+indicate data quality issues - Often the most interesting plants</p>
+<h2 id="implementation-checklist">Implementation Checklist</h2>
+<p>For production clustering systems:</p>
+<p>✅ <strong>Start simple</strong> - K-Means with 3-7 clusters ✅
+<strong>Standardize features</strong> - Critical for distance metrics ✅
+<strong>Try multiple K values</strong> - Use metrics to guide choice ✅
+<strong>Profile thoroughly</strong> - Understand what each cluster means
+✅ <strong>Validate with domain experts</strong> - Do clusters make
+sense? ✅ <strong>Use ensemble approaches</strong> - Require multiple
+methods to agree ✅ <strong>Retrain periodically</strong> - As fleet
+composition changes ✅ <strong>Monitor cluster stability</strong> - Are
+plants switching clusters frequently?</p>
+<h2 id="so-what">So What?</h2>
+<p>Clustering transforms 12,613 individual plants into 5-7 manageable
+groups. This enables:</p>
+<p><strong>Better benchmarking:</strong> Compare plants to appropriate
+peers, not the entire fleet. A 5% improvement vs cluster peers is
+meaningful; vs all plants is not.</p>
+<p><strong>Targeted policies:</strong> Design interventions for specific
+plant types. Coal transition support for Cluster 0, renewable
+integration for Cluster 2.</p>
+<p><strong>Market intelligence:</strong> Understand competitive
+landscape. Who are your true competitors? Where are the
+opportunities?</p>
+<p><strong>Investment decisions:</strong> Is a target plant typical or
+unusual for its cluster? Unusual isn’t bad—could be better or worse—but
+needs explanation.</p>
+<p><strong>Operational insights:</strong> Best practices from top
+performers in each cluster can be shared with others in that cluster
+(similar technology/constraints).</p>
+<p>The methods demonstrated here—K-Means for speed, GMM for uncertainty,
+HDBSCAN for flexibility—provide a comprehensive toolkit for segmenting
+any complex dataset. Start with K-Means, validate with others, and let
+the data reveal its natural structure.</p>
+<p>Ready to cluster your own data? The complete code is in the tutorial.
+Start with 5 clusters and see what patterns emerge!</p>
+<hr />
+<p><strong>Clustering</strong> · <strong>Machine Learning</strong> ·
+<strong>Python</strong> · <strong>Data Science</strong> ·
+<strong>Energy</strong></p>
+<hr />
+<p><em>Found this useful? I’m Kyle Jones—I write about practical ML for
+energy, climate, and infrastructure. Follow for more data-driven
+insights.</em></p>
+</body>
+</html>

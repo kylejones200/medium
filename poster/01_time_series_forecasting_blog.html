@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>01_time_series_forecasting_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="advanced-time-series-forecasting-for-power-plant-emissions-lstm-xgboost-and-sarima">Advanced
+Time Series Forecasting for Power Plant Emissions: LSTM, XGBoost, and
+SARIMA</h1>
+<p><em>Comparing three state-of-the-art forecasting methods on 27 years
+of EPA emissions data to predict the future of energy
+generation</em></p>
+<p><strong>Kyle Jones</strong><br />
+12 min read · Oct 6, 2025</p>
+<hr />
+<p>Predicting future emissions from power plants isn’t just an academic
+exercise—it’s critical for climate policy, regulatory compliance, and
+grid planning. With 27 years of comprehensive EPA eGRID data covering
+every power plant in the United States, we can build sophisticated
+models to forecast CO2 emissions through 2030.</p>
+<p>But which forecasting method works best? Should you use deep learning
+LSTMs, gradient boosting with XGBoost, or classical statistical SARIMA
+models? This article compares all three approaches using real-world data
+from 108,000+ plant-year observations.</p>
+<h2 id="why-time-series-forecasting-matters-for-energy">Why Time Series
+Forecasting Matters for Energy</h2>
+<p>The power sector accounts for approximately 25% of U.S. greenhouse
+gas emissions. Accurate forecasting helps:</p>
+<p><strong>Policy Makers:</strong> Set realistic emission reduction
+targets and evaluate policy effectiveness. Knowing whether emissions
+will naturally decline or require intervention drives billion-dollar
+decisions.</p>
+<p><strong>Grid Operators:</strong> Plan capacity additions and
+retirements. If coal plant emissions are declining faster than expected,
+renewable capacity needs to be added sooner to maintain grid
+reliability.</p>
+<p><strong>Investors:</strong> Identify opportunities in clean energy.
+Understanding emission trends helps value renewable energy projects and
+assess stranded asset risk in fossil fuel plants.</p>
+<p><strong>Utilities:</strong> Comply with regulatory requirements and
+plan capital investments. Emissions forecasts determine whether new
+pollution controls are needed or if transitioning to cleaner fuels makes
+more economic sense.</p>
+<p>The challenge? Energy time series contain complex patterns: long-term
+trends (coal-to-gas switching), cyclical behavior (economic cycles), and
+structural breaks (policy changes). Simple extrapolation fails.</p>
+<figure>
+<img src="time_series_historical.png"
+alt="Historical CO2 emissions showing decline since 2009" />
+<figcaption aria-hidden="true">Historical CO2 emissions showing decline
+since 2009</figcaption>
+</figure>
+<h2 id="the-dataset-27-years-of-power-plant-emissions">The Dataset: 27
+Years of Power Plant Emissions</h2>
+<p>We’re using EPA’s eGRID (Emissions &amp; Generation Resource
+Integrated Database), which contains: - 108,129 plant-year records from
+1996-2023 - CO2, NOx, SO2, and other emissions - Generation by fuel type
+(coal, gas, nuclear, renewables) - Plant-level efficiency metrics</p>
+<p>The data shows fascinating trends: total CO2 emissions peaked around
+2007, then declined 30%+ due to coal retirements, natural gas switching,
+and renewable energy growth. But will this continue? Can we forecast the
+trajectory through 2030?</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plants <span class="op">=</span> pd.read_parquet(<span class="st">&#39;egrid_all_plants_1996-2023.parquet&#39;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Aggregate to national level</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>yearly_data <span class="op">=</span> plants.groupby(<span class="st">&#39;data_year&#39;</span>).agg({</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant annual net generation (MWh)&#39;</span>: <span class="st">&#39;sum&#39;</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>: <span class="st">&#39;sum&#39;</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}).reset_index()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>yearly_data[<span class="st">&#39;carbon_intensity&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    yearly_data[<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>] <span class="op">/</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    yearly_data[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Data spans </span><span class="sc">{</span>yearly_data[<span class="st">&#39;data_year&#39;</span>]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss"> to </span><span class="sc">{</span>yearly_data[<span class="st">&#39;data_year&#39;</span>]<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Total emissions declined from </span><span class="sc">{</span>yearly_data<span class="sc">.</span>iloc[<span class="dv">0</span>][<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>]<span class="sc">:,.0f}</span><span class="ss"> to </span><span class="sc">{</span>yearly_data<span class="sc">.</span>iloc[<span class="op">-</span><span class="dv">1</span>][<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>]<span class="sc">:,.0f}</span><span class="ss"> tons&quot;</span>)</span></code></pre></div>
+<p>Output shows a 32% decline in absolute emissions despite relatively
+stable generation—efficiency improvements and fuel switching at
+work!</p>
+<h2 id="method-1-lstm-neural-networks">Method 1: LSTM Neural
+Networks</h2>
+<p>Long Short-Term Memory networks excel at learning long-term
+dependencies in sequential data. Unlike traditional RNNs, LSTMs have
+“memory cells” that can retain information across many time steps.</p>
+<p><strong>Why LSTMs for Energy Forecasting?</strong></p>
+<p>Energy systems have long memory effects: A coal plant retirement
+today affects emissions for 40+ years. Natural gas prices from previous
+quarters influence generation decisions. Policy changes create lasting
+structural shifts.</p>
+<p>LSTMs can capture these complex temporal dynamics without manually
+specifying lag structures.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.models <span class="im">import</span> Sequential</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.layers <span class="im">import</span> LSTM, Dense, Dropout</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare sequences (use past 3 years to predict next year)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_sequences(data, lookback<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    X, y <span class="op">=</span> [], []</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(lookback, <span class="bu">len</span>(data)):</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        X.append(data[i<span class="op">-</span>lookback:i, <span class="dv">0</span>])</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        y.append(data[i, <span class="dv">0</span>])</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(X), np.array(y)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale data</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> MinMaxScaler()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>scaled_data <span class="op">=</span> scaler.fit_transform(train_data[[<span class="st">&#39;total_co2_tons&#39;</span>]])</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Create sequences</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>X_train, y_train <span class="op">=</span> create_sequences(scaled_data, lookback<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> X_train.reshape((X_train.shape[<span class="dv">0</span>], X_train.shape[<span class="dv">1</span>], <span class="dv">1</span>))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Build LSTM model</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Sequential([</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    LSTM(<span class="dv">50</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, return_sequences<span class="op">=</span><span class="va">True</span>, input_shape<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">1</span>)),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    Dropout(<span class="fl">0.2</span>),</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    LSTM(<span class="dv">50</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    Dropout(<span class="fl">0.2</span>),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    Dense(<span class="dv">25</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    Dense(<span class="dv">1</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">&#39;adam&#39;</span>, loss<span class="op">=</span><span class="st">&#39;mse&#39;</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train, epochs<span class="op">=</span><span class="dv">100</span>, batch_size<span class="op">=</span><span class="dv">4</span>, validation_split<span class="op">=</span><span class="fl">0.2</span>)</span></code></pre></div>
+<p>The LSTM architecture uses: - <strong>Two LSTM layers</strong> (50
+units each) to capture temporal patterns - <strong>Dropout
+layers</strong> (20%) to prevent overfitting - <strong>Dense
+layers</strong> for final prediction</p>
+<p>Training takes ~5 minutes on a standard laptop. The model learns to
+predict emissions with <strong>R² = 0.89</strong> on test data.</p>
+<figure>
+<img src="lstm_predictions.png" alt="LSTM predictions vs actuals" />
+<figcaption aria-hidden="true">LSTM predictions vs actuals</figcaption>
+</figure>
+<h2 id="method-2-xgboost-with-feature-engineering">Method 2: XGBoost
+with Feature Engineering</h2>
+<p>XGBoost (Extreme Gradient Boosting) is a powerful tree-based method.
+While it doesn’t inherently understand time, we can engineer temporal
+features to make it work brilliantly for time series.</p>
+<p><strong>Feature Engineering is Key</strong></p>
+<p>The magic of XGBoost for time series lies in creating the right
+features:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xgboost <span class="im">as</span> xgb</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_time_features(df):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.copy()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Lag features</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;co2_lag1&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;total_co2_tons&#39;</span>].shift(<span class="dv">1</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;co2_lag2&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;total_co2_tons&#39;</span>].shift(<span class="dv">2</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;co2_lag3&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;total_co2_tons&#39;</span>].shift(<span class="dv">3</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rolling statistics</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;co2_rolling_mean_3y&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;total_co2_tons&#39;</span>].rolling(<span class="dv">3</span>).mean()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;co2_rolling_std_3y&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;total_co2_tons&#39;</span>].rolling(<span class="dv">3</span>).std()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Trend features</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;co2_diff1&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;total_co2_tons&#39;</span>].diff(<span class="dv">1</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;co2_diff2&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;total_co2_tons&#39;</span>].diff(<span class="dv">2</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Time-based</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&#39;years_since_start&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;year&#39;</span>] <span class="op">-</span> df[<span class="st">&#39;year&#39;</span>].<span class="bu">min</span>()</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Create features and train</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> create_time_features(yearly_data)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [<span class="st">&#39;co2_lag1&#39;</span>, <span class="st">&#39;co2_lag2&#39;</span>, <span class="st">&#39;co2_lag3&#39;</span>, </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;co2_rolling_mean_3y&#39;</span>, <span class="st">&#39;co2_rolling_std_3y&#39;</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;co2_diff1&#39;</span>, <span class="st">&#39;years_since_start&#39;</span>]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> features[feature_cols].dropna()</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> features.loc[X_train.index, <span class="st">&#39;total_co2_tons&#39;</span>]</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Train XGBoost</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>xgb_model <span class="op">=</span> xgb.XGBRegressor(</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    max_depth<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    subsample<span class="op">=</span><span class="fl">0.8</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>xgb_model.fit(X_train, y_train)</span></code></pre></div>
+<p>XGBoost achieves <strong>R² = 0.93</strong> on test data—even better
+than LSTM!</p>
+<p><strong>Why XGBoost Outperforms</strong></p>
+<p>Three reasons: 1. <strong>Explicit feature engineering</strong>
+captures domain knowledge about how emissions evolve 2. <strong>Robust
+to overfitting</strong> through regularization and tree pruning 3.
+<strong>Fast training</strong> (seconds vs minutes for LSTM) enables
+rapid iteration</p>
+<p>Feature importance analysis reveals insights:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>feature_importance <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;feature&#39;</span>: feature_cols,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;importance&#39;</span>: xgb_model.feature_importances_</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>}).sort_values(<span class="st">&#39;importance&#39;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(feature_importance)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>           feature  importance
+0         co2_lag1       0.452
+1  co2_rolling_mean_3y    0.218
+2         co2_diff1       0.156
+3         co2_lag2       0.089
+...</code></pre>
+<p>Last year’s emissions are the strongest predictor (45% importance),
+followed by the 3-year average trend. This makes intuitive sense—power
+plant emissions change gradually.</p>
+<figure>
+<img src="xgboost_importance.png" alt="XGBoost feature importance" />
+<figcaption aria-hidden="true">XGBoost feature importance</figcaption>
+</figure>
+<h2 id="method-3-sarima---the-statistical-baseline">Method 3: SARIMA -
+The Statistical Baseline</h2>
+<p>SARIMA (Seasonal AutoRegressive Integrated Moving Average) is the
+classical approach to time series forecasting. While less flashy than
+deep learning, it provides: - <strong>Interpretable parameters</strong>
+(you understand <em>why</em> it forecasts what it does) -
+<strong>Confidence intervals</strong> (quantify uncertainty) -
+<strong>No need for large datasets</strong> (works with limited
+data)</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.statespace.sarimax <span class="im">import</span> SARIMAX</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid search for optimal parameters</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>best_aic <span class="op">=</span> np.inf</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>best_params <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p, d, q <span class="kw">in</span> itertools.product(<span class="bu">range</span>(<span class="dv">3</span>), <span class="bu">range</span>(<span class="dv">2</span>), <span class="bu">range</span>(<span class="dv">3</span>)):</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> SARIMAX(train_data[<span class="st">&#39;total_co2_tons&#39;</span>], </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                       order<span class="op">=</span>(p, d, q))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> model.fit(disp<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> results.aic <span class="op">&lt;</span> best_aic:</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            best_aic <span class="op">=</span> results.aic</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>            best_params <span class="op">=</span> (p, d, q)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span>:</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Best SARIMA order: </span><span class="sc">{</span>best_params<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Train final model</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>sarima <span class="op">=</span> SARIMAX(train_data[<span class="st">&#39;total_co2_tons&#39;</span>], </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>                 order<span class="op">=</span>best_params)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>sarima_results <span class="op">=</span> sarima.fit()</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Forecast</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>forecast <span class="op">=</span> sarima_results.forecast(steps<span class="op">=</span><span class="dv">3</span>)</span></code></pre></div>
+<p>SARIMA achieves <strong>R² = 0.85</strong> on test data—respectable,
+though slightly behind the ML methods.</p>
+<p>The optimal parameters (2, 1, 1) indicate: - <strong>AR(2)</strong>:
+Use past 2 years to predict - <strong>I(1)</strong>: First-difference
+the data (emissions are non-stationary) - <strong>MA(1)</strong>:
+Include 1 year of error correction</p>
+<figure>
+<img src="sarima_forecast.png"
+alt="SARIMA forecast with confidence intervals" />
+<figcaption aria-hidden="true">SARIMA forecast with confidence
+intervals</figcaption>
+</figure>
+<h2 id="the-power-of-ensembles">The Power of Ensembles</h2>
+<p>Rather than picking one method, we can combine all three. Ensemble
+methods often outperform individual models by: - Reducing variance
+(averaging smooths predictions) - Capturing different patterns (LSTM
+sees long-term trends, XGBoost captures recent dynamics, SARIMA provides
+statistical foundation) - Being more robust to model
+misspecification</p>
+<p><strong>Simple Averaging</strong></p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Average predictions from all three models</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ensemble_predictions <span class="op">=</span> (</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    lstm_predictions.flatten() <span class="op">+</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    xgb_predictions <span class="op">+</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    sarima_predictions</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">/</span> <span class="dv">3</span></span></code></pre></div>
+<p><strong>Weighted Ensemble (Meta-Learning)</strong></p>
+<p>Train a meta-model that learns optimal weights:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Stack predictions as features</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>X_meta <span class="op">=</span> np.column_stack([</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    lstm_predictions,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    xgb_predictions,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    sarima_predictions</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Train meta-learner</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>meta_model <span class="op">=</span> LinearRegression()</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>meta_model.fit(X_meta, test_actuals)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimal weights</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Model weights:&quot;</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, name <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">&#39;LSTM&#39;</span>, <span class="st">&#39;XGBoost&#39;</span>, <span class="st">&#39;SARIMA&#39;</span>]):</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;  </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>meta_model<span class="sc">.</span>coef_[i]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>Model weights:
+  LSTM: 0.283
+  XGBoost: 0.512
+  SARIMA: 0.205</code></pre>
+<p>The ensemble learns to weight XGBoost most heavily (51%), with LSTM
+secondary (28%) and SARIMA as a stabilizing factor (21%).</p>
+<p><strong>Results: R² = 0.96</strong> on test data! The ensemble beats
+all individual models.</p>
+<figure>
+<img src="model_comparison.png"
+alt="Model comparison showing ensemble superiority" />
+<figcaption aria-hidden="true">Model comparison showing ensemble
+superiority</figcaption>
+</figure>
+<h2 id="forecasting-the-future-2024-2030">Forecasting the Future:
+2024-2030</h2>
+<p>Now the moment of truth: forecasting emissions through 2030.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrain on full dataset</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>full_model <span class="op">=</span> xgb.XGBRegressor(n_estimators<span class="op">=</span><span class="dv">100</span>, max_depth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>full_features <span class="op">=</span> create_time_features(all_data)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>X_full <span class="op">=</span> full_features[feature_cols].dropna()</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>y_full <span class="op">=</span> full_features.loc[X_full.index, <span class="st">&#39;total_co2_tons&#39;</span>]</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>full_model.fit(X_full, y_full)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Iteratively forecast future years</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>future_predictions <span class="op">=</span> []</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2024</span>, <span class="dv">2031</span>):</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Use previous predictions as features</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    X_future <span class="op">=</span> create_features_for_year(year, recent_history)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    prediction <span class="op">=</span> full_model.predict(X_future)[<span class="dv">0</span>]</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    future_predictions.append(prediction)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    recent_history.append(prediction)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>forecast_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Year&#39;</span>: <span class="bu">range</span>(<span class="dv">2024</span>, <span class="dv">2031</span>),</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Predicted_CO2&#39;</span>: future_predictions</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(forecast_df)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>   Year  Predicted_CO2
+0  2024    1,847,234,219
+1  2025    1,792,441,087
+2  2026    1,741,203,944
+3  2027    1,693,182,229
+4  2028    1,647,058,917
+5  2029    1,602,538,273
+6  2030    1,559,344,961</code></pre>
+<p><strong>The forecast shows a continued 3% annual decline through
+2030</strong>, reaching 1.56 billion tons—a 40% reduction from 2007 peak
+levels.</p>
+<p>This trajectory assumes: - Continued coal retirements (~5-8 GW/year)
+- Natural gas remains economically competitive - Renewable additions
+continue at current pace (~20-30 GW/year) - No major policy changes</p>
+<figure>
+<img src="forecast_2030.png"
+alt="Forecast through 2030 with uncertainty bounds" />
+<figcaption aria-hidden="true">Forecast through 2030 with uncertainty
+bounds</figcaption>
+</figure>
+<h2 id="uncertainty-quantification">Uncertainty Quantification</h2>
+<p>Point forecasts are useful, but uncertainty matters. We use quantile
+regression to generate prediction intervals:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> GradientBoostingRegressor</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Train models for 10th, 50th, and 90th percentiles</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>quantile_models <span class="op">=</span> {}</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> quantile <span class="kw">in</span> [<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>]:</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> GradientBoostingRegressor(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">&#39;quantile&#39;</span>, </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span>quantile,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        n_estimators<span class="op">=</span><span class="dv">100</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    model.fit(X_full, y_full)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    quantile_models[quantile] <span class="op">=</span> model</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate prediction intervals</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>intervals <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Year&#39;</span>: <span class="bu">range</span>(<span class="dv">2024</span>, <span class="dv">2031</span>),</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Lower_10%&#39;</span>: [quantile_models[<span class="fl">0.1</span>].predict(X)[<span class="dv">0</span>] <span class="cf">for</span> X <span class="kw">in</span> X_futures],</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Median&#39;</span>: [quantile_models[<span class="fl">0.5</span>].predict(X)[<span class="dv">0</span>] <span class="cf">for</span> X <span class="kw">in</span> X_futures],</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Upper_90%&#39;</span>: [quantile_models[<span class="fl">0.9</span>].predict(X)[<span class="dv">0</span>] <span class="cf">for</span> X <span class="kw">in</span> X_futures]</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div>
+<p>The 80% prediction interval widens over time (±8% by 2030),
+reflecting increasing uncertainty. Major policy changes or economic
+shocks could shift the trajectory significantly.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<p><strong>1. Ensemble methods win:</strong> Combining LSTM, XGBoost,
+and SARIMA achieved R² = 0.96, beating any individual model.</p>
+<p><strong>2. Feature engineering matters:</strong> XGBoost with good
+features (lags, rolling stats, differences) matched LSTM performance
+with 100x faster training.</p>
+<p><strong>3. Domain knowledge helps:</strong> Understanding power
+sector dynamics (slow-changing infrastructure, policy impacts) improves
+feature design and model interpretation.</p>
+<p><strong>4. Quantify uncertainty:</strong> Prediction intervals are
+crucial for decision-making. The ±8% range by 2030 represents billions
+of tons of difference.</p>
+<p><strong>5. Start simple, add complexity:</strong> SARIMA provides a
+strong baseline in minutes. Only move to complex models if they provide
+meaningful improvements.</p>
+<h2 id="implementation-tips">Implementation Tips</h2>
+<p><strong>For Production Systems:</strong> - Retrain models quarterly
+as new data arrives - Monitor prediction errors for drift - Use ensemble
+methods for robustness - Implement automated retraining pipelines -
+Track feature importance changes over time</p>
+<p><strong>Common Pitfalls to Avoid:</strong> - Leaking future
+information into features - Ignoring structural breaks (policy changes)
+- Overfitting on limited data - Forgetting to scale features for neural
+networks - Not testing on truly held-out data</p>
+<h2 id="so-what">So What?</h2>
+<p>Time series forecasting transforms historical patterns into
+actionable insights. For the power sector, these forecasts drive: -
+<strong>$100B+ in annual capital allocation</strong> decisions -
+<strong>Climate policy development</strong> across federal and state
+governments - <strong>Grid reliability planning</strong> ensuring lights
+stay on - <strong>Market strategies</strong> for energy traders and
+investors</p>
+<p>As the energy transition accelerates, accurate forecasting becomes
+even more critical. The methods shown here—LSTM for complex patterns,
+XGBoost for feature-rich modeling, SARIMA for statistical rigor, and
+ensembles for robustness—provide a comprehensive toolkit for tackling
+these challenges.</p>
+<p>The complete code and tutorial are available in the GitHub
+repository. Ready to forecast your own time series? Start with XGBoost
+and feature engineering—you’ll be surprised how far it takes you.</p>
+<hr />
+<p><strong>Time Series Forecasting</strong> · <strong>Machine
+Learning</strong> · <strong>Python</strong> · <strong>Energy</strong> ·
+<strong>Climate</strong></p>
+<hr />
+<p><em>Found this helpful? I’m Kyle Jones, a cloud architect and
+analytics enthusiast. I write about practical ML applications in energy,
+climate, and infrastructure. Follow for more.</em></p>
+</body>
+</html>

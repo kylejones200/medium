@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_risk_management_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="real-time-risk-management-for-power-portfolios-preventing-catastrophic-losses">Real-Time
+Risk Management for Power Portfolios: Preventing Catastrophic
+Losses</h1>
+<p>When Amaranth Advisors collapsed in September 2006, losing $6.6
+billion in natural gas trading, the root cause wasn’t bad luck—it was
+inadequate risk management. The fund’s concentrated positions and
+insufficient stress testing left it vulnerable to a market move that,
+while extreme, was entirely possible. Traders with robust risk
+frameworks survived the same event; Amaranth did not.</p>
+<p>In power trading, where prices can move 500% in hours and
+correlations break down during crises, risk management isn’t a
+back-office function—it’s the difference between survival and ruin.
+Professional risk management prevents catastrophic losses while enabling
+traders to size positions appropriately for maximum expected
+returns.</p>
+<h2 id="why-risk-management-defines-long-term-success">Why Risk
+Management Defines Long-Term Success</h2>
+<p>Every power trader faces an inescapable reality: extreme events will
+occur. Transmission lines will fail. Heat waves will spike demand.
+Generators will experience unplanned outages. The question isn’t whether
+these events happen, but whether your portfolio survives them.</p>
+<p>Effective risk management serves multiple critical functions: -
+<strong>Prevents Catastrophic Losses</strong>: Limits exposure to tail
+events that could eliminate years of gains - <strong>Enables Optimal
+Position Sizing</strong>: Quantifies risk to determine appropriate
+position sizes - <strong>Identifies Hidden Correlations</strong>:
+Reveals concentration risks that aren’t obvious from notional exposures
+- <strong>Facilitates Rapid Response</strong>: Provides real-time
+visibility into portfolio risk evolution - <strong>Supports Regulatory
+Compliance</strong>: Documents risk controls for regulators and
+stakeholders</p>
+<figure>
+<img src="05_risk_management_main.png"
+alt="Risk Management Framework" />
+<figcaption aria-hidden="true">Risk Management Framework</figcaption>
+</figure>
+<h2 id="value-at-risk-var-the-foundation-metric">Value at Risk (VaR):
+The Foundation Metric</h2>
+<p>VaR answers a simple question: “What is the maximum loss I can expect
+with X% confidence over Y time period?” This single number summarizes
+portfolio risk in intuitive terms:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_portfolio_var(positions, price_data, confidence_level<span class="op">=</span><span class="fl">0.95</span>, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                           time_horizon_days<span class="op">=</span><span class="dv">1</span>, method<span class="op">=</span><span class="st">&#39;parametric&#39;</span>):</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate Value at Risk for power trading portfolio.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Supports multiple VaR methodologies:</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">    - Parametric (assumes normal distribution)</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">    - Historical simulation (uses actual historical returns)</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    - Monte Carlo (generates scenarios from return distribution)</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    n_positions <span class="op">=</span> <span class="bu">len</span>(positions)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Method calculators dictionary</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> calculate_parametric():</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        returns <span class="op">=</span> [np.diff(price_data[p[<span class="st">&#39;asset&#39;</span>]]) <span class="op">/</span> price_data[p[<span class="st">&#39;asset&#39;</span>]][:<span class="op">-</span><span class="dv">1</span>] <span class="cf">for</span> p <span class="kw">in</span> positions]</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        returns_matrix <span class="op">=</span> np.array(returns).T</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        position_weights <span class="op">=</span> np.array([p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> positions])</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        total_value <span class="op">=</span> np.<span class="bu">sum</span>(position_weights)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        weights <span class="op">=</span> position_weights <span class="op">/</span> total_value</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        portfolio_returns <span class="op">=</span> returns_matrix <span class="op">@</span> weights</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        portfolio_mean <span class="op">=</span> np.mean(portfolio_returns)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        portfolio_std <span class="op">=</span> np.std(portfolio_returns)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        scaled_std <span class="op">=</span> portfolio_std <span class="op">*</span> np.sqrt(time_horizon_days)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        z_score <span class="op">=</span> norm.ppf(<span class="dv">1</span> <span class="op">-</span> confidence_level)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        var_pct <span class="op">=</span> portfolio_mean <span class="op">*</span> time_horizon_days <span class="op">+</span> z_score <span class="op">*</span> scaled_std</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        var_dollars <span class="op">=</span> <span class="bu">abs</span>(var_pct) <span class="op">*</span> total_value</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;method&#39;</span>: <span class="st">&#39;parametric&#39;</span>,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_pct&#39;</span>: var_pct <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_dollars&#39;</span>: var_dollars,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence_level&#39;</span>: confidence_level,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;time_horizon_days&#39;</span>: time_horizon_days,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;portfolio_value&#39;</span>: total_value,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: portfolio_mean <span class="op">*</span> time_horizon_days <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;volatility&#39;</span>: portfolio_std <span class="op">*</span> np.sqrt(<span class="dv">252</span>) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> calculate_historical():</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        position_weights <span class="op">=</span> np.array([p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> positions])</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        total_value <span class="op">=</span> np.<span class="bu">sum</span>(position_weights)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        returns <span class="op">=</span> [np.diff(price_data[p[<span class="st">&#39;asset&#39;</span>]]) <span class="op">/</span> price_data[p[<span class="st">&#39;asset&#39;</span>]][:<span class="op">-</span><span class="dv">1</span>] <span class="op">*</span> </span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>                  p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> positions]</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        portfolio_pnl <span class="op">=</span> np.<span class="bu">sum</span>(returns, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        var_dollars <span class="op">=</span> <span class="bu">abs</span>(np.percentile(portfolio_pnl, (<span class="dv">1</span> <span class="op">-</span> confidence_level) <span class="op">*</span> <span class="dv">100</span>))</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        var_pct <span class="op">=</span> var_dollars <span class="op">/</span> total_value <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;method&#39;</span>: <span class="st">&#39;historical&#39;</span>,</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_pct&#39;</span>: var_pct,</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_dollars&#39;</span>: var_dollars,</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence_level&#39;</span>: confidence_level,</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;time_horizon_days&#39;</span>: time_horizon_days,</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;portfolio_value&#39;</span>: total_value,</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;worst_historical_loss&#39;</span>: <span class="bu">abs</span>(np.<span class="bu">min</span>(portfolio_pnl)),</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;best_historical_gain&#39;</span>: np.<span class="bu">max</span>(portfolio_pnl)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> calculate_monte_carlo():</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        position_weights <span class="op">=</span> np.array([p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> positions])</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>        total_value <span class="op">=</span> np.<span class="bu">sum</span>(position_weights)</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        returns <span class="op">=</span> [np.diff(price_data[p[<span class="st">&#39;asset&#39;</span>]]) <span class="op">/</span> price_data[p[<span class="st">&#39;asset&#39;</span>]][:<span class="op">-</span><span class="dv">1</span>] <span class="cf">for</span> p <span class="kw">in</span> positions]</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>        returns_matrix <span class="op">=</span> np.array(returns).T</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        mean_returns <span class="op">=</span> np.mean(returns_matrix, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>        cov_matrix <span class="op">=</span> np.cov(returns_matrix.T)</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>        n_scenarios <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>        scenarios <span class="op">=</span> np.random.multivariate_normal(</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>            mean_returns <span class="op">*</span> time_horizon_days,</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>            cov_matrix <span class="op">*</span> time_horizon_days,</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>            n_scenarios</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>        weights <span class="op">=</span> position_weights <span class="op">/</span> total_value</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>        portfolio_returns <span class="op">=</span> scenarios <span class="op">@</span> weights</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>        portfolio_pnl <span class="op">=</span> portfolio_returns <span class="op">*</span> total_value</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>        var_dollars <span class="op">=</span> <span class="bu">abs</span>(np.percentile(portfolio_pnl, (<span class="dv">1</span> <span class="op">-</span> confidence_level) <span class="op">*</span> <span class="dv">100</span>))</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>        var_pct <span class="op">=</span> var_dollars <span class="op">/</span> total_value <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;method&#39;</span>: <span class="st">&#39;monte_carlo&#39;</span>,</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_pct&#39;</span>: var_pct,</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_dollars&#39;</span>: var_dollars,</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence_level&#39;</span>: confidence_level,</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;time_horizon_days&#39;</span>: time_horizon_days,</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;portfolio_value&#39;</span>: total_value,</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;n_scenarios&#39;</span>: n_scenarios,</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: np.mean(portfolio_pnl),</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;worst_scenario&#39;</span>: np.<span class="bu">min</span>(portfolio_pnl),</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;best_scenario&#39;</span>: np.<span class="bu">max</span>(portfolio_pnl)</span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Method dispatcher</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>    method_calculators <span class="op">=</span> {</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;parametric&#39;</span>: calculate_parametric,</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;historical&#39;</span>: calculate_historical,</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;monte_carlo&#39;</span>: calculate_monte_carlo</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> method_calculators.get(method, calculate_parametric)()</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Calculate VaR for power portfolio</span></span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>positions <span class="op">=</span> [</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&#39;asset&#39;</span>: <span class="st">&#39;power_spot&#39;</span>, <span class="st">&#39;quantity&#39;</span>: <span class="dv">500</span>, <span class="st">&#39;current_price&#39;</span>: <span class="fl">85.00</span>},      <span class="co"># 500 MW power</span></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&#39;asset&#39;</span>: <span class="st">&#39;gas_futures&#39;</span>, <span class="st">&#39;quantity&#39;</span>: <span class="op">-</span><span class="dv">200</span>, <span class="st">&#39;current_price&#39;</span>: <span class="fl">4.50</span>},     <span class="co"># Short 200 MMBtu gas</span></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&#39;asset&#39;</span>: <span class="st">&#39;coal_forward&#39;</span>, <span class="st">&#39;quantity&#39;</span>: <span class="dv">1000</span>, <span class="st">&#39;current_price&#39;</span>: <span class="fl">75.00</span>}    <span class="co"># Long coal</span></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate sample price data</span></span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>price_data <span class="op">=</span> {</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;power_spot&#39;</span>: <span class="dv">85</span> <span class="op">+</span> np.cumsum(np.random.randn(<span class="dv">252</span>) <span class="op">*</span> <span class="dv">5</span>),</span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;gas_futures&#39;</span>: <span class="fl">4.5</span> <span class="op">+</span> np.cumsum(np.random.randn(<span class="dv">252</span>) <span class="op">*</span> <span class="fl">0.3</span>),</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;coal_forward&#39;</span>: <span class="dv">75</span> <span class="op">+</span> np.cumsum(np.random.randn(<span class="dv">252</span>) <span class="op">*</span> <span class="dv">3</span>)</span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate VaR using all three methods</span></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>var_parametric <span class="op">=</span> calculate_portfolio_var(positions, price_data, confidence_level<span class="op">=</span><span class="fl">0.95</span>, method<span class="op">=</span><span class="st">&#39;parametric&#39;</span>)</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>var_historical <span class="op">=</span> calculate_portfolio_var(positions, price_data, confidence_level<span class="op">=</span><span class="fl">0.95</span>, method<span class="op">=</span><span class="st">&#39;historical&#39;</span>)</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>var_monte_carlo <span class="op">=</span> calculate_portfolio_var(positions, price_data, confidence_level<span class="op">=</span><span class="fl">0.95</span>, method<span class="op">=</span><span class="st">&#39;monte_carlo&#39;</span>)</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Value at Risk Analysis (95% Confidence, 1-Day Horizon):&quot;</span>)</span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Parametric VaR:&quot;</span>)</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  VaR: $</span><span class="sc">{</span>var_parametric[<span class="st">&#39;var_dollars&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> (</span><span class="sc">{</span>var_parametric[<span class="st">&#39;var_pct&#39;</span>]<span class="sc">:.2f}</span><span class="ss">%)&quot;</span>)</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Portfolio Value: $</span><span class="sc">{</span>var_parametric[<span class="st">&#39;portfolio_value&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Annualized Volatility: </span><span class="sc">{</span>var_parametric[<span class="st">&#39;volatility&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Historical VaR:&quot;</span>)</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  VaR: $</span><span class="sc">{</span>var_historical[<span class="st">&#39;var_dollars&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> (</span><span class="sc">{</span>var_historical[<span class="st">&#39;var_pct&#39;</span>]<span class="sc">:.2f}</span><span class="ss">%)&quot;</span>)</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Worst Historical Loss: $</span><span class="sc">{</span>var_historical[<span class="st">&#39;worst_historical_loss&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Monte Carlo VaR:&quot;</span>)</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  VaR: $</span><span class="sc">{</span>var_monte_carlo[<span class="st">&#39;var_dollars&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> (</span><span class="sc">{</span>var_monte_carlo[<span class="st">&#39;var_pct&#39;</span>]<span class="sc">:.2f}</span><span class="ss">%)&quot;</span>)</span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Worst Scenario: $</span><span class="sc">{</span>var_monte_carlo[<span class="st">&#39;worst_scenario&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Best Scenario: $</span><span class="sc">{</span>var_monte_carlo[<span class="st">&#39;best_scenario&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>Each VaR method has strengths: parametric is fast but assumes
+normality (dangerous in power markets); historical uses actual data but
+may miss unprecedented events; Monte Carlo captures complexity but
+requires accurate correlation assumptions. Professional traders
+calculate all three and use the maximum for conservative risk
+assessment.</p>
+<h2 id="stress-testing-preparing-for-the-unexpected">Stress Testing:
+Preparing for the Unexpected</h2>
+<p>VaR tells you normal losses; stress testing reveals catastrophic
+losses during extreme events:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stress_test_portfolio(positions, stress_scenarios):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Apply extreme but plausible scenarios to portfolio.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Stress scenarios include historical events, hypothetical shocks,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    and worst-case combinations of risk factors.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    portfolio_value <span class="op">=</span> <span class="bu">sum</span>(p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> positions)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    stress_results <span class="op">=</span> []</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> scenario <span class="kw">in</span> stress_scenarios:</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        scenario_pnl <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        position_impacts <span class="op">=</span> []</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> position <span class="kw">in</span> positions:</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            asset <span class="op">=</span> position[<span class="st">&#39;asset&#39;</span>]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>            quantity <span class="op">=</span> position[<span class="st">&#39;quantity&#39;</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            current_price <span class="op">=</span> position[<span class="st">&#39;current_price&#39;</span>]</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            position_value <span class="op">=</span> quantity <span class="op">*</span> current_price</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Apply scenario shock to asset using dictionary lookup</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            price_shock_pct <span class="op">=</span> scenario[<span class="st">&#39;shocks&#39;</span>].get(asset, <span class="dv">0</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>            new_price <span class="op">=</span> current_price <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> price_shock_pct <span class="op">/</span> <span class="dv">100</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            position_pnl <span class="op">=</span> quantity <span class="op">*</span> (new_price <span class="op">-</span> current_price)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            scenario_pnl <span class="op">+=</span> position_pnl</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>            position_impacts.append({</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;asset&#39;</span>: asset,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;position_value&#39;</span>: position_value,</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;pnl&#39;</span>: position_pnl,</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;pnl_pct&#39;</span>: (position_pnl <span class="op">/</span> (<span class="bu">abs</span>(position_value) <span class="op">+</span> (position_value <span class="op">==</span> <span class="dv">0</span>))) <span class="op">*</span> <span class="dv">100</span> <span class="op">*</span> (position_value <span class="op">!=</span> <span class="dv">0</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Severity calculation using dictionary lookup</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        pnl_ratio <span class="op">=</span> <span class="bu">abs</span>(scenario_pnl) <span class="op">/</span> portfolio_value</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        severity_thresholds <span class="op">=</span> [(<span class="fl">0.15</span>, <span class="st">&#39;CRITICAL&#39;</span>), (<span class="fl">0.10</span>, <span class="st">&#39;HIGH&#39;</span>), (<span class="dv">0</span>, <span class="st">&#39;MODERATE&#39;</span>)]</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        severity <span class="op">=</span> <span class="bu">next</span>((sev <span class="cf">for</span> thresh, sev <span class="kw">in</span> <span class="bu">filter</span>(<span class="kw">lambda</span> x: pnl_ratio <span class="op">&gt;</span> x[<span class="dv">0</span>], severity_thresholds)), <span class="st">&#39;MODERATE&#39;</span>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>        stress_results.append({</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;scenario_name&#39;</span>: scenario[<span class="st">&#39;name&#39;</span>],</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;scenario_description&#39;</span>: scenario[<span class="st">&#39;description&#39;</span>],</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;total_pnl&#39;</span>: scenario_pnl,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;pnl_pct&#39;</span>: (scenario_pnl <span class="op">/</span> portfolio_value) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;position_impacts&#39;</span>: position_impacts,</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;severity&#39;</span>: severity</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rank by severity</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    stress_results.sort(key<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">abs</span>(x[<span class="st">&#39;total_pnl&#39;</span>]), reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;portfolio_value&#39;</span>: portfolio_value,</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;stress_results&#39;</span>: stress_results,</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;worst_scenario&#39;</span>: <span class="bu">next</span>(<span class="bu">iter</span>(stress_results), <span class="va">None</span>),</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;scenarios_critical&#39;</span>: <span class="bu">sum</span>(s[<span class="st">&#39;severity&#39;</span>] <span class="op">==</span> <span class="st">&#39;CRITICAL&#39;</span> <span class="cf">for</span> s <span class="kw">in</span> stress_results),</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;scenarios_high&#39;</span>: <span class="bu">sum</span>(s[<span class="st">&#39;severity&#39;</span>] <span class="op">==</span> <span class="st">&#39;HIGH&#39;</span> <span class="cf">for</span> s <span class="kw">in</span> stress_results)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="co"># Define stress scenarios</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>stress_scenarios <span class="op">=</span> [</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Heat Wave&#39;</span>,</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;description&#39;</span>: <span class="st">&#39;Extended heat wave drives power demand surge&#39;</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;shocks&#39;</span>: {</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;power_spot&#39;</span>: <span class="op">+</span><span class="dv">150</span>,      <span class="co"># Power up 150%</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gas_futures&#39;</span>: <span class="op">+</span><span class="dv">80</span>,      <span class="co"># Gas up 80%</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;coal_forward&#39;</span>: <span class="op">+</span><span class="dv">25</span>      <span class="co"># Coal up 25%</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Polar Vortex&#39;</span>,</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;description&#39;</span>: <span class="st">&#39;Extreme cold weather event&#39;</span>,</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;shocks&#39;</span>: {</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;power_spot&#39;</span>: <span class="op">+</span><span class="dv">200</span>,</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gas_futures&#39;</span>: <span class="op">+</span><span class="dv">300</span>,     <span class="co"># Gas spikes dramatically</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;coal_forward&#39;</span>: <span class="op">+</span><span class="dv">40</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Gas Supply Disruption&#39;</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;description&#39;</span>: <span class="st">&#39;Major pipeline outage cuts gas supply&#39;</span>,</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;shocks&#39;</span>: {</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;power_spot&#39;</span>: <span class="op">+</span><span class="dv">120</span>,</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gas_futures&#39;</span>: <span class="op">+</span><span class="dv">250</span>,</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;coal_forward&#39;</span>: <span class="op">+</span><span class="dv">50</span>      <span class="co"># Coal substitute demand</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Transmission Failure&#39;</span>,</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;description&#39;</span>: <span class="st">&#39;Major transmission line outage&#39;</span>,</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;shocks&#39;</span>: {</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;power_spot&#39;</span>: <span class="op">+</span><span class="dv">180</span>,</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gas_futures&#39;</span>: <span class="op">+</span><span class="dv">30</span>,</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;coal_forward&#39;</span>: <span class="op">+</span><span class="dv">10</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Renewable Lull&#39;</span>,</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;description&#39;</span>: <span class="st">&#39;Low wind/solar generation forces thermal backup&#39;</span>,</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;shocks&#39;</span>: {</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;power_spot&#39;</span>: <span class="op">+</span><span class="dv">60</span>,</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gas_futures&#39;</span>: <span class="op">+</span><span class="dv">40</span>,</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;coal_forward&#39;</span>: <span class="op">+</span><span class="dv">30</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Market Volatility Spike&#39;</span>,</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;description&#39;</span>: <span class="st">&#39;Extreme volatility across all commodities&#39;</span>,</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;shocks&#39;</span>: {</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;power_spot&#39;</span>: <span class="op">+</span><span class="dv">250</span>,</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gas_futures&#39;</span>: <span class="op">+</span><span class="dv">180</span>,</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;coal_forward&#39;</span>: <span class="op">+</span><span class="dv">60</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;2021 Texas Storm Replay&#39;</span>,</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;description&#39;</span>: <span class="st">&#39;Repeat of February 2021 Texas event&#39;</span>,</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;shocks&#39;</span>: {</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;power_spot&#39;</span>: <span class="op">+</span><span class="dv">1000</span>,     <span class="co"># 10x normal prices</span></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gas_futures&#39;</span>: <span class="op">+</span><span class="dv">600</span>,</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;coal_forward&#39;</span>: <span class="op">+</span><span class="dv">80</span></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a><span class="co"># Run stress tests</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>stress_analysis <span class="op">=</span> stress_test_portfolio(positions, stress_scenarios)</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Stress Testing Results:&quot;</span>)</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Portfolio Value: $</span><span class="sc">{</span>stress_analysis[<span class="st">&#39;portfolio_value&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Critical Scenarios: </span><span class="sc">{</span>stress_analysis[<span class="st">&#39;scenarios_critical&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;High-Risk Scenarios: </span><span class="sc">{</span>stress_analysis[<span class="st">&#39;scenarios_high&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Worst Scenario: </span><span class="sc">{</span>stress_analysis[<span class="st">&#39;worst_scenario&#39;</span>][<span class="st">&#39;scenario_name&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Description: </span><span class="sc">{</span>stress_analysis[<span class="st">&#39;worst_scenario&#39;</span>][<span class="st">&#39;scenario_description&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  P&amp;L Impact: $</span><span class="sc">{</span>stress_analysis[<span class="st">&#39;worst_scenario&#39;</span>][<span class="st">&#39;total_pnl&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  % of Portfolio: </span><span class="sc">{</span>stress_analysis[<span class="st">&#39;worst_scenario&#39;</span>][<span class="st">&#39;pnl_pct&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Severity: </span><span class="sc">{</span>stress_analysis[<span class="st">&#39;worst_scenario&#39;</span>][<span class="st">&#39;severity&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Top 3 Risk Scenarios:&quot;</span>)</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, scenario <span class="kw">in</span> <span class="bu">enumerate</span>(stress_analysis[<span class="st">&#39;stress_results&#39;</span>][:<span class="dv">3</span>], <span class="dv">1</span>):</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>scenario[<span class="st">&#39;scenario_name&#39;</span>]<span class="sc">}</span><span class="ss"> [</span><span class="sc">{</span>scenario[<span class="st">&#39;severity&#39;</span>]<span class="sc">}</span><span class="ss">]&quot;</span>)</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;   Impact: $</span><span class="sc">{</span>scenario[<span class="st">&#39;total_pnl&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> (</span><span class="sc">{</span>scenario[<span class="st">&#39;pnl_pct&#39;</span>]<span class="sc">:+.1f}</span><span class="ss">%)&quot;</span>)</span></code></pre></div>
+<p>Stress testing reveals vulnerabilities VaR misses. If a “Texas Storm
+Replay” would bankrupt your portfolio, you need to reduce exposure
+regardless of what VaR says. Professional traders set position limits
+based on stress tests, not just VaR.</p>
+<h2 id="concentration-risk-and-correlation-analysis">Concentration Risk
+and Correlation Analysis</h2>
+<p>Diversification only works if positions aren’t secretly
+correlated:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_concentration_risk(positions, correlation_matrix):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Identify concentration risks in portfolio.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculates concentration by asset class, geography, and risk factor.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Reveals hidden correlations that amplify risk during crises.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    total_gross_exposure <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">abs</span>(p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>]) <span class="cf">for</span> p <span class="kw">in</span> positions)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    total_net_exposure <span class="op">=</span> <span class="bu">sum</span>(p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> positions)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate concentration by asset</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    asset_exposure <span class="op">=</span> {}</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> position <span class="kw">in</span> positions:</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        asset <span class="op">=</span> position[<span class="st">&#39;asset&#39;</span>]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        exposure <span class="op">=</span> <span class="bu">abs</span>(position[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> position[<span class="st">&#39;current_price&#39;</span>])</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        asset_exposure[asset] <span class="op">=</span> asset_exposure.get(asset, <span class="dv">0</span>) <span class="op">+</span> exposure</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate concentration score (Herfindahl index)</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    concentration_score <span class="op">=</span> <span class="bu">sum</span>((exp <span class="op">/</span> total_gross_exposure) <span class="op">**</span> <span class="dv">2</span> <span class="cf">for</span> exp <span class="kw">in</span> asset_exposure.values())</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Analyze effective diversification accounting for correlations</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Effective positions = 1 / sum(weight_i * weight_j * correlation_ij)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    weights <span class="op">=</span> np.array([<span class="bu">abs</span>(p[<span class="st">&#39;quantity&#39;</span>] <span class="op">*</span> p[<span class="st">&#39;current_price&#39;</span>]) <span class="op">/</span> total_gross_exposure </span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">for</span> p <span class="kw">in</span> positions])</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate portfolio variance considering correlations using boolean arithmetic</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    has_corr_matrix <span class="op">=</span> correlation_matrix <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    portfolio_variance <span class="op">=</span> (weights <span class="op">@</span> correlation_matrix <span class="op">@</span> weights) <span class="op">*</span> has_corr_matrix</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    effective_positions <span class="op">=</span> (</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        (<span class="dv">1</span> <span class="op">/</span> portfolio_variance) <span class="op">*</span> (portfolio_variance <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">*</span> has_corr_matrix <span class="op">+</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        <span class="bu">len</span>(positions) <span class="op">*</span> ((portfolio_variance <span class="op">==</span> <span class="dv">0</span>) <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> has_corr_matrix))</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Identify top concentrations</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    sorted_exposures <span class="op">=</span> <span class="bu">sorted</span>(asset_exposure.items(), key<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="dv">1</span>], reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_gross_exposure&#39;</span>: total_gross_exposure,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_net_exposure&#39;</span>: total_net_exposure,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;net_to_gross_ratio&#39;</span>: (total_net_exposure <span class="op">/</span> (total_gross_exposure <span class="op">+</span> (total_gross_exposure <span class="op">==</span> <span class="dv">0</span>))) <span class="op">*</span> (total_gross_exposure <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;concentration_score&#39;</span>: concentration_score,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;effective_positions&#39;</span>: effective_positions,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;diversification_ratio&#39;</span>: effective_positions <span class="op">/</span> <span class="bu">len</span>(positions),</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;asset_exposures&#39;</span>: sorted_exposures,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;largest_exposure_pct&#39;</span>: (sorted_exposures[<span class="dv">0</span>][<span class="dv">1</span>] <span class="op">/</span> total_gross_exposure <span class="op">*</span> <span class="dv">100</span>) <span class="op">*</span> <span class="bu">bool</span>(sorted_exposures)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Example correlation matrix (power, gas, coal)</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>correlation_matrix <span class="op">=</span> np.array([</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">1.00</span>, <span class="fl">0.75</span>, <span class="fl">0.45</span>],  <span class="co"># Power correlations</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.75</span>, <span class="fl">1.00</span>, <span class="fl">0.30</span>],  <span class="co"># Gas correlations</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.45</span>, <span class="fl">0.30</span>, <span class="fl">1.00</span>]   <span class="co"># Coal correlations</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>concentration <span class="op">=</span> analyze_concentration_risk(positions, correlation_matrix)</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Concentration Risk Analysis:&quot;</span>)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Total Gross Exposure: $</span><span class="sc">{</span>concentration[<span class="st">&#39;total_gross_exposure&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Total Net Exposure: $</span><span class="sc">{</span>concentration[<span class="st">&#39;total_net_exposure&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Net/Gross Ratio: </span><span class="sc">{</span>concentration[<span class="st">&#39;net_to_gross_ratio&#39;</span>]<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Concentration Score: </span><span class="sc">{</span>concentration[<span class="st">&#39;concentration_score&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Effective Positions: </span><span class="sc">{</span>concentration[<span class="st">&#39;effective_positions&#39;</span>]<span class="sc">:.1f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Diversification Ratio: </span><span class="sc">{</span>concentration[<span class="st">&#39;diversification_ratio&#39;</span>]<span class="sc">:.1%}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Exposure by Asset:&quot;</span>)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> asset, exposure <span class="kw">in</span> concentration[<span class="st">&#39;asset_exposures&#39;</span>]:</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    pct <span class="op">=</span> exposure <span class="op">/</span> concentration[<span class="st">&#39;total_gross_exposure&#39;</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;  </span><span class="sc">{</span>asset<span class="sc">}</span><span class="ss">: $</span><span class="sc">{</span>exposure<span class="sc">:,.2f}</span><span class="ss"> (</span><span class="sc">{</span>pct<span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span></code></pre></div>
+<p>High concentration scores (&gt;0.3) indicate dangerous concentration.
+During crises, correlations spike toward 1.0—diversification you thought
+you had disappears exactly when you need it most.</p>
+<h2 id="real-time-risk-monitoring-dashboard">Real-Time Risk Monitoring
+Dashboard</h2>
+<p>Professional risk management requires continuous monitoring:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_risk_dashboard(positions, market_data, risk_limits):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Generate comprehensive real-time risk dashboard.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Monitors multiple risk metrics against established limits,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    generating alerts when thresholds are breached.</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate all risk metrics</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    var_95 <span class="op">=</span> calculate_portfolio_var(positions, market_data, confidence_level<span class="op">=</span><span class="fl">0.95</span>, method<span class="op">=</span><span class="st">&#39;monte_carlo&#39;</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    var_99 <span class="op">=</span> calculate_portfolio_var(positions, market_data, confidence_level<span class="op">=</span><span class="fl">0.99</span>, method<span class="op">=</span><span class="st">&#39;monte_carlo&#39;</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    concentration <span class="op">=</span> analyze_concentration_risk(positions, <span class="va">None</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check against limits using list comprehension</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    alert_checks <span class="op">=</span> [</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;condition&#39;</span>: var_95[<span class="st">&#39;var_dollars&#39;</span>] <span class="op">&gt;</span> risk_limits[<span class="st">&#39;max_var_95&#39;</span>],</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;alert&#39;</span>: {</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;severity&#39;</span>: <span class="st">&#39;HIGH&#39;</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;metric&#39;</span>: <span class="st">&#39;VaR 95%&#39;</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;current&#39;</span>: var_95[<span class="st">&#39;var_dollars&#39;</span>],</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;limit&#39;</span>: risk_limits[<span class="st">&#39;max_var_95&#39;</span>],</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;breach_pct&#39;</span>: (var_95[<span class="st">&#39;var_dollars&#39;</span>] <span class="op">/</span> risk_limits[<span class="st">&#39;max_var_95&#39;</span>] <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;action&#39;</span>: <span class="st">&#39;Reduce position sizes or add hedges&#39;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;condition&#39;</span>: var_99[<span class="st">&#39;var_dollars&#39;</span>] <span class="op">&gt;</span> risk_limits[<span class="st">&#39;max_var_99&#39;</span>],</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;alert&#39;</span>: {</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;severity&#39;</span>: <span class="st">&#39;CRITICAL&#39;</span>,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;metric&#39;</span>: <span class="st">&#39;VaR 99%&#39;</span>,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;current&#39;</span>: var_99[<span class="st">&#39;var_dollars&#39;</span>],</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;limit&#39;</span>: risk_limits[<span class="st">&#39;max_var_99&#39;</span>],</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;breach_pct&#39;</span>: (var_99[<span class="st">&#39;var_dollars&#39;</span>] <span class="op">/</span> risk_limits[<span class="st">&#39;max_var_99&#39;</span>] <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;action&#39;</span>: <span class="st">&#39;Immediately reduce exposures&#39;</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;condition&#39;</span>: concentration[<span class="st">&#39;largest_exposure_pct&#39;</span>] <span class="op">&gt;</span> risk_limits[<span class="st">&#39;max_single_exposure_pct&#39;</span>],</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;alert&#39;</span>: {</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;severity&#39;</span>: <span class="st">&#39;MEDIUM&#39;</span>,</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;metric&#39;</span>: <span class="st">&#39;Single Asset Concentration&#39;</span>,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;current&#39;</span>: concentration[<span class="st">&#39;largest_exposure_pct&#39;</span>],</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;limit&#39;</span>: risk_limits[<span class="st">&#39;max_single_exposure_pct&#39;</span>],</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;breach_pct&#39;</span>: (concentration[<span class="st">&#39;largest_exposure_pct&#39;</span>] <span class="op">/</span> risk_limits[<span class="st">&#39;max_single_exposure_pct&#39;</span>] <span class="op">-</span> <span class="dv">1</span>) <span class="op">*</span> <span class="dv">100</span>,</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;action&#39;</span>: <span class="st">&#39;Diversify into additional assets&#39;</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    alerts <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: x[<span class="st">&#39;alert&#39;</span>], <span class="bu">filter</span>(<span class="kw">lambda</span> x: x[<span class="st">&#39;condition&#39;</span>], alert_checks)))</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate utilization percentages</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    var_95_utilization <span class="op">=</span> (var_95[<span class="st">&#39;var_dollars&#39;</span>] <span class="op">/</span> risk_limits[<span class="st">&#39;max_var_95&#39;</span>]) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    var_99_utilization <span class="op">=</span> (var_99[<span class="st">&#39;var_dollars&#39;</span>] <span class="op">/</span> risk_limits[<span class="st">&#39;max_var_99&#39;</span>]) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;timestamp&#39;</span>: pd.Timestamp.now(),</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;portfolio_value&#39;</span>: var_95[<span class="st">&#39;portfolio_value&#39;</span>],</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;risk_metrics&#39;</span>: {</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_95&#39;</span>: var_95[<span class="st">&#39;var_dollars&#39;</span>],</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_99&#39;</span>: var_99[<span class="st">&#39;var_dollars&#39;</span>],</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_95_pct&#39;</span>: var_95[<span class="st">&#39;var_pct&#39;</span>],</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_99_pct&#39;</span>: var_99[<span class="st">&#39;var_pct&#39;</span>],</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: var_95.get(<span class="st">&#39;expected_return&#39;</span>, <span class="dv">0</span>),</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;volatility&#39;</span>: var_95.get(<span class="st">&#39;volatility&#39;</span>, <span class="dv">0</span>)</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;concentration_metrics&#39;</span>: {</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gross_exposure&#39;</span>: concentration[<span class="st">&#39;total_gross_exposure&#39;</span>],</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;net_exposure&#39;</span>: concentration[<span class="st">&#39;total_net_exposure&#39;</span>],</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;concentration_score&#39;</span>: concentration[<span class="st">&#39;concentration_score&#39;</span>],</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;effective_positions&#39;</span>: concentration[<span class="st">&#39;effective_positions&#39;</span>]</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;limit_utilization&#39;</span>: {</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_95&#39;</span>: var_95_utilization,</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;var_99&#39;</span>: var_99_utilization</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;alerts&#39;</span>: alerts,</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;risk_status&#39;</span>: <span class="bu">next</span>(</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>            <span class="bu">filter</span>(<span class="kw">lambda</span> severity: <span class="bu">any</span>(<span class="bu">map</span>(<span class="kw">lambda</span> a: a[<span class="st">&#39;severity&#39;</span>] <span class="op">==</span> severity, alerts)),</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>                   [<span class="st">&#39;CRITICAL&#39;</span>, <span class="st">&#39;HIGH&#39;</span>, <span class="st">&#39;MEDIUM&#39;</span>]),</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;NORMAL&#39;</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Define risk limits</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>risk_limits <span class="op">=</span> {</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_var_95&#39;</span>: <span class="dv">500000</span>,          <span class="co"># $500K max VaR at 95%</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_var_99&#39;</span>: <span class="dv">1000000</span>,         <span class="co"># $1M max VaR at 99%</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_single_exposure_pct&#39;</span>: <span class="dv">40</span>,  <span class="co"># No more than 40% in single asset</span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_concentration_score&#39;</span>: <span class="fl">0.35</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate dashboard</span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>dashboard <span class="op">=</span> generate_risk_dashboard(positions, price_data, risk_limits)</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Real-Time Risk Dashboard&quot;</span>)</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Status: </span><span class="sc">{</span>dashboard[<span class="st">&#39;risk_status&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Portfolio Value: $</span><span class="sc">{</span>dashboard[<span class="st">&#39;portfolio_value&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Risk Metrics:&quot;</span>)</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  VaR 95%: $</span><span class="sc">{</span>dashboard[<span class="st">&#39;risk_metrics&#39;</span>][<span class="st">&#39;var_95&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> (</span><span class="sc">{</span>dashboard[<span class="st">&#39;limit_utilization&#39;</span>][<span class="st">&#39;var_95&#39;</span>]<span class="sc">:.0f}</span><span class="ss">% of limit)&quot;</span>)</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  VaR 99%: $</span><span class="sc">{</span>dashboard[<span class="st">&#39;risk_metrics&#39;</span>][<span class="st">&#39;var_99&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> (</span><span class="sc">{</span>dashboard[<span class="st">&#39;limit_utilization&#39;</span>][<span class="st">&#39;var_99&#39;</span>]<span class="sc">:.0f}</span><span class="ss">% of limit)&quot;</span>)</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Concentration:&quot;</span>)</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Gross Exposure: $</span><span class="sc">{</span>dashboard[<span class="st">&#39;concentration_metrics&#39;</span>][<span class="st">&#39;gross_exposure&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Net Exposure: $</span><span class="sc">{</span>dashboard[<span class="st">&#39;concentration_metrics&#39;</span>][<span class="st">&#39;net_exposure&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Effective Positions: </span><span class="sc">{</span>dashboard[<span class="st">&#39;concentration_metrics&#39;</span>][<span class="st">&#39;effective_positions&#39;</span>]<span class="sc">:.1f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Display alerts or confirmation message</span></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>alert_messages <span class="op">=</span> [<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">⚠️  ACTIVE ALERTS (</span><span class="sc">{</span><span class="bu">len</span>(dashboard[<span class="st">&#39;alerts&#39;</span>])<span class="sc">}</span><span class="ss">):&quot;</span> <span class="op">+</span> </span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&#39;&#39;</span>.join(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">  [</span><span class="sc">{</span>a[<span class="st">&#39;severity&#39;</span>]<span class="sc">}</span><span class="ss">] </span><span class="sc">{</span>a[<span class="st">&#39;metric&#39;</span>]<span class="sc">}</span><span class="ch">\n</span><span class="ss">    Current: </span><span class="sc">{</span>a[<span class="st">&#39;current&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> | Limit: </span><span class="sc">{</span>a[<span class="st">&#39;limit&#39;</span>]<span class="sc">:,.2f}</span><span class="ss"> | Breach: +</span><span class="sc">{</span>a[<span class="st">&#39;breach_pct&#39;</span>]<span class="sc">:.0f}</span><span class="ss">%</span><span class="ch">\n</span><span class="ss">    Action: </span><span class="sc">{</span>a[<span class="st">&#39;action&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span> </span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>                          <span class="cf">for</span> a <span class="kw">in</span> dashboard[<span class="st">&#39;alerts&#39;</span>])] <span class="op">*</span> <span class="bu">bool</span>(dashboard[<span class="st">&#39;alerts&#39;</span>]) <span class="op">+</span> <span class="op">\</span></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>                 [<span class="st">&quot;</span><span class="ch">\n</span><span class="st">✅ All metrics within limits&quot;</span>] <span class="op">*</span> (<span class="kw">not</span> <span class="bu">bool</span>(dashboard[<span class="st">&#39;alerts&#39;</span>]))</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(alert_messages[<span class="dv">0</span>])</span></code></pre></div>
+<p>Real-time dashboards enable immediate response to risk breaches. When
+VaR exceeds limits, traders can reduce positions before small losses
+become catastrophic.</p>
+<h2 id="key-takeaways-for-risk-management">Key Takeaways for Risk
+Management</h2>
+<p>Professional risk management transforms trading from gambling into
+calculated risk-taking:</p>
+<p><strong>1. VaR Is a Starting Point, Not the End</strong>: Calculate
+VaR using multiple methods, but don’t stop there. Stress testing reveals
+what VaR misses.</p>
+<p><strong>2. Stress Test Against History and Imagination</strong>: If
+your portfolio can’t survive a “Texas Storm Replay,” reduce exposure.
+Historical worst-cases will happen again.</p>
+<p><strong>3. Correlations Increase in Crises</strong>: Diversification
+that works in normal markets disappears during crises when you need it
+most. Size positions accordingly.</p>
+<p><strong>4. Real-Time Monitoring Is Essential</strong>: Risk evolves
+continuously. Daily risk reports are obsolete—monitor intraday and
+respond immediately to breaches.</p>
+<p><strong>5. Limits Must Be Enforced</strong>: Risk limits without
+enforcement are suggestions. Automated systems that prevent limit
+breaches protect against human judgment errors during volatile
+markets.</p>
+<p>The code provides examples of how this works for risk management.
+Implement VaR calculation, add stress testing, deploy concentration
+analysis, and build real-time monitoring dashboards for comprehensive
+risk oversight.</p>
+<figure>
+<img src="05_risk_management_excellence.png"
+alt="Risk Management Excellence" />
+<figcaption aria-hidden="true">Risk Management Excellence</figcaption>
+</figure>
+</body>
+</html>

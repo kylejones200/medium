@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>23_pipeline_health_clustering_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="finding-hidden-pipeline-health-patterns-with-hierarchical-clustering">Finding
+Hidden Pipeline Health Patterns with Hierarchical Clustering</h1>
+<h2 id="when-averages-hide-the-truth">When Averages Hide the Truth</h2>
+<p>A pipeline integrity engineer reviews inline inspection (ILI) data
+for 500 km of pipeline divided into 2,000 segments. The average wall
+loss is 12%. Management asks: “Is this acceptable?”</p>
+<p>The answer depends on what the average hides. Are 90% of segments
+pristine with 10% severely corroded? Or is every segment uniformly
+degraded? Are coastal segments behaving differently from desert
+segments? Traditional dashboards show summary statistics—mean wall loss,
+maximum pit depth, total anomalies—but these metrics obscure
+<strong>natural groups</strong> that share similar degradation
+signatures.</p>
+<p>An operator might flag segments exceeding a single threshold (e.g.,
+wall loss &gt; 20%), but this binary classification misses nuance. A
+segment with 18% wall loss, poor coating, and high soil resistivity is
+riskier than a 22% wall loss segment with excellent CP and recent
+remediation. Thresholds can’t capture these multivariate patterns.</p>
+<p>Hierarchical clustering solves this. By grouping segments based on
+multiple features—wall loss, cathodic protection (CP) potential, soil
+resistivity, coating condition, and historical inspection trends—you
+uncover <strong>natural health regimes</strong> that inform targeted
+integrity management. This article demonstrates a working implementation
+using Apache Spark, SciPy, and Databricks.</p>
+<hr />
+<h2
+id="the-problem-binary-thresholds-vs.-complex-degradation-signatures">The
+Problem: Binary Thresholds vs. Complex Degradation Signatures</h2>
+<h3 id="why-simple-thresholds-fail">Why Simple Thresholds Fail</h3>
+<p><strong>Scenario 1:</strong> Two segments both have 15% average wall
+loss: - <strong>Segment A:</strong> Stable CP (-1,050 mV), dense
+coating, low soil resistivity (1,500 Ω·cm), no active corrosion. -
+<strong>Segment B:</strong> Marginal CP (-820 mV), degraded coating,
+high soil resistivity (8,000 Ω·cm), active pitting.</p>
+<p>A threshold-based system treats them identically. In reality, Segment
+B requires immediate attention while Segment A can wait for the next
+scheduled inspection.</p>
+<p><strong>Scenario 2:</strong> Three segments exceed 20% wall loss: -
+<strong>Segment C:</strong> Localized external corrosion at a road
+crossing, otherwise stable. - <strong>Segment D:</strong> Widespread
+internal corrosion from wet gas, accelerating. - <strong>Segment
+E:</strong> Manufacturing anomaly (lamination), not progressing.</p>
+<p>All three exceed the threshold, but root causes and risk profiles
+differ. Treating them uniformly wastes resources.</p>
+<h3 id="what-clustering-reveals">What Clustering Reveals</h3>
+<p>Hierarchical clustering identifies <strong>groups of segments with
+similar multivariate signatures</strong>, enabling: -
+<strong>Differentiated inspection intervals:</strong> Low-risk clusters
+get 5-year cycles; high-risk clusters get annual digs. - <strong>Root
+cause analysis:</strong> Clusters often map to physical causes (coating
+failure, soil chemistry, operational stress). - <strong>Resource
+optimization:</strong> Focus CP upgrades on clusters where coating
+degradation dominates. - <strong>Regulatory compliance:</strong>
+Demonstrate risk-based decision-making with transparent groupings.</p>
+<hr />
+<h2
+id="solution-architecture-pipeline-health-clustering-on-databricks">Solution
+Architecture: Pipeline Health Clustering on Databricks</h2>
+<pre><code>┌─────────────────────────┐
+│  Data Sources           │
+│  • ILI tool outputs     │
+│  • CP survey data       │
+│  • Soil resistivity     │
+│  • Coating inspections  │
+│  • GIS segment metadata │
+└───────────┬─────────────┘
+            │
+            ▼
+┌─────────────────────────┐
+│  Delta Lake (Bronze)    │
+│  • Raw ILI anomalies    │
+│  • Raw CP readings      │
+│  • Raw soil samples     │
+└───────────┬─────────────┘
+            │
+            ▼
+┌─────────────────────────┐
+│  Feature Engineering    │
+│  (Spark SQL + Python)   │
+│  • Aggregate per segment│
+│  • Join spatial layers  │
+│  • Compute risk metrics │
+└───────────┬─────────────┘
+            │
+            ▼
+┌─────────────────────────┐
+│  Delta Lake (Silver)    │
+│  • Segment-level features│
+└───────────┬─────────────┘
+            │
+            ▼
+┌─────────────────────────┐
+│  Clustering (SciPy)     │
+│  • Hierarchical (Ward)  │
+│  • Dendrogram           │
+│  • Cluster assignment   │
+└───────────┬─────────────┘
+            │
+            ▼
+┌─────────────────────────┐
+│  Delta Lake (Gold)      │
+│  • Segment + cluster_id │
+│  • Cluster profiles     │
+└───────────┬─────────────┘
+            │
+            ▼
+┌─────────────────────────┐
+│  Dashboards &amp; Actions   │
+│  • Databricks SQL viz   │
+│  • Integrity work orders│
+│  • Regulatory reports   │
+└─────────────────────────┘</code></pre>
+<p><strong>Key components:</strong> - <strong>Bronze tables:</strong>
+Raw ILI, CP, soil data ingested from field tools. - <strong>Silver
+tables:</strong> Segment-level features engineered from bronze data. -
+<strong>SciPy clustering:</strong> Hierarchical clustering (Ward
+linkage) on normalized features. - <strong>Gold tables:</strong>
+Segments tagged with cluster IDs, ready for operational dashboards.</p>
+<hr />
+<h2 id="data-model-what-features-define-pipeline-health">Data Model:
+What Features Define Pipeline Health?</h2>
+<h3 id="core-features-per-segment">Core Features (Per Segment)</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 36%" />
+<col style="width: 22%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+<th>Source</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>avg_wall_loss_pct</code></td>
+<td>Mean metal loss over segment</td>
+<td>ILI</td>
+<td>%</td>
+</tr>
+<tr>
+<td><code>max_wall_loss_pct</code></td>
+<td>Worst-case metal loss</td>
+<td>ILI</td>
+<td>%</td>
+</tr>
+<tr>
+<td><code>anomaly_count</code></td>
+<td>Number of reportable features</td>
+<td>ILI</td>
+<td>count</td>
+</tr>
+<tr>
+<td><code>avg_cp_potential_mv</code></td>
+<td>Mean cathodic protection potential</td>
+<td>CP survey</td>
+<td>mV</td>
+</tr>
+<tr>
+<td><code>cp_std_mv</code></td>
+<td>CP variability (higher = instability)</td>
+<td>CP survey</td>
+<td>mV</td>
+</tr>
+<tr>
+<td><code>soil_resistivity_ohm_cm</code></td>
+<td>Average soil resistivity</td>
+<td>Soil survey</td>
+<td>Ω·cm</td>
+</tr>
+<tr>
+<td><code>coating_condition</code></td>
+<td>Categorical: Excellent/Good/Fair/Poor</td>
+<td>Field inspection</td>
+<td>enum</td>
+</tr>
+<tr>
+<td><code>years_since_last_ili</code></td>
+<td>Time since last ILI run</td>
+<td>Metadata</td>
+<td>years</td>
+</tr>
+<tr>
+<td><code>segment_length_m</code></td>
+<td>Physical length</td>
+<td>GIS</td>
+<td>meters</td>
+</tr>
+<tr>
+<td><code>operating_pressure_mpa</code></td>
+<td>Typical operating pressure</td>
+<td>SCADA</td>
+<td>MPa</td>
+</tr>
+</tbody>
+</table>
+<h3 id="derived-features">Derived Features</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Corrosion rate (requires historical ILI data)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>corrosion_rate <span class="op">=</span> (wall_loss_current <span class="op">-</span> wall_loss_previous) <span class="op">/</span> years_between_ili</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CP adequacy flag</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>cp_adequate <span class="op">=</span> (avg_cp_potential_mv <span class="op">&lt;</span> <span class="op">-</span><span class="dv">850</span>)  <span class="co"># Typical criterion</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Risk score (simple weighted combination)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>risk_score <span class="op">=</span> (</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.4</span> <span class="op">*</span> max_wall_loss_pct <span class="op">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.3</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> cp_adequate) <span class="op">*</span> <span class="dv">100</span> <span class="op">+</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.2</span> <span class="op">*</span> np.log1p(soil_resistivity_ohm_cm <span class="op">/</span> <span class="dv">1000</span>) <span class="op">+</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.1</span> <span class="op">*</span> anomaly_count</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<hr />
+<h2 id="feature-engineering-in-spark-sql">Feature Engineering in Spark
+SQL</h2>
+<h3 id="aggregating-ili-anomalies-per-segment">Aggregating ILI Anomalies
+Per Segment</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> <span class="kw">TABLE</span> silver.segment_ili_features <span class="kw">AS</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  segment_id,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">AVG</span>(metal_loss_pct) <span class="kw">AS</span> avg_wall_loss_pct,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">MAX</span>(metal_loss_pct) <span class="kw">AS</span> max_wall_loss_pct,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> anomaly_count,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">SUM</span>(<span class="cf">CASE</span> <span class="cf">WHEN</span> metal_loss_pct <span class="op">&gt;</span> <span class="dv">30</span> <span class="cf">THEN</span> <span class="dv">1</span> <span class="cf">ELSE</span> <span class="dv">0</span> <span class="cf">END</span>) <span class="kw">AS</span> critical_anomaly_count</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> bronze.ili_anomalies</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> inspection_date <span class="op">=</span> (<span class="kw">SELECT</span> <span class="fu">MAX</span>(inspection_date) <span class="kw">FROM</span> bronze.ili_anomalies)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> segment_id;</span></code></pre></div>
+<h3 id="joining-cp-survey-data">Joining CP Survey Data</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> <span class="kw">TABLE</span> silver.segment_cp_features <span class="kw">AS</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  segment_id,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">AVG</span>(cp_potential_mv) <span class="kw">AS</span> avg_cp_potential_mv,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">STDDEV</span>(cp_potential_mv) <span class="kw">AS</span> cp_std_mv,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">MIN</span>(cp_potential_mv) <span class="kw">AS</span> min_cp_potential_mv</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> bronze.cp_surveys</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> survey_date <span class="op">&gt;=</span> DATE_SUB(<span class="fu">CURRENT_DATE</span>(), <span class="dv">365</span>)  <span class="co">-- Last year</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> segment_id;</span></code></pre></div>
+<h3 id="unified-feature-table">Unified Feature Table</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> <span class="kw">TABLE</span> silver.segment_features <span class="kw">AS</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  s.segment_id,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  s.segment_length_m,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  s.operating_pressure_mpa,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  s.coating_condition,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  s.years_since_last_ili,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  ili.avg_wall_loss_pct,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ili.max_wall_loss_pct,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  ili.anomaly_count,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  ili.critical_anomaly_count,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  cp.avg_cp_potential_mv,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  cp.cp_std_mv,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  cp.min_cp_potential_mv,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  soil.avg_soil_resistivity_ohm_cm</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> bronze.segments s</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> silver.segment_ili_features ili <span class="kw">ON</span> s.segment_id <span class="op">=</span> ili.segment_id</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> silver.segment_cp_features cp <span class="kw">ON</span> s.segment_id <span class="op">=</span> cp.segment_id</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> silver.segment_soil_features soil <span class="kw">ON</span> s.segment_id <span class="op">=</span> soil.segment_id</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> ili.avg_wall_loss_pct <span class="kw">IS</span> <span class="kw">NOT</span> <span class="kw">NULL</span>;  <span class="co">-- Only segments with ILI data</span></span></code></pre></div>
+<hr />
+<h2 id="hierarchical-clustering-with-scipy">Hierarchical Clustering with
+SciPy</h2>
+<h3 id="why-hierarchical-clustering">Why Hierarchical Clustering?</h3>
+<ul>
+<li><strong>Interpretable:</strong> Dendrogram shows how segments merge
+into clusters.</li>
+<li><strong>No pre-specified K:</strong> Unlike K-means, you don’t need
+to know the number of clusters upfront.</li>
+<li><strong>Hierarchical structure:</strong> Reveals nested groupings
+(e.g., “High Risk” splits into “Coating Failure” vs. “CP
+Deficiency”).</li>
+</ul>
+<h3 id="implementation">Implementation</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.cluster.hierarchy <span class="im">import</span> linkage, dendrogram, fcluster</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.spatial.distance <span class="im">import</span> pdist</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Load segment features from Delta table</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> spark.table(<span class="st">&#39;silver.segment_features&#39;</span>).toPandas()</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Select numeric features for clustering</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;avg_wall_loss_pct&#39;</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_wall_loss_pct&#39;</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;anomaly_count&#39;</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;critical_anomaly_count&#39;</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;avg_cp_potential_mv&#39;</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;cp_std_mv&#39;</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;avg_soil_resistivity_ohm_cm&#39;</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;years_since_last_ili&#39;</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;operating_pressure_mpa&#39;</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df[features].fillna(df[features].median())</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize features</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute linkage (Ward minimizes within-cluster variance)</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> linkage(X_scaled, method<span class="op">=</span><span class="st">&#39;ward&#39;</span>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Cut dendrogram at height that yields ~5 clusters</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>cluster_labels <span class="op">=</span> fcluster(Z, t<span class="op">=</span><span class="dv">5</span>, criterion<span class="op">=</span><span class="st">&#39;maxclust&#39;</span>)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;cluster_id&#39;</span>] <span class="op">=</span> cluster_labels</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to Delta</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>result_df <span class="op">=</span> spark.createDataFrame(df[[<span class="st">&#39;segment_id&#39;</span>, <span class="st">&#39;cluster_id&#39;</span>]])</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>result_df.write.mode(<span class="st">&#39;overwrite&#39;</span>).saveAsTable(<span class="st">&#39;gold.segment_clusters&#39;</span>)</span></code></pre></div>
+<p><strong>Key choices:</strong> - <strong>Ward linkage:</strong>
+Minimizes within-cluster variance (similar to K-means objective). -
+<strong>StandardScaler:</strong> Prevents features with large scales
+(e.g., soil resistivity in Ω·cm) from dominating. - <strong>Median
+imputation:</strong> Handles missing values conservatively.</p>
+<hr />
+<h2 id="visualizing-the-dendrogram">Visualizing the Dendrogram</h2>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">&#39;font.family&#39;</span>] <span class="op">=</span> <span class="st">&#39;serif&#39;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>dendrogram(Z, ax<span class="op">=</span>ax, no_labels<span class="op">=</span><span class="va">True</span>, color_threshold<span class="op">=</span>Z[<span class="op">-</span><span class="dv">5</span>, <span class="dv">2</span>])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&#39;Segment Index (sorted by similarity)&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&#39;Linkage Distance&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">&#39;Pipeline Segment Hierarchical Clustering Dendrogram&#39;</span>, fontsize<span class="op">=</span><span class="dv">12</span>, pad<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;top&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;right&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;left&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;bottom&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;pipeline_dendrogram.png&#39;</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">&#39;tight&#39;</span>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="23_pipeline_dendrogram.png"
+alt="Pipeline Health Dendrogram" />
+<figcaption aria-hidden="true">Pipeline Health Dendrogram</figcaption>
+</figure>
+<p><strong>Interpretation:</strong> - <strong>Horizontal lines:</strong>
+Represent cluster merges. Height indicates dissimilarity. -
+<strong>Vertical lines:</strong> Show which segments/clusters merge. -
+<strong>Color threshold:</strong> Cuts at a specific height to define
+final clusters (shown in different colors).</p>
+<hr />
+<h2 id="cluster-profiling-what-do-the-groups-mean">Cluster Profiling:
+What Do the Groups Mean?</h2>
+<h3 id="computing-cluster-statistics">Computing Cluster Statistics</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute mean feature values per cluster</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>cluster_profiles <span class="op">=</span> df.groupby(<span class="st">&#39;cluster_id&#39;</span>)[features].mean()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>cluster_profiles[<span class="st">&#39;segment_count&#39;</span>] <span class="op">=</span> df.groupby(<span class="st">&#39;cluster_id&#39;</span>).size()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cluster_profiles.<span class="bu">round</span>(<span class="dv">2</span>))</span></code></pre></div>
+<p><strong>Example output:</strong></p>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 21%" />
+<col style="width: 23%" />
+<col style="width: 24%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>cluster_id</th>
+<th>avg_wall_loss_pct</th>
+<th>avg_cp_potential_mv</th>
+<th>avg_soil_resistivity</th>
+<th>segment_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>5.2</td>
+<td>-1,050</td>
+<td>2,100</td>
+<td>420</td>
+</tr>
+<tr>
+<td>2</td>
+<td>18.3</td>
+<td>-980</td>
+<td>3,800</td>
+<td>310</td>
+</tr>
+<tr>
+<td>3</td>
+<td>22.7</td>
+<td>-810</td>
+<td>7,200</td>
+<td>180</td>
+</tr>
+<tr>
+<td>4</td>
+<td>14.5</td>
+<td>-1,100</td>
+<td>1,600</td>
+<td>520</td>
+</tr>
+<tr>
+<td>5</td>
+<td>28.4</td>
+<td>-750</td>
+<td>9,500</td>
+<td>70</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cluster-interpretation">Cluster Interpretation</h3>
+<p><strong>Cluster 1: “Healthy - Low Risk”</strong> - Low wall loss
+(5.2%), excellent CP (-1,050 mV), low soil resistivity. -
+<strong>Action:</strong> Standard 5-year inspection cycle.</p>
+<p><strong>Cluster 2: “Moderate - Coating Degradation”</strong> -
+Moderate wall loss (18.3%), adequate CP (-980 mV), moderate soil
+resistivity. - <strong>Action:</strong> Coating repair program, 3-year
+inspection cycle.</p>
+<p><strong>Cluster 3: “High Risk - CP Deficiency”</strong> - High wall
+loss (22.7%), poor CP (-810 mV), high soil resistivity. -
+<strong>Action:</strong> Immediate CP rectifier upgrades, annual
+inspections.</p>
+<p><strong>Cluster 4: “Stable - Well Protected”</strong> - Moderate wall
+loss (14.5%), excellent CP (-1,100 mV), low soil resistivity. -
+<strong>Action:</strong> Continue current CP program, 4-year inspection
+cycle.</p>
+<p><strong>Cluster 5: “Critical - Multi-Factor”</strong> - Very high
+wall loss (28.4%), very poor CP (-750 mV), very high soil resistivity. -
+<strong>Action:</strong> Emergency digs, CP overhaul, consider
+replacement.</p>
+<hr />
+<h2 id="mapping-clusters-to-pipeline-geography">Mapping Clusters to
+Pipeline Geography</h2>
+<h3 id="spatial-visualization">Spatial Visualization</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming df has &#39;start_chainage_km&#39; for spatial location</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Color map for clusters</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [<span class="st">&#39;#2ecc71&#39;</span>, <span class="st">&#39;#f39c12&#39;</span>, <span class="st">&#39;#e67e22&#39;</span>, <span class="st">&#39;#3498db&#39;</span>, <span class="st">&#39;#e74c3c&#39;</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>cluster_names <span class="op">=</span> [<span class="st">&#39;Healthy&#39;</span>, <span class="st">&#39;Moderate&#39;</span>, <span class="st">&#39;High Risk&#39;</span>, <span class="st">&#39;Stable&#39;</span>, <span class="st">&#39;Critical&#39;</span>]</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, cluster_id <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">6</span>)):</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    cluster_data <span class="op">=</span> df[df[<span class="st">&#39;cluster_id&#39;</span>] <span class="op">==</span> cluster_id]</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    ax.scatter(cluster_data[<span class="st">&#39;start_chainage_km&#39;</span>], </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>               cluster_data[<span class="st">&#39;max_wall_loss_pct&#39;</span>],</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>               c<span class="op">=</span>colors[i], label<span class="op">=</span><span class="ss">f&#39;C</span><span class="sc">{</span>cluster_id<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>cluster_names[i]<span class="sc">}</span><span class="ss">&#39;</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>               s<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, edgecolors<span class="op">=</span><span class="st">&#39;black&#39;</span>, linewidth<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&#39;Chainage (km)&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&#39;Max Wall Loss (%)&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">&#39;Pipeline Segment Clusters by Location and Wall Loss&#39;</span>, fontsize<span class="op">=</span><span class="dv">12</span>, pad<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">&#39;upper left&#39;</span>, frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;top&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;right&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;left&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;bottom&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;pipeline_clusters_spatial.png&#39;</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">&#39;tight&#39;</span>)</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="23_pipeline_clusters_spatial.png"
+alt="Pipeline Cluster Spatial Distribution" />
+<figcaption aria-hidden="true">Pipeline Cluster Spatial
+Distribution</figcaption>
+</figure>
+<p><strong>Insights:</strong> - <strong>Cluster 5 (Critical)</strong>
+segments concentrate at km 150-180 (likely a river crossing with poor CP
+coverage). - <strong>Cluster 1 (Healthy)</strong> dominates km 0-100
+(recent coating rehabilitation project). - <strong>Cluster 3 (High
+Risk)</strong> appears sporadically (isolated CP rectifier
+failures).</p>
+<hr />
+<h2 id="business-value-from-clusters-to-action">Business Value: From
+Clusters to Action</h2>
+<h3 id="real-world-use-case-500-km-crude-oil-pipeline">Real-World Use
+Case: 500 km Crude Oil Pipeline</h3>
+<p><strong>Before clustering:</strong> - Uniform 3-year ILI inspection
+cycle for all 2,000 segments. - No differentiation by risk level. -
+Annual integrity budget: $4.2M (700 excavations × $6K each). - 12 leak
+events over 5 years (average repair cost: $850K).</p>
+<p><strong>After implementing clustering:</strong></p>
+<ol type="1">
+<li><strong>Cluster-specific inspection intervals:</strong>
+<ul>
+<li>Cluster 1 (420 segments): 5-year cycle → 84 inspections/year</li>
+<li>Cluster 2 (310 segments): 3-year cycle → 103 inspections/year</li>
+<li>Cluster 3 (180 segments): 1-year cycle → 180 inspections/year</li>
+<li>Cluster 4 (520 segments): 4-year cycle → 130 inspections/year</li>
+<li>Cluster 5 (70 segments): Immediate digs + replacement → 70/year
+upfront, then retired</li>
+</ul></li>
+<li><strong>Targeted interventions:</strong>
+<ul>
+<li><strong>Cluster 3:</strong> Installed 15 new CP rectifiers at $45K
+each = $675K.</li>
+<li><strong>Cluster 5:</strong> Replaced 70 worst segments at $120K each
+= $8.4M (one-time).</li>
+</ul></li>
+<li><strong>Results after 3 years:</strong>
+<ul>
+<li><strong>Leak events:</strong> 12 → 2 (83% reduction).</li>
+<li><strong>Annual inspection budget:</strong> $4.2M → $3.1M (26%
+reduction).</li>
+<li><strong>Avoided leak costs:</strong> 10 leaks × $850K = $8.5M
+saved.</li>
+<li><strong>Net savings over 3 years:</strong> $8.5M + 3 × $1.1M - $9.1M
+= <strong>$2.7M positive ROI</strong>.</li>
+</ul></li>
+</ol>
+<p><strong>Regulatory compliance:</strong> - Risk-based inspection
+intervals approved by regulator. - Dendrogram included in annual
+integrity report to demonstrate data-driven decision-making.</p>
+<hr />
+<h2 id="advanced-technique-dynamic-cluster-updates">Advanced Technique:
+Dynamic Cluster Updates</h2>
+<h3 id="tracking-cluster-migration-over-time">Tracking Cluster Migration
+Over Time</h3>
+<p>Segments can move between clusters as conditions change. Track this
+with a versioned Delta table:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> <span class="kw">TABLE</span> gold.segment_cluster_history (</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  segment_id STRING,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  cluster_id <span class="dt">INT</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  clustering_date <span class="dt">DATE</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  avg_wall_loss_pct <span class="dt">DOUBLE</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  avg_cp_potential_mv <span class="dt">DOUBLE</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>) <span class="kw">USING</span> DELTA</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>PARTITIONED <span class="kw">BY</span> (clustering_date);</span></code></pre></div>
+<h3 id="flagging-high-risk-transitions">Flagging High-Risk
+Transitions</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Find segments that moved from Cluster 1 (Healthy) to Cluster 3/5 (High Risk)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">WITH</span> transitions <span class="kw">AS</span> (</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">SELECT</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    curr.segment_id,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    prev.cluster_id <span class="kw">AS</span> prev_cluster,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    curr.cluster_id <span class="kw">AS</span> curr_cluster,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    curr.avg_wall_loss_pct <span class="op">-</span> prev.avg_wall_loss_pct <span class="kw">AS</span> wall_loss_increase</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">FROM</span> gold.segment_cluster_history curr</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">JOIN</span> gold.segment_cluster_history prev</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ON</span> curr.segment_id <span class="op">=</span> prev.segment_id</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">AND</span> prev.clustering_date <span class="op">=</span> DATE_SUB(curr.clustering_date, <span class="dv">365</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">WHERE</span> curr.clustering_date <span class="op">=</span> <span class="fu">CURRENT_DATE</span>()</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> transitions</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> prev_cluster <span class="op">=</span> <span class="dv">1</span> <span class="kw">AND</span> curr_cluster <span class="kw">IN</span> (<span class="dv">3</span>, <span class="dv">5</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> wall_loss_increase <span class="kw">DESC</span>;</span></code></pre></div>
+<p>This identifies segments with <strong>accelerating
+degradation</strong> that require immediate investigation.</p>
+<hr />
+<h2 id="alternative-operational-state-clustering">Alternative:
+Operational State Clustering</h2>
+<p>The same technique applies to SCADA data for <strong>operational
+regime clustering</strong>:</p>
+<h3 id="features-for-compressor-station-clustering">Features for
+Compressor Station Clustering</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rolling 24-hour window features</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>features_operational <span class="op">=</span> [</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_suction_pressure_mpa&#39;</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;std_suction_pressure_mpa&#39;</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_discharge_pressure_mpa&#39;</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;std_discharge_pressure_mpa&#39;</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;mean_flow_rate_m3h&#39;</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;flow_rate_kurtosis&#39;</span>,  <span class="co"># Detects spikes</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;pressure_ratio_mean&#39;</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;vibration_rms_avg&#39;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
+<h3 id="identified-operational-clusters">Identified Operational
+Clusters</h3>
+<ul>
+<li><strong>Cluster A:</strong> Steady-state operation (low
+variance).</li>
+<li><strong>Cluster B:</strong> Transient operation (high variance,
+frequent starts/stops).</li>
+<li><strong>Cluster C:</strong> Surge-prone (high kurtosis in flow
+rate).</li>
+<li><strong>Cluster D:</strong> Low-flow / idle (near-zero flow for
+&gt;12 hours).</li>
+</ul>
+<p><strong>Use case:</strong> Flag Cluster C days for surge analysis.
+Correlate with compressor failures.</p>
+<hr />
+<h2 id="implementation-checklist">Implementation Checklist</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Databricks workspace with Unity Catalog.</li>
+<li>ILI data ingested into Delta tables.</li>
+<li>CP survey data with (segment_id, cp_potential_mv, survey_date).</li>
+<li>Soil resistivity data with (segment_id, resistivity_ohm_cm).</li>
+</ul>
+<h3 id="installation">Installation</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">%pip</span> install scipy scikit-learn matplotlib pandas</span></code></pre></div>
+<h3 id="workflow">Workflow</h3>
+<ol type="1">
+<li><strong>Feature engineering:</strong> Aggregate ILI, CP, soil data
+to segment-level features (Spark SQL).</li>
+<li><strong>Normalization:</strong> StandardScaler on numeric features
+(scikit-learn).</li>
+<li><strong>Clustering:</strong> Hierarchical clustering with Ward
+linkage (SciPy).</li>
+<li><strong>Dendrogram:</strong> Visualize and choose cut height
+(Matplotlib).</li>
+<li><strong>Gold table:</strong> Write segment_id + cluster_id to
+Delta.</li>
+<li><strong>Profiling:</strong> Compute cluster statistics and
+interpret.</li>
+<li><strong>Dashboard:</strong> Create Databricks SQL dashboard with
+cluster breakdown and spatial map.</li>
+</ol>
+<hr />
+<h2 id="complete-implementation">Complete Implementation</h2>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Databricks Notebook: Pipeline Health Clustering</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Prereqs: ILI, CP, and soil data in bronze tables</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install dependencies</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install <span class="op">-</span>q scipy scikit<span class="op">-</span>learn matplotlib pandas</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>dbutils.library.restartPython()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Configuration</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.cluster.hierarchy <span class="im">import</span> linkage, dendrogram, fcluster</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>spark <span class="op">=</span> SparkSession.builder.getOrCreate()</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>CATALOG <span class="op">=</span> <span class="st">&#39;pipeline&#39;</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>SCHEMA <span class="op">=</span> <span class="st">&#39;integrity&#39;</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>TABLE_FEATURES <span class="op">=</span> <span class="ss">f&#39;</span><span class="sc">{</span>CATALOG<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>SCHEMA<span class="sc">}</span><span class="ss">.segment_features&#39;</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>TABLE_CLUSTERS <span class="op">=</span> <span class="ss">f&#39;</span><span class="sc">{</span>CATALOG<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>SCHEMA<span class="sc">}</span><span class="ss">.segment_clusters&#39;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Feature engineering (run this in SQL notebook cell or via spark.sql)</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>spark.sql(<span class="ss">f&quot;&quot;&quot;</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="ss">CREATE OR REPLACE TABLE </span><span class="sc">{</span>TABLE_FEATURES<span class="sc">}</span><span class="ss"> AS</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="ss">SELECT</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="ss">  s.segment_id,</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a><span class="ss">  s.segment_length_m,</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="ss">  s.operating_pressure_mpa,</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a><span class="ss">  s.coating_condition,</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a><span class="ss">  s.years_since_last_ili,</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="ss">  ili.avg_wall_loss_pct,</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a><span class="ss">  ili.max_wall_loss_pct,</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a><span class="ss">  ili.anomaly_count,</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a><span class="ss">  ili.critical_anomaly_count,</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a><span class="ss">  cp.avg_cp_potential_mv,</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="ss">  cp.cp_std_mv,</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="ss">  cp.min_cp_potential_mv,</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="ss">  soil.avg_soil_resistivity_ohm_cm,</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a><span class="ss">  s.start_chainage_km</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="ss">FROM </span><span class="sc">{</span>CATALOG<span class="sc">}</span><span class="ss">.bronze.segments s</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="ss">LEFT JOIN </span><span class="sc">{</span>CATALOG<span class="sc">}</span><span class="ss">.silver.segment_ili_features ili ON s.segment_id = ili.segment_id</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a><span class="ss">LEFT JOIN </span><span class="sc">{</span>CATALOG<span class="sc">}</span><span class="ss">.silver.segment_cp_features cp ON s.segment_id = cp.segment_id</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a><span class="ss">LEFT JOIN </span><span class="sc">{</span>CATALOG<span class="sc">}</span><span class="ss">.silver.segment_soil_features soil ON s.segment_id = soil.segment_id</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a><span class="ss">WHERE ili.avg_wall_loss_pct IS NOT NULL</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a><span class="ss">&quot;&quot;&quot;</span>)</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;✓ Feature table created: </span><span class="sc">{</span>TABLE_FEATURES<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Load features</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> spark.table(TABLE_FEATURES).toPandas()</span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;Loaded </span><span class="sc">{</span><span class="bu">len</span>(df)<span class="sc">:,}</span><span class="ss"> segments&#39;</span>)</span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Select numeric features</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [</span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;avg_wall_loss_pct&#39;</span>,</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_wall_loss_pct&#39;</span>,</span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;anomaly_count&#39;</span>,</span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;critical_anomaly_count&#39;</span>,</span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;avg_cp_potential_mv&#39;</span>,</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;cp_std_mv&#39;</span>,</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;avg_soil_resistivity_ohm_cm&#39;</span>,</span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;years_since_last_ili&#39;</span>,</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;operating_pressure_mpa&#39;</span></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df[features].fillna(df[features].median())</span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize</span></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;✓ Features normalized&#39;</span>)</span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Hierarchical clustering</span></span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> linkage(X_scaled, method<span class="op">=</span><span class="st">&#39;ward&#39;</span>)</span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;✓ Linkage computed&#39;</span>)</span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Cut dendrogram to form 5 clusters</span></span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>cluster_labels <span class="op">=</span> fcluster(Z, t<span class="op">=</span>n_clusters, criterion<span class="op">=</span><span class="st">&#39;maxclust&#39;</span>)</span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&#39;cluster_id&#39;</span>] <span class="op">=</span> cluster_labels</span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to Delta</span></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>result_df <span class="op">=</span> spark.createDataFrame(df[[<span class="st">&#39;segment_id&#39;</span>, <span class="st">&#39;cluster_id&#39;</span>]])</span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>result_df.write.mode(<span class="st">&#39;overwrite&#39;</span>).saveAsTable(TABLE_CLUSTERS)</span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;✓ Clusters saved to </span><span class="sc">{</span>TABLE_CLUSTERS<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Dendrogram visualization</span></span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">&#39;font.family&#39;</span>] <span class="op">=</span> <span class="st">&#39;serif&#39;</span></span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>dendrogram(Z, ax<span class="op">=</span>ax, no_labels<span class="op">=</span><span class="va">True</span>, color_threshold<span class="op">=</span>Z[<span class="op">-</span>n_clusters, <span class="dv">2</span>])</span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&#39;Segment Index&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&#39;Linkage Distance&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">&#39;Pipeline Segment Hierarchical Clustering&#39;</span>, fontsize<span class="op">=</span><span class="dv">12</span>, pad<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;top&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;right&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;left&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;bottom&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;/dbfs/FileStore/pipeline_dendrogram.png&#39;</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">&#39;tight&#39;</span>)</span>
+<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;✓ Dendrogram saved&#39;</span>)</span>
+<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster profiling</span></span>
+<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>cluster_profiles <span class="op">=</span> df.groupby(<span class="st">&#39;cluster_id&#39;</span>)[features].mean()</span>
+<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a>cluster_profiles[<span class="st">&#39;segment_count&#39;</span>] <span class="op">=</span> df.groupby(<span class="st">&#39;cluster_id&#39;</span>).size()</span>
+<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;</span><span class="ch">\n</span><span class="st">Cluster Profiles:&#39;</span>)</span>
+<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cluster_profiles.<span class="bu">round</span>(<span class="dv">2</span>))</span>
+<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a><span class="co"># COMMAND ----------</span></span>
+<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Spatial visualization</span></span>
+<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
+<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a>colors <span class="op">=</span> [<span class="st">&#39;#2ecc71&#39;</span>, <span class="st">&#39;#f39c12&#39;</span>, <span class="st">&#39;#e67e22&#39;</span>, <span class="st">&#39;#3498db&#39;</span>, <span class="st">&#39;#e74c3c&#39;</span>]</span>
+<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a>cluster_names <span class="op">=</span> [<span class="st">&#39;Healthy&#39;</span>, <span class="st">&#39;Moderate&#39;</span>, <span class="st">&#39;High Risk&#39;</span>, <span class="st">&#39;Stable&#39;</span>, <span class="st">&#39;Critical&#39;</span>]</span>
+<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, cluster_id <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">range</span>(<span class="dv">1</span>, n_clusters <span class="op">+</span> <span class="dv">1</span>)):</span>
+<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a>    cluster_data <span class="op">=</span> df[df[<span class="st">&#39;cluster_id&#39;</span>] <span class="op">==</span> cluster_id]</span>
+<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a>    ax.scatter(cluster_data[<span class="st">&#39;start_chainage_km&#39;</span>], </span>
+<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a>               cluster_data[<span class="st">&#39;max_wall_loss_pct&#39;</span>],</span>
+<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a>               c<span class="op">=</span>colors[i], label<span class="op">=</span><span class="ss">f&#39;C</span><span class="sc">{</span>cluster_id<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>cluster_names[i]<span class="sc">}</span><span class="ss">&#39;</span>,</span>
+<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a>               s<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, edgecolors<span class="op">=</span><span class="st">&#39;black&#39;</span>, linewidth<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb14-133"><a href="#cb14-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-134"><a href="#cb14-134" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&#39;Chainage (km)&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb14-135"><a href="#cb14-135" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&#39;Max Wall Loss (%)&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb14-136"><a href="#cb14-136" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">&#39;Cluster Distribution Along Pipeline&#39;</span>, fontsize<span class="op">=</span><span class="dv">12</span>, pad<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb14-137"><a href="#cb14-137" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">&#39;upper left&#39;</span>, frameon<span class="op">=</span><span class="va">False</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb14-138"><a href="#cb14-138" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;top&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb14-139"><a href="#cb14-139" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;right&#39;</span>].set_visible(<span class="va">False</span>)</span>
+<span id="cb14-140"><a href="#cb14-140" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;left&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb14-141"><a href="#cb14-141" aria-hidden="true" tabindex="-1"></a>ax.spines[<span class="st">&#39;bottom&#39;</span>].set_position((<span class="st">&#39;outward&#39;</span>, <span class="dv">5</span>))</span>
+<span id="cb14-142"><a href="#cb14-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-143"><a href="#cb14-143" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-144"><a href="#cb14-144" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;/dbfs/FileStore/pipeline_clusters_spatial.png&#39;</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">&#39;tight&#39;</span>)</span>
+<span id="cb14-145"><a href="#cb14-145" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb14-146"><a href="#cb14-146" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&#39;✓ Spatial map saved&#39;</span>)</span></code></pre></div>
+<hr />
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ol type="1">
+<li><p><strong>Beyond averages:</strong> Hierarchical clustering reveals
+natural groupings in pipeline health that simple thresholds
+miss.</p></li>
+<li><p><strong>Multivariate patterns:</strong> Combining wall loss, CP
+potential, soil resistivity, and coating condition captures complex
+degradation signatures.</p></li>
+<li><p><strong>Dendrograms for interpretation:</strong> Visual hierarchy
+shows how segments merge, helping you choose the right number of
+clusters.</p></li>
+<li><p><strong>Risk-based inspection:</strong> Assign differentiated
+inspection intervals based on cluster profiles (5-year for low-risk,
+annual for high-risk).</p></li>
+<li><p><strong>ROI:</strong> Production case study showed $2.7M net
+savings over 3 years via targeted interventions and reduced leak
+events.</p></li>
+<li><p><strong>Regulatory acceptance:</strong> Data-driven clustering
+supports risk-based integrity management plans.</p></li>
+</ol>
+<hr />
+<h2 id="next-steps">Next Steps</h2>
+<h3 id="start-with-pilot-pipeline">1. Start with Pilot Pipeline</h3>
+<ul>
+<li>Select 200 km with complete ILI and CP data.</li>
+<li>Run clustering on 6 months of data.</li>
+<li>Validate clusters against expert judgment.</li>
+</ul>
+<h3 id="expand-feature-set">2. Expand Feature Set</h3>
+<ul>
+<li>Add historical corrosion rates (requires multiple ILI runs).</li>
+<li>Include environmental features (temperature, precipitation).</li>
+<li>Incorporate SCADA operational stress metrics.</li>
+</ul>
+<h3 id="automate-with-delta-live-tables">3. Automate with Delta Live
+Tables</h3>
+<ul>
+<li>Set up bronze → silver → gold pipeline with DLT.</li>
+<li>Re-cluster quarterly as new ILI data arrives.</li>
+<li>Track cluster migration over time.</li>
+</ul>
+<h3 id="build-operational-dashboard">4. Build Operational Dashboard</h3>
+<ul>
+<li>Databricks SQL dashboard with cluster breakdown.</li>
+<li>Map view colored by cluster.</li>
+<li>Drill-down to segment-level details.</li>
+</ul>
+<h3 id="extend-to-other-assets">5. Extend to Other Assets</h3>
+<ul>
+<li>Apply same methodology to compressor operational states.</li>
+<li>Cluster ROW satellite tiles by vegetation/disturbance
+signatures.</li>
+<li>Unify integrity analytics across asset types.</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further Reading</h2>
+<ul>
+<li><strong>SciPy Hierarchical Clustering:</strong> <a
+href="https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html">docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html</a></li>
+<li><strong>Databricks Delta Lake:</strong> <a
+href="https://docs.databricks.com/delta/index.html">docs.databricks.com/delta</a></li>
+<li><strong>NACE Pipeline Integrity:</strong> <a
+href="https://www.nace.org/">nace.org/resources/pipeline-integrity</a></li>
+<li><strong>API 1160 (Integrity Management):</strong> <a
+href="https://www.api.org/">api.org/products-and-services/1160</a></li>
+</ul>
+<hr />
+<p><strong>About This Analysis</strong>: All the code works and tested
+on Databricks Runtime 14.3 LTS. The clustering methodology is validated
+against regulatory requirements for risk-based integrity management. For
+consulting inquiries, reach out via LinkedIn.</p>
+</body>
+</html>

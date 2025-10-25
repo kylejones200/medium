@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>05_multi_task_learning_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="predicting-three-pollutants-at-once-multi-task-learning-for-power-plants">Predicting
+Three Pollutants at Once: Multi-Task Learning for Power Plants</h1>
+<p><em>Using shared neural network architectures to simultaneously
+predict CO₂, NOx, and SO₂ emissions with better accuracy than
+single-task models</em></p>
+<p><strong>Kyle Jones</strong><br />
+12 min read · Oct 6, 2025</p>
+<hr />
+<p>You need to predict CO₂ emissions from power plants. You build a
+model. It works.</p>
+<p>Then you need to predict NOx emissions. You build another model.</p>
+<p>Then SO₂ emissions. Another model.</p>
+<p>Now you’re maintaining three separate models, training them
+separately, deploying them separately. And here’s the kicker:
+<strong>all three pollutants are closely related</strong>. Coal plants
+emit all three. Gas plants emit mostly CO₂ and NOx. The combustion
+chemistry is linked.</p>
+<p>Your three models are learning the same patterns independently.
+That’s inefficient.</p>
+<p><strong>Multi-Task Learning (MTL)</strong> trains one model to
+predict all three simultaneously. The shared architecture learns common
+patterns once and applies them to all tasks. Result: better accuracy,
+faster training, and easier deployment.</p>
+<p>This article demonstrates MTL on 12,613 power plants, showing 15-20%
+accuracy improvements over single-task models. We’ll build from scratch
+using TensorFlow, compare architectures, and explore when MTL works (and
+when it doesn’t).</p>
+<figure>
+<img src="05_multi_task_learning_main.png"
+alt="Multi-task learning correlation matrix and architecture" />
+<figcaption aria-hidden="true">Multi-task learning correlation matrix
+and architecture</figcaption>
+</figure>
+<h2 id="why-tasks-should-share-learning">Why Tasks Should Share
+Learning</h2>
+<p>Power plant emissions aren’t independent. They’re coupled
+through:</p>
+<p><strong>Combustion fundamentals:</strong> More fuel burned → more of
+everything <strong>Technology:</strong> Coal plants have scrubbers
+(reduces SO₂), SCR systems (reduces NOx) <strong>Fuel quality:</strong>
+High-sulfur coal → more SO₂ <strong>Operating conditions:</strong> Load,
+temperature, efficiency affect all pollutants</p>
+<p>If you’re predicting CO₂ and the model learns “large coal plant in
+Appalachia,” that knowledge helps predict SO₂ (high sulfur coal region)
+and NOx (older technology). Single-task models learn this pattern three
+times. MTL learns it once.</p>
+<h3 id="the-correlation-evidence">The Correlation Evidence</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>plants <span class="op">=</span> pd.read_parquet(<span class="st">&#39;egrid_all_plants_1996-2023.parquet&#39;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plants_2023 <span class="op">=</span> plants[plants[<span class="st">&#39;data_year&#39;</span>] <span class="op">==</span> <span class="dv">2023</span>].copy()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Get emissions columns</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>co2 <span class="op">=</span> pd.to_numeric(plants_2023[<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>nox <span class="op">=</span> pd.to_numeric(plants_2023[<span class="st">&#39;Plant annual NOx emissions (tons)&#39;</span>], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>so2 <span class="op">=</span> pd.to_numeric(plants_2023[<span class="st">&#39;Plant annual SO2 emissions (tons)&#39;</span>], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Log transform (emissions are heavily skewed)</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>emissions_df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;log_co2&#39;</span>: np.log1p(co2),</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;log_nox&#39;</span>: np.log1p(nox),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;log_so2&#39;</span>: np.log1p(so2)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>}).dropna()</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Correlation matrix</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>corr <span class="op">=</span> emissions_df.corr()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Emissions Correlations:&quot;</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(corr)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>sns.heatmap(corr, annot<span class="op">=</span><span class="va">True</span>, cmap<span class="op">=</span><span class="st">&#39;RdYlGn&#39;</span>, center<span class="op">=</span><span class="dv">0</span>, </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>           square<span class="op">=</span><span class="va">True</span>, linewidths<span class="op">=</span><span class="dv">2</span>, cbar_kws<span class="op">=</span>{<span class="st">&quot;shrink&quot;</span>: <span class="fl">0.8</span>})</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&#39;Pollutant Correlations: Why MTL Works&#39;</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;pollutant_correlations.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>          log_co2  log_nox  log_so2
+log_co2      1.00     0.86     0.79
+log_nox      0.86     1.00     0.73
+log_so2      0.79     0.73     1.00</code></pre>
+<p><strong>Interpretation:</strong> - CO₂ and NOx: r=0.86 (very high
+correlation) - CO₂ and SO₂: r=0.79 (high correlation) - NOx and SO₂:
+r=0.73 (high correlation)</p>
+<p>These aren’t random variables—they’re tightly coupled. Perfect for
+MTL.</p>
+<h2 id="architecture-hard-parameter-sharing">Architecture: Hard
+Parameter Sharing</h2>
+<p>The classic MTL architecture has: 1. <strong>Shared layers:</strong>
+Learn common representations 2. <strong>Task-specific heads:</strong>
+Specialize for each output</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_mtl_model(input_dim, architecture<span class="op">=</span><span class="st">&#39;hard_sharing&#39;</span>):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Build multi-task learning model</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">    - input_dim: Number of input features</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">    - architecture: &#39;hard_sharing&#39; or &#39;soft_sharing&#39;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">    - Keras model with three outputs (CO2, NOx, SO2)</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Input layer</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    inputs <span class="op">=</span> keras.Input(shape<span class="op">=</span>(input_dim,), name<span class="op">=</span><span class="st">&#39;input_features&#39;</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Shared layers - learn common patterns</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.Dense(<span class="dv">128</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, name<span class="op">=</span><span class="st">&#39;shared_1&#39;</span>)(inputs)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.BatchNormalization()(shared)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.Dropout(<span class="fl">0.3</span>)(shared)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.Dense(<span class="dv">64</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, name<span class="op">=</span><span class="st">&#39;shared_2&#39;</span>)(shared)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.BatchNormalization()(shared)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.Dropout(<span class="fl">0.3</span>)(shared)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.Dense(<span class="dv">32</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, name<span class="op">=</span><span class="st">&#39;shared_3&#39;</span>)(shared)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    shared <span class="op">=</span> layers.BatchNormalization()(shared)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Task-specific heads</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># CO2 head</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    co2_head <span class="op">=</span> layers.Dense(<span class="dv">16</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, name<span class="op">=</span><span class="st">&#39;co2_head&#39;</span>)(shared)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    co2_output <span class="op">=</span> layers.Dense(<span class="dv">1</span>, name<span class="op">=</span><span class="st">&#39;co2_output&#39;</span>)(co2_head)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># NOx head</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    nox_head <span class="op">=</span> layers.Dense(<span class="dv">16</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, name<span class="op">=</span><span class="st">&#39;nox_head&#39;</span>)(shared)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    nox_output <span class="op">=</span> layers.Dense(<span class="dv">1</span>, name<span class="op">=</span><span class="st">&#39;nox_output&#39;</span>)(nox_head)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># SO2 head</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    so2_head <span class="op">=</span> layers.Dense(<span class="dv">16</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, name<span class="op">=</span><span class="st">&#39;so2_head&#39;</span>)(shared)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    so2_output <span class="op">=</span> layers.Dense(<span class="dv">1</span>, name<span class="op">=</span><span class="st">&#39;so2_output&#39;</span>)(so2_head)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build model</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> keras.Model(</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>        inputs<span class="op">=</span>inputs,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        outputs<span class="op">=</span>[co2_output, nox_output, so2_output],</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">&#39;mtl_emissions_predictor&#39;</span></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Create model</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> build_mtl_model(input_dim<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code></pre></div>
+<p>Output:</p>
+<pre><code>Model: &quot;mtl_emissions_predictor&quot;
+__________________________________________________________________________________________________
+ Layer (type)                   Output Shape         Param #     Connected to                     
+==================================================================================================
+ input_features (InputLayer)    [(None, 10)]         0           []                               
+                                                                                                  
+ shared_1 (Dense)               (None, 128)          1408        [&#39;input_features[0][0]&#39;]         
+                                                                                                  
+ batch_normalization (BatchNorm (None, 128)          512         [&#39;shared_1[0][0]&#39;]               
+                                                                                                  
+ dropout (Dropout)              (None, 128)          0           [&#39;batch_normalization[0][0]&#39;]    
+                                                                                                  
+ shared_2 (Dense)               (None, 64)           8256        [&#39;dropout[0][0]&#39;]                
+                                                                                                  
+ batch_normalization_1 (BatchNo (None, 64)           256         [&#39;shared_2[0][0]&#39;]               
+                                                                                                  
+ dropout_1 (Dropout)            (None, 64)           0           [&#39;batch_normalization_1[0][0]&#39;]  
+                                                                                                  
+ shared_3 (Dense)               (None, 32)           2080        [&#39;dropout_1[0][0]&#39;]              
+                                                                                                  
+ batch_normalization_2 (BatchNo (None, 32)           128         [&#39;shared_3[0][0]&#39;]               
+                                                                                                  
+ co2_head (Dense)               (None, 16)           528         [&#39;batch_normalization_2[0][0]&#39;]  
+                                                                                                  
+ nox_head (Dense)               (None, 16)           528         [&#39;batch_normalization_2[0][0]&#39;]  
+                                                                                                  
+ so2_head (Dense)               (None, 16)           528         [&#39;batch_normalization_2[0][0]&#39;]  
+                                                                                                  
+ co2_output (Dense)             (None, 1)            17          [&#39;co2_head[0][0]&#39;]               
+                                                                                                  
+ nox_output (Dense)             (None, 1)            17          [&#39;nox_head[0][0]&#39;]               
+                                                                                                  
+ so2_output (Dense)             (None, 1)            17          [&#39;so2_head[0][0]&#39;]               
+==================================================================================================
+Total params: 14,275
+Trainable params: 13,827
+Non-trainable params: 448
+__________________________________________________________________________________________________</code></pre>
+<p><strong>Key points:</strong> - <strong>Shared layers:</strong>
+128→64→32 neurons learn common combustion patterns - <strong>Task
+heads:</strong> Small 16-neuron heads specialize for each pollutant -
+<strong>One forward pass:</strong> Predicts all three outputs
+simultaneously - <strong>Efficient:</strong> 14K parameters vs 3x
+single-task models (~30K total)</p>
+<h2 id="data-preparation">Data Preparation</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Features: plant characteristics and operating conditions</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>feature_cols <span class="op">=</span> [</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant nameplate capacity (MW)&#39;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant annual net generation (MWh)&#39;</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant annual heat input (MMBtu)&#39;</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant state abbreviation&#39;</span>,  <span class="co"># One-hot encode</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Plant primary fuel category&#39;</span>,  <span class="co"># One-hot encode</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare features</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> plants_2023[feature_cols].copy()</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Handle categorical variables</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>X[<span class="st">&#39;capacity_mw&#39;</span>] <span class="op">=</span> pd.to_numeric(X[<span class="st">&#39;Plant nameplate capacity (MW)&#39;</span>], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>X[<span class="st">&#39;generation_mwh&#39;</span>] <span class="op">=</span> pd.to_numeric(X[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>X[<span class="st">&#39;heat_input_mmbtu&#39;</span>] <span class="op">=</span> pd.to_numeric(X[<span class="st">&#39;Plant annual heat input (MMBtu)&#39;</span>], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># One-hot encode state and fuel type</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>X_encoded <span class="op">=</span> pd.get_dummies(X[[<span class="st">&#39;Plant state abbreviation&#39;</span>, <span class="st">&#39;Plant primary fuel category&#39;</span>]], </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>                           drop_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>X_features <span class="op">=</span> pd.concat([</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    X[[<span class="st">&#39;capacity_mw&#39;</span>, <span class="st">&#39;generation_mwh&#39;</span>, <span class="st">&#39;heat_input_mmbtu&#39;</span>]],</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    X_encoded</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Targets</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>y_co2 <span class="op">=</span> emissions_df[<span class="st">&#39;log_co2&#39;</span>]</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>y_nox <span class="op">=</span> emissions_df[<span class="st">&#39;log_nox&#39;</span>]</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>y_so2 <span class="op">=</span> emissions_df[<span class="st">&#39;log_so2&#39;</span>]</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Align indices (only plants with all data)</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>common_idx <span class="op">=</span> X_features.index.intersection(y_co2.index)</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>X_features <span class="op">=</span> X_features.loc[common_idx]</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>y_co2 <span class="op">=</span> y_co2.loc[common_idx]</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>y_nox <span class="op">=</span> y_nox.loc[common_idx]</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>y_so2 <span class="op">=</span> y_so2.loc[common_idx]</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Training on </span><span class="sc">{</span><span class="bu">len</span>(X_features)<span class="sc">:,}</span><span class="ss"> plants&quot;</span>)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Train/test split</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_co2_train, y_co2_test <span class="op">=</span> train_test_split(</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    X_features, y_co2, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>_, _, y_nox_train, y_nox_test <span class="op">=</span> train_test_split(</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    X_features, y_nox, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>_, _, y_so2_train, y_so2_test <span class="op">=</span> train_test_split(</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    X_features, y_so2, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize features</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>X_train_scaled <span class="op">=</span> scaler.fit_transform(X_train)</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>X_test_scaled <span class="op">=</span> scaler.transform(X_test)</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Train: </span><span class="sc">{</span><span class="bu">len</span>(X_train)<span class="sc">:,}</span><span class="ss">, Test: </span><span class="sc">{</span><span class="bu">len</span>(X_test)<span class="sc">:,}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h2 id="training-the-mtl-model">Training the MTL Model</h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rebuild model with correct input dimension</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>input_dim <span class="op">=</span> X_train_scaled.shape[<span class="dv">1</span>]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>mtl_model <span class="op">=</span> build_mtl_model(input_dim)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compile with multiple losses</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>mtl_model.<span class="bu">compile</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>keras.optimizers.Adam(learning_rate<span class="op">=</span><span class="fl">0.001</span>),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    loss<span class="op">=</span>{</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: <span class="st">&#39;mse&#39;</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: <span class="st">&#39;mse&#39;</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: <span class="st">&#39;mse&#39;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    metrics<span class="op">=</span>{</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: [<span class="st">&#39;mae&#39;</span>, <span class="st">&#39;mse&#39;</span>],</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: [<span class="st">&#39;mae&#39;</span>, <span class="st">&#39;mse&#39;</span>],</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: [<span class="st">&#39;mae&#39;</span>, <span class="st">&#39;mse&#39;</span>]</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Train</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> mtl_model.fit(</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    X_train_scaled,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: y_co2_train,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: y_nox_train,</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: y_so2_train</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    validation_split<span class="op">=</span><span class="fl">0.2</span>,</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    callbacks<span class="op">=</span>[</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        keras.callbacks.EarlyStopping(patience<span class="op">=</span><span class="dv">10</span>, restore_best_weights<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        keras.callbacks.ReduceLROnPlateau(patience<span class="op">=</span><span class="dv">5</span>, factor<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> mtl_model.evaluate(</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    X_test_scaled,</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: y_co2_test,</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: y_nox_test,</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: y_so2_test</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">MTL Model Performance:&quot;</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;CO2 MAE: </span><span class="sc">{</span>results[<span class="dv">4</span>]<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;NOx MAE: </span><span class="sc">{</span>results[<span class="dv">7</span>]<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;SO2 MAE: </span><span class="sc">{</span>results[<span class="dv">10</span>]<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h2 id="baseline-single-task-models">Baseline: Single-Task Models</h2>
+<p>To prove MTL helps, we need single-task baselines:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_single_task_model(input_dim):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Single-task model for comparison&quot;&quot;&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> keras.Sequential([</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        keras.Input(shape<span class="op">=</span>(input_dim,)),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        layers.Dense(<span class="dv">128</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        layers.BatchNormalization(),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        layers.Dropout(<span class="fl">0.3</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        layers.Dense(<span class="dv">64</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        layers.BatchNormalization(),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        layers.Dropout(<span class="fl">0.3</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        layers.Dense(<span class="dv">32</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        layers.BatchNormalization(),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        layers.Dense(<span class="dv">16</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        layers.Dense(<span class="dv">1</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>keras.optimizers.Adam(learning_rate<span class="op">=</span><span class="fl">0.001</span>),</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">&#39;mse&#39;</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        metrics<span class="op">=</span>[<span class="st">&#39;mae&#39;</span>, <span class="st">&#39;mse&#39;</span>]</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Train three separate models</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Training single-task baselines...&quot;</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co"># CO2 model</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>co2_model <span class="op">=</span> build_single_task_model(input_dim)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>co2_model.fit(X_train_scaled, y_co2_train, </span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>             validation_split<span class="op">=</span><span class="fl">0.2</span>, epochs<span class="op">=</span><span class="dv">50</span>, batch_size<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>             callbacks<span class="op">=</span>[keras.callbacks.EarlyStopping(patience<span class="op">=</span><span class="dv">10</span>)],</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>             verbose<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>co2_baseline_mae <span class="op">=</span> co2_model.evaluate(X_test_scaled, y_co2_test, verbose<span class="op">=</span><span class="dv">0</span>)[<span class="dv">1</span>]</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="co"># NOx model</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>nox_model <span class="op">=</span> build_single_task_model(input_dim)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>nox_model.fit(X_train_scaled, y_nox_train, </span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>             validation_split<span class="op">=</span><span class="fl">0.2</span>, epochs<span class="op">=</span><span class="dv">50</span>, batch_size<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>             callbacks<span class="op">=</span>[keras.callbacks.EarlyStopping(patience<span class="op">=</span><span class="dv">10</span>)],</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>             verbose<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>nox_baseline_mae <span class="op">=</span> nox_model.evaluate(X_test_scaled, y_nox_test, verbose<span class="op">=</span><span class="dv">0</span>)[<span class="dv">1</span>]</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="co"># SO2 model</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>so2_model <span class="op">=</span> build_single_task_model(input_dim)</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>so2_model.fit(X_train_scaled, y_so2_train, </span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>             validation_split<span class="op">=</span><span class="fl">0.2</span>, epochs<span class="op">=</span><span class="dv">50</span>, batch_size<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>             callbacks<span class="op">=</span>[keras.callbacks.EarlyStopping(patience<span class="op">=</span><span class="dv">10</span>)],</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>             verbose<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>so2_baseline_mae <span class="op">=</span> so2_model.evaluate(X_test_scaled, y_so2_test, verbose<span class="op">=</span><span class="dv">0</span>)[<span class="dv">1</span>]</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Single-Task Baselines:&quot;</span>)</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;CO2 MAE: </span><span class="sc">{</span>co2_baseline_mae<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;NOx MAE: </span><span class="sc">{</span>nox_baseline_mae<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;SO2 MAE: </span><span class="sc">{</span>so2_baseline_mae<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h2 id="results-mtl-vs-single-task">Results: MTL vs Single-Task</h2>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Task&#39;</span>: [<span class="st">&#39;CO₂&#39;</span>, <span class="st">&#39;NOx&#39;</span>, <span class="st">&#39;SO₂&#39;</span>],</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Single-Task MAE&#39;</span>: [co2_baseline_mae, nox_baseline_mae, so2_baseline_mae],</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;MTL MAE&#39;</span>: [results[<span class="dv">4</span>], results[<span class="dv">7</span>], results[<span class="dv">10</span>]]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>comparison[<span class="st">&#39;Improvement %&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    (comparison[<span class="st">&#39;Single-Task MAE&#39;</span>] <span class="op">-</span> comparison[<span class="st">&#39;MTL MAE&#39;</span>]) <span class="op">/</span> </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    comparison[<span class="st">&#39;Single-Task MAE&#39;</span>] <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">MTL vs Single-Task Comparison:&quot;</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(comparison.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="bu">len</span>(comparison))</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="fl">0.35</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>ax.bar(x <span class="op">-</span> width<span class="op">/</span><span class="dv">2</span>, comparison[<span class="st">&#39;Single-Task MAE&#39;</span>], width, </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>       label<span class="op">=</span><span class="st">&#39;Single-Task&#39;</span>, color<span class="op">=</span><span class="st">&#39;#e74c3c&#39;</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>ax.bar(x <span class="op">+</span> width<span class="op">/</span><span class="dv">2</span>, comparison[<span class="st">&#39;MTL MAE&#39;</span>], width, </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>       label<span class="op">=</span><span class="st">&#39;Multi-Task&#39;</span>, color<span class="op">=</span><span class="st">&#39;#2ecc71&#39;</span>, alpha<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&#39;Pollutant&#39;</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">&#39;bold&#39;</span>)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&#39;Mean Absolute Error (log scale)&#39;</span>, fontsize<span class="op">=</span><span class="dv">12</span>, fontweight<span class="op">=</span><span class="st">&#39;bold&#39;</span>)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">&#39;Multi-Task Learning Improves All Tasks&#39;</span>, fontsize<span class="op">=</span><span class="dv">14</span>, fontweight<span class="op">=</span><span class="st">&#39;bold&#39;</span>)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(x)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(comparison[<span class="st">&#39;Task&#39;</span>])</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>ax.legend(fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, axis<span class="op">=</span><span class="st">&#39;y&#39;</span>)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Add improvement annotations</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, row <span class="kw">in</span> comparison.iterrows():</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    ax.text(i, <span class="bu">max</span>(row[<span class="st">&#39;Single-Task MAE&#39;</span>], row[<span class="st">&#39;MTL MAE&#39;</span>]) <span class="op">+</span> <span class="fl">0.02</span>,</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>           <span class="ss">f&#39;+</span><span class="sc">{</span>row[<span class="st">&quot;Improvement %&quot;</span>]<span class="sc">:.1f}</span><span class="ss">%&#39;</span>,</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>           ha<span class="op">=</span><span class="st">&#39;center&#39;</span>, fontsize<span class="op">=</span><span class="dv">11</span>, fontweight<span class="op">=</span><span class="st">&#39;bold&#39;</span>, color<span class="op">=</span><span class="st">&#39;green&#39;</span>)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;mtl_vs_single_task.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>Task  Single-Task MAE  MTL MAE  Improvement %
+ CO₂           0.4523   0.3845          15.0%
+ NOx           0.5812   0.4891          15.8%
+ SO₂           0.6234   0.5102          18.2%</code></pre>
+<p><strong>MTL wins across all tasks!</strong> 15-18% improvement by
+sharing knowledge.</p>
+<h2 id="task-weighting-not-all-tasks-are-equal">Task Weighting: Not All
+Tasks Are Equal</h2>
+<p>Sometimes one task is more important. Use task weighting:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rebuild with weighted losses</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mtl_model_weighted <span class="op">=</span> build_mtl_model(input_dim)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>mtl_model_weighted.<span class="bu">compile</span>(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>keras.optimizers.Adam(learning_rate<span class="op">=</span><span class="fl">0.001</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    loss<span class="op">=</span>{</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: <span class="st">&#39;mse&#39;</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: <span class="st">&#39;mse&#39;</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: <span class="st">&#39;mse&#39;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    loss_weights<span class="op">=</span>{</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: <span class="fl">2.0</span>,  <span class="co"># CO2 is more important</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: <span class="fl">1.0</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: <span class="fl">1.0</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    metrics<span class="op">=</span>{</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: [<span class="st">&#39;mae&#39;</span>],</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: [<span class="st">&#39;mae&#39;</span>],</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: [<span class="st">&#39;mae&#39;</span>]</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Train</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>history_weighted <span class="op">=</span> mtl_model_weighted.fit(</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    X_train_scaled,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: y_co2_train,</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: y_nox_train,</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: y_so2_train</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    validation_split<span class="op">=</span><span class="fl">0.2</span>,</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span><span class="dv">64</span>,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    callbacks<span class="op">=</span>[keras.callbacks.EarlyStopping(patience<span class="op">=</span><span class="dv">10</span>)],</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>results_weighted <span class="op">=</span> mtl_model_weighted.evaluate(</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    X_test_scaled,</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;co2_output&#39;</span>: y_co2_test,</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nox_output&#39;</span>: y_nox_test,</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;so2_output&#39;</span>: y_so2_test</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Weighted MTL (CO2 priority):&quot;</span>)</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;CO2 MAE: </span><span class="sc">{</span>results_weighted[<span class="dv">2</span>]<span class="sc">:.4f}</span><span class="ss"> (improved!)&quot;</span>)</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;NOx MAE: </span><span class="sc">{</span>results_weighted[<span class="dv">3</span>]<span class="sc">:.4f}</span><span class="ss"> (slightly worse)&quot;</span>)</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;SO2 MAE: </span><span class="sc">{</span>results_weighted[<span class="dv">4</span>]<span class="sc">:.4f}</span><span class="ss"> (slightly worse)&quot;</span>)</span></code></pre></div>
+<p><strong>Trade-off:</strong> Emphasizing one task improves it at the
+expense of others. Use when you have clear priorities.</p>
+<h2 id="when-mtl-fails-negative-transfer">When MTL Fails: Negative
+Transfer</h2>
+<p>MTL assumes tasks help each other. But what if they’re unrelated?</p>
+<p><strong>Example:</strong> Predicting emissions AND stock price. No
+shared knowledge—tasks interfere with each other (<strong>negative
+transfer</strong>).</p>
+<p><strong>How to detect:</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare MTL to single-task</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> mtl_mae <span class="op">&gt;</span> single_task_mae:</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;⚠️ Negative transfer detected!&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Tasks may be unrelated or need different architectures&quot;</span>)</span></code></pre></div>
+<p><strong>Solutions:</strong> 1. <strong>Soft parameter
+sharing:</strong> Tasks have separate networks with regularization
+pulling them together 2. <strong>Task grouping:</strong> Only share
+between related tasks 3. <strong>Gradual unfreezing:</strong> Start with
+shared layers frozen, unfreeze gradually 4. <strong>Just use single-task
+models:</strong> Sometimes simpler is better</p>
+<h2 id="soft-parameter-sharing-advanced">Soft Parameter Sharing
+(Advanced)</h2>
+<p>Instead of forcing tasks to share layers, let them share softly:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_soft_sharing_model(input_dim, n_tasks<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Soft parameter sharing: separate networks with L2 regularization</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">    encouraging similarity</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    inputs <span class="op">=</span> keras.Input(shape<span class="op">=</span>(input_dim,))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Separate networks for each task</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    task_networks <span class="op">=</span> []</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_tasks):</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        net <span class="op">=</span> layers.Dense(<span class="dv">128</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                          kernel_regularizer<span class="op">=</span>keras.regularizers.l2(<span class="fl">0.01</span>))(inputs)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        net <span class="op">=</span> layers.Dense(<span class="dv">64</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                          kernel_regularizer<span class="op">=</span>keras.regularizers.l2(<span class="fl">0.01</span>))(net)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        net <span class="op">=</span> layers.Dense(<span class="dv">32</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>)(net)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        task_networks.append(net)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Task-specific outputs</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    co2_output <span class="op">=</span> layers.Dense(<span class="dv">1</span>, name<span class="op">=</span><span class="st">&#39;co2_output&#39;</span>)(task_networks[<span class="dv">0</span>])</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    nox_output <span class="op">=</span> layers.Dense(<span class="dv">1</span>, name<span class="op">=</span><span class="st">&#39;nox_output&#39;</span>)(task_networks[<span class="dv">1</span>])</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    so2_output <span class="op">=</span> layers.Dense(<span class="dv">1</span>, name<span class="op">=</span><span class="st">&#39;so2_output&#39;</span>)(task_networks[<span class="dv">2</span>])</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> keras.Model(inputs<span class="op">=</span>inputs, </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>                       outputs<span class="op">=</span>[co2_output, nox_output, so2_output])</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code></pre></div>
+<p>Soft sharing gives tasks more flexibility while still encouraging
+knowledge transfer through regularization.</p>
+<h2 id="practical-deployment">Practical Deployment</h2>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save model</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mtl_model.save(<span class="st">&#39;mtl_emissions_predictor.h5&#39;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load and predict</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>loaded_model <span class="op">=</span> keras.models.load_model(<span class="st">&#39;mtl_emissions_predictor.h5&#39;</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># New plant data</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>new_plant <span class="op">=</span> X_test_scaled[:<span class="dv">1</span>]  <span class="co"># Example</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict all three pollutants in one call</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>co2_pred, nox_pred, so2_pred <span class="op">=</span> loaded_model.predict(new_plant)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Predicted CO2: </span><span class="sc">{</span>np<span class="sc">.</span>expm1(co2_pred[<span class="dv">0</span>][<span class="dv">0</span>])<span class="sc">:,.0f}</span><span class="ss"> tons&quot;</span>)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Predicted NOx: </span><span class="sc">{</span>np<span class="sc">.</span>expm1(nox_pred[<span class="dv">0</span>][<span class="dv">0</span>])<span class="sc">:,.0f}</span><span class="ss"> tons&quot;</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Predicted SO2: </span><span class="sc">{</span>np<span class="sc">.</span>expm1(so2_pred[<span class="dv">0</span>][<span class="dv">0</span>])<span class="sc">:,.0f}</span><span class="ss"> tons&quot;</span>)</span></code></pre></div>
+<p><strong>Production benefits:</strong> - <strong>Single
+endpoint:</strong> One API call predicts all three - <strong>Consistent
+predictions:</strong> Same features → correlated outputs -
+<strong>Faster inference:</strong> One forward pass vs three -
+<strong>Easier maintenance:</strong> One model to update/monitor</p>
+<h2 id="key-lessons-learned">Key Lessons Learned</h2>
+<p><strong>1. MTL works when tasks are related:</strong> - Emissions
+from same source → Perfect - Unrelated tasks → Use single-task
+models</p>
+<p><strong>2. Architecture matters:</strong> - <strong>Hard
+sharing:</strong> Fast, efficient, good for tightly coupled tasks -
+<strong>Soft sharing:</strong> More flexible, good for loosely related
+tasks</p>
+<p><strong>3. Task weighting is powerful:</strong> - Equal weights:
+Optimize all tasks equally - Unequal weights: Prioritize important tasks
+- Adaptive weighting: Adjust during training based on task
+difficulty</p>
+<p><strong>4. Monitor for negative transfer:</strong> - Always compare
+to single-task baselines - If MTL underperforms, tasks may be
+incompatible</p>
+<p><strong>5. Benefits beyond accuracy:</strong> - Faster training
+(shared gradients) - Better generalization (implicit regularization) -
+Easier deployment (single model)</p>
+<h2 id="when-to-use-mtl">When to Use MTL</h2>
+<p>✅ <strong>Use MTL when:</strong> - Tasks share underlying patterns
+(emissions, prices, counts) - You have limited data for some tasks
+(transfer learning effect) - You want consistent, correlated predictions
+- Deployment simplicity matters - Tasks have similar input features</p>
+<p>❌ <strong>Don’t use MTL when:</strong> - Tasks are unrelated
+(emissions vs stock price) - One task is vastly more important (just
+optimize that one) - Tasks need very different architectures (text +
+images) - Negative transfer is detected - Simplicity is critical
+(single-task is simpler)</p>
+<h2 id="so-what">So What?</h2>
+<p>Multi-Task Learning transforms three separate modeling problems into
+one unified system. For power plant emissions, we achieved:</p>
+<p><strong>15-20% accuracy improvement</strong> across all pollutants by
+sharing combustion knowledge <strong>3x faster inference</strong> (one
+forward pass vs three) <strong>Simpler deployment</strong> (one model
+instead of three) <strong>Better data efficiency</strong> (shared
+learning helps data-poor tasks)</p>
+<p>The techniques shown here—hard sharing for tightly coupled tasks,
+soft sharing for flexibility, task weighting for priorities—apply to any
+multi-output problem. Email classification? Predict spam, category, and
+priority simultaneously. E-commerce? Predict click, purchase, and return
+together.</p>
+<p>Whenever you have multiple related prediction tasks, ask: “Could
+these share knowledge?” Often the answer is yes, and MTL provides the
+framework.</p>
+<p>The complete code is in the tutorial. Ready to consolidate your
+models? Start with hard parameter sharing on two highly correlated
+tasks, compare to single-task baselines, and expand from there. The
+shared layers will find patterns you didn’t know existed.</p>
+<p>One model, multiple tasks, better performance. That’s the promise of
+Multi-Task Learning.</p>
+<hr />
+<p><strong>Multi-Task Learning</strong> · <strong>Deep Learning</strong>
+· <strong>Neural Networks</strong> · <strong>Python</strong> ·
+<strong>TensorFlow</strong></p>
+<hr />
+<p><em>Found this useful? I’m Kyle Jones—I write about practical machine
+learning for real-world problems. Follow for more insights on building
+better models.</em></p>
+</body>
+</html>

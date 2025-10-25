@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_lmp_analysis_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="locational-marginal-pricing-the-hidden-arbitrage-goldmine-in-power-markets">Locational
+Marginal Pricing: The Hidden Arbitrage Goldmine in Power Markets</h1>
+<p>When PJM experienced a transmission constraint in July 2022, prices
+at the constrained node spiked to $145/MWh while the hub price remained
+at $85/MWh. Traders who understood Locational Marginal Pricing (LMP)
+mechanics captured a $60/MWh spread—translating to millions in profit
+over just a few hours. Meanwhile, traders focused only on hub prices
+missed the opportunity entirely.</p>
+<p>LMP isn’t just another pricing mechanism—it’s a real-time signal that
+reveals where congestion creates value, where transmission bottlenecks
+generate profits, and where market inefficiencies present arbitrage
+opportunities that sophisticated traders exploit every single day.</p>
+<h2 id="why-lmp-analysis-separates-winners-from-losers">Why LMP Analysis
+Separates Winners from Losers</h2>
+<p>Unlike commodity markets where a single price prevails, electricity
+prices vary by location within the same market. This spatial price
+differentiation reflects transmission constraints, generation costs, and
+local supply-demand imbalances. Professional power traders who master
+LMP analysis gain access to opportunities invisible to those watching
+only average market prices.</p>
+<p>The three components of LMP tell a complete story: - <strong>Energy
+Component</strong>: Base cost of generation - <strong>Congestion
+Component</strong>: Value of transmission constraints - <strong>Loss
+Component</strong>: Cost of electrical losses over distance</p>
+<p>When these components diverge significantly across nodes, profit
+opportunities emerge.</p>
+<figure>
+<img src="02_lmp_analysis_main.png" alt="LMP Analysis" />
+<figcaption aria-hidden="true">LMP Analysis</figcaption>
+</figure>
+<h2 id="understanding-multi-node-price-formation">Understanding
+Multi-Node Price Formation</h2>
+<p>Let’s analyze how prices form differently across market nodes:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_multi_node_lmp(hours<span class="op">=</span><span class="dv">24</span>, seed<span class="op">=</span><span class="dv">42</span>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Generate realistic LMP data for multiple market nodes.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Captures hub pricing, constrained zones, renewable zones,</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    and urban load centers with realistic price relationships.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    np.random.seed(seed)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    node_data <span class="op">=</span> []</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    base_time <span class="op">=</span> datetime.now().replace(hour<span class="op">=</span><span class="dv">0</span>, minute<span class="op">=</span><span class="dv">0</span>, second<span class="op">=</span><span class="dv">0</span>, microsecond<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> hour <span class="kw">in</span> <span class="bu">range</span>(hours):</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        timestamp <span class="op">=</span> base_time <span class="op">+</span> timedelta(hours<span class="op">=</span>hour)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Hub price (baseline reference)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        hub_price <span class="op">=</span> <span class="fl">82.44</span> <span class="op">+</span> np.random.randn() <span class="op">*</span> <span class="dv">8</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Constrained zone (typically higher due to congestion)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        constraint_premium <span class="op">=</span> <span class="dv">15</span> <span class="op">+</span> np.random.randn() <span class="op">*</span> <span class="dv">12</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="dv">16</span> <span class="op">&lt;=</span> hour <span class="op">&lt;=</span> <span class="dv">21</span>:  <span class="co"># Peak hours see more congestion</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            constraint_premium <span class="op">*=</span> <span class="fl">1.5</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        constrained_price <span class="op">=</span> hub_price <span class="op">+</span> constraint_premium</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Renewable zone (typically lower due to cheap generation)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        renewable_discount <span class="op">=</span> <span class="op">-</span><span class="dv">8</span> <span class="op">+</span> np.random.randn() <span class="op">*</span> <span class="dv">6</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        renewable_price <span class="op">=</span> hub_price <span class="op">+</span> renewable_discount</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Urban load center (higher due to local demand)</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        urban_premium <span class="op">=</span> <span class="dv">8</span> <span class="op">+</span> np.random.randn() <span class="op">*</span> <span class="dv">10</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="dv">17</span> <span class="op">&lt;=</span> hour <span class="op">&lt;=</span> <span class="dv">20</span>:  <span class="co"># Evening peak in cities</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            urban_premium <span class="op">*=</span> <span class="fl">1.3</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        urban_price <span class="op">=</span> hub_price <span class="op">+</span> urban_premium</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        node_data.append({</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;timestamp&#39;</span>: timestamp,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;hour&#39;</span>: hour,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;hub_price&#39;</span>: hub_price,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;constrained_zone&#39;</span>: constrained_price,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;renewable_zone&#39;</span>: renewable_price,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;urban_center&#39;</span>: urban_price</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> node_data</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate node pricing</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>node_prices <span class="op">=</span> generate_multi_node_lmp()</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Hour 19 (Peak):&quot;</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Hub: $</span><span class="sc">{</span>node_prices[<span class="dv">19</span>][<span class="st">&#39;hub_price&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Constrained: $</span><span class="sc">{</span>node_prices[<span class="dv">19</span>][<span class="st">&#39;constrained_zone&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Spread: $</span><span class="sc">{</span>node_prices[<span class="dv">19</span>][<span class="st">&#39;constrained_zone&#39;</span>] <span class="op">-</span> node_prices[<span class="dv">19</span>][<span class="st">&#39;hub_price&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span></code></pre></div>
+<p>This code reveals how prices diverge across the network. During peak
+hours, constrained zones can trade 40-60% above hub prices. Renewable
+zones often trade below hub due to zero marginal cost generation. Urban
+centers add premiums reflecting local demand intensity.</p>
+<h2 id="identifying-congestion-revenue-opportunities">Identifying
+Congestion Revenue Opportunities</h2>
+<p>The real money in power trading lies in exploiting these price
+differentials:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_congestion_revenue(node_data):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate potential congestion revenue from price spreads.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Identifies profitable trading opportunities between nodes</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    based on price differentials and typical position sizes.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    opportunities <span class="op">=</span> []</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> hour_data <span class="kw">in</span> node_data:</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        hour <span class="op">=</span> hour_data[<span class="st">&#39;hour&#39;</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        hub <span class="op">=</span> hour_data[<span class="st">&#39;hub_price&#39;</span>]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        constrained <span class="op">=</span> hour_data[<span class="st">&#39;constrained_zone&#39;</span>]</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        renewable <span class="op">=</span> hour_data[<span class="st">&#39;renewable_zone&#39;</span>]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        urban <span class="op">=</span> hour_data[<span class="st">&#39;urban_center&#39;</span>]</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Arbitrage: Buy hub, sell constrained</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        hub_to_constrained_spread <span class="op">=</span> constrained <span class="op">-</span> hub</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Arbitrage: Buy renewable, sell hub</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        renewable_to_hub_spread <span class="op">=</span> hub <span class="op">-</span> renewable</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Arbitrage: Buy renewable, sell urban</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        renewable_to_urban_spread <span class="op">=</span> urban <span class="op">-</span> renewable</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate potential revenue (assuming 100 MW position)</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        position_size_mw <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> hub_to_constrained_spread <span class="op">&gt;</span> <span class="dv">10</span>:  <span class="co"># Meaningful spread</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            opportunities.append({</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;hour&#39;</span>: hour,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;strategy&#39;</span>: <span class="st">&#39;Hub to Constrained&#39;</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;spread_mwh&#39;</span>: hub_to_constrained_spread,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;revenue_hour&#39;</span>: hub_to_constrained_spread <span class="op">*</span> position_size_mw,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;HIGH&#39;</span> <span class="cf">if</span> hub_to_constrained_spread <span class="op">&gt;</span> <span class="dv">20</span> <span class="cf">else</span> <span class="st">&#39;MEDIUM&#39;</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> renewable_to_hub_spread <span class="op">&gt;</span> <span class="dv">5</span>:</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>            opportunities.append({</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;hour&#39;</span>: hour,</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;strategy&#39;</span>: <span class="st">&#39;Renewable to Hub&#39;</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;spread_mwh&#39;</span>: renewable_to_hub_spread,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;revenue_hour&#39;</span>: renewable_to_hub_spread <span class="op">*</span> position_size_mw,</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;MEDIUM&#39;</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> renewable_to_urban_spread <span class="op">&gt;</span> <span class="dv">15</span>:</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>            opportunities.append({</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;hour&#39;</span>: hour,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;strategy&#39;</span>: <span class="st">&#39;Renewable to Urban&#39;</span>,</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;spread_mwh&#39;</span>: renewable_to_urban_spread,</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;revenue_hour&#39;</span>: renewable_to_urban_spread <span class="op">*</span> position_size_mw,</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;HIGH&#39;</span> <span class="cf">if</span> renewable_to_urban_spread <span class="op">&gt;</span> <span class="dv">25</span> <span class="cf">else</span> <span class="st">&#39;MEDIUM&#39;</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate daily totals</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    total_revenue <span class="op">=</span> <span class="bu">sum</span>(opp[<span class="st">&#39;revenue_hour&#39;</span>] <span class="cf">for</span> opp <span class="kw">in</span> opportunities)</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    high_confidence_revenue <span class="op">=</span> <span class="bu">sum</span>(</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        opp[<span class="st">&#39;revenue_hour&#39;</span>] <span class="cf">for</span> opp <span class="kw">in</span> opportunities </span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> opp[<span class="st">&#39;confidence&#39;</span>] <span class="op">==</span> <span class="st">&#39;HIGH&#39;</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;opportunities&#39;</span>: opportunities,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_opportunities&#39;</span>: <span class="bu">len</span>(opportunities),</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_daily_revenue&#39;</span>: total_revenue,</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;high_confidence_revenue&#39;</span>: high_confidence_revenue,</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;avg_spread&#39;</span>: total_revenue <span class="op">/</span> <span class="bu">len</span>(opportunities) <span class="op">/</span> <span class="dv">100</span> <span class="cf">if</span> opportunities <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyze opportunities</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> calculate_congestion_revenue(node_prices)</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Congestion Revenue Analysis:&quot;</span>)</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Total Opportunities: </span><span class="sc">{</span>results[<span class="st">&#39;total_opportunities&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Daily Revenue Potential: $</span><span class="sc">{</span>results[<span class="st">&#39;total_daily_revenue&#39;</span>]<span class="sc">:,.0f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  High Confidence Revenue: $</span><span class="sc">{</span>results[<span class="st">&#39;high_confidence_revenue&#39;</span>]<span class="sc">:,.0f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Average Spread: $</span><span class="sc">{</span>results[<span class="st">&#39;avg_spread&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span></code></pre></div>
+<p>On a typical day, identifying and executing congestion trades can
+generate $50,000-$200,000 in revenue from a 100 MW position. During
+extreme events (heat waves, transmission outages), these numbers
+multiply several-fold.</p>
+<h2 id="real-time-lmp-monitoring-and-alerting">Real-Time LMP Monitoring
+and Alerting</h2>
+<p>Successful LMP trading requires continuous monitoring and rapid
+response:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> monitor_lmp_alerts(current_prices, historical_avg, threshold_std<span class="op">=</span><span class="fl">2.0</span>):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Monitor LMP for unusual price movements requiring immediate action.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Generates alerts when prices deviate significantly from historical</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    patterns, indicating trading opportunities or risk events.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    alerts <span class="op">=</span> []</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> node_name, current_price <span class="kw">in</span> current_prices.items():</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        hist_avg <span class="op">=</span> historical_avg.get(node_name, <span class="dv">85</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        hist_std <span class="op">=</span> <span class="dv">15</span>  <span class="co"># Typical standard deviation</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate z-score</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        z_score <span class="op">=</span> (current_price <span class="op">-</span> hist_avg) <span class="op">/</span> hist_std</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">abs</span>(z_score) <span class="op">&gt;</span> threshold_std:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            severity <span class="op">=</span> <span class="st">&#39;CRITICAL&#39;</span> <span class="cf">if</span> <span class="bu">abs</span>(z_score) <span class="op">&gt;</span> <span class="dv">3</span> <span class="cf">else</span> <span class="st">&#39;WARNING&#39;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> z_score <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                alert_type <span class="op">=</span> <span class="st">&#39;SPIKE&#39;</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                message <span class="op">=</span> <span class="ss">f&quot;Price spike at </span><span class="sc">{</span>node_name<span class="sc">}</span><span class="ss">: $</span><span class="sc">{</span>current_price<span class="sc">:.2f}</span><span class="ss">/MWh (</span><span class="sc">{</span>z_score<span class="sc">:.1f}</span><span class="ss">σ above avg)&quot;</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                action <span class="op">=</span> <span class="st">&#39;SELL&#39;</span> <span class="cf">if</span> node_name <span class="op">!=</span> <span class="st">&#39;hub_price&#39;</span> <span class="cf">else</span> <span class="st">&#39;MONITOR&#39;</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                alert_type <span class="op">=</span> <span class="st">&#39;DROP&#39;</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                message <span class="op">=</span> <span class="ss">f&quot;Price drop at </span><span class="sc">{</span>node_name<span class="sc">}</span><span class="ss">: $</span><span class="sc">{</span>current_price<span class="sc">:.2f}</span><span class="ss">/MWh (</span><span class="sc">{</span><span class="bu">abs</span>(z_score)<span class="sc">:.1f}</span><span class="ss">σ below avg)&quot;</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                action <span class="op">=</span> <span class="st">&#39;BUY&#39;</span> <span class="cf">if</span> node_name <span class="op">!=</span> <span class="st">&#39;hub_price&#39;</span> <span class="cf">else</span> <span class="st">&#39;MONITOR&#39;</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>            alerts.append({</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;node&#39;</span>: node_name,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;alert_type&#39;</span>: alert_type,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;severity&#39;</span>: severity,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;current_price&#39;</span>: current_price,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;z_score&#39;</span>: z_score,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;message&#39;</span>: message,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                <span class="st">&#39;recommended_action&#39;</span>: action</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> alerts</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Monitor current market conditions</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>current_market <span class="op">=</span> {</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;hub_price&#39;</span>: <span class="fl">88.50</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;constrained_zone&#39;</span>: <span class="fl">142.30</span>,  <span class="co"># Significant spike</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;renewable_zone&#39;</span>: <span class="fl">75.20</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;urban_center&#39;</span>: <span class="fl">94.80</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>historical_average <span class="op">=</span> {</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;hub_price&#39;</span>: <span class="fl">85.00</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;constrained_zone&#39;</span>: <span class="fl">95.00</span>,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;renewable_zone&#39;</span>: <span class="fl">78.00</span>,</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;urban_center&#39;</span>: <span class="fl">92.00</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>alerts <span class="op">=</span> monitor_lmp_alerts(current_market, historical_average)</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">LMP Alert System:&quot;</span>)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> alert <span class="kw">in</span> alerts:</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;  [</span><span class="sc">{</span>alert[<span class="st">&#39;severity&#39;</span>]<span class="sc">}</span><span class="ss">] </span><span class="sc">{</span>alert[<span class="st">&#39;message&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;    Action: </span><span class="sc">{</span>alert[<span class="st">&#39;recommended_action&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>Automated alert systems enable traders to respond within seconds when
+opportunities emerge. When constrained zone prices spike 3+ standard
+deviations above normal, it signals immediate selling opportunities that
+may last only minutes.</p>
+<h2 id="financial-transmission-rights-ftrs-strategy">Financial
+Transmission Rights (FTRs) Strategy</h2>
+<p>FTRs provide hedge instruments for congestion risk and speculative
+vehicles for congestion bets:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_ftr_value(node_a, node_b, historical_spreads, ftr_cost):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Analyze Financial Transmission Right value and profitability.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    FTRs pay the difference between nodal prices, providing</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    hedge value or speculative profit depending on strategy.</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Historical spread analysis</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    avg_spread <span class="op">=</span> np.mean(historical_spreads)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    std_spread <span class="op">=</span> np.std(historical_spreads)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    max_spread <span class="op">=</span> np.<span class="bu">max</span>(historical_spreads)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    min_spread <span class="op">=</span> np.<span class="bu">min</span>(historical_spreads)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Probability of profitability</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    profitable_hours <span class="op">=</span> <span class="bu">sum</span>(<span class="dv">1</span> <span class="cf">for</span> spread <span class="kw">in</span> historical_spreads <span class="cf">if</span> spread <span class="op">&gt;</span> ftr_cost)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    prob_profitable <span class="op">=</span> profitable_hours <span class="op">/</span> <span class="bu">len</span>(historical_spreads)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Expected value calculation</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    expected_revenue <span class="op">=</span> avg_spread</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    expected_profit <span class="op">=</span> expected_revenue <span class="op">-</span> ftr_cost</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Risk metrics</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    value_at_risk_95 <span class="op">=</span> np.percentile(historical_spreads, <span class="dv">5</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    downside_risk <span class="op">=</span> ftr_cost <span class="op">-</span> value_at_risk_95</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;avg_spread&#39;</span>: avg_spread,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;std_spread&#39;</span>: std_spread,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;max_spread&#39;</span>: max_spread,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;min_spread&#39;</span>: min_spread,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;ftr_cost&#39;</span>: ftr_cost,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;expected_profit&#39;</span>: expected_profit,</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;probability_profitable&#39;</span>: prob_profitable,</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;var_95&#39;</span>: value_at_risk_95,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;downside_risk&#39;</span>: downside_risk,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;sharpe_ratio&#39;</span>: expected_profit <span class="op">/</span> std_spread <span class="cf">if</span> std_spread <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Evaluate FTR purchase decision</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>historical_hub_to_constrained <span class="op">=</span> [</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="fl">15.2</span>, <span class="fl">18.7</span>, <span class="fl">22.3</span>, <span class="fl">12.8</span>, <span class="fl">28.4</span>, <span class="fl">31.2</span>, <span class="fl">19.5</span>, <span class="fl">16.8</span>, <span class="fl">25.1</span>, <span class="fl">20.3</span>,</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="fl">14.5</span>, <span class="fl">17.9</span>, <span class="fl">35.6</span>, <span class="fl">21.2</span>, <span class="fl">18.5</span>, <span class="fl">26.7</span>, <span class="fl">19.8</span>, <span class="fl">22.6</span>, <span class="fl">29.3</span>, <span class="fl">17.4</span>,</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    <span class="fl">15.8</span>, <span class="fl">24.1</span>, <span class="fl">20.7</span>, <span class="fl">18.3</span>, <span class="fl">27.5</span>, <span class="fl">16.2</span>, <span class="fl">21.8</span>, <span class="fl">25.9</span>, <span class="fl">19.1</span>, <span class="fl">23.4</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>ftr_analysis <span class="op">=</span> analyze_ftr_value(</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;hub&#39;</span>, <span class="st">&#39;constrained_zone&#39;</span>, </span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    historical_hub_to_constrained, </span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    ftr_cost<span class="op">=</span><span class="fl">18.50</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">FTR Analysis (Hub to Constrained Zone):&quot;</span>)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Average Spread: $</span><span class="sc">{</span>ftr_analysis[<span class="st">&#39;avg_spread&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  FTR Cost: $</span><span class="sc">{</span>ftr_analysis[<span class="st">&#39;ftr_cost&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Expected Profit: $</span><span class="sc">{</span>ftr_analysis[<span class="st">&#39;expected_profit&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Probability Profitable: </span><span class="sc">{</span>ftr_analysis[<span class="st">&#39;probability_profitable&#39;</span>]<span class="sc">:.1%}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Sharpe Ratio: </span><span class="sc">{</span>ftr_analysis[<span class="st">&#39;sharpe_ratio&#39;</span>]<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  VaR (95%): $</span><span class="sc">{</span>ftr_analysis[<span class="st">&#39;var_95&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span></code></pre></div>
+<p>FTR analysis requires understanding both historical spread behavior
+and forward-looking transmission constraints. When expected spreads
+exceed FTR costs by 20%+, purchase decisions become compelling.</p>
+<h2 id="advanced-lmp-decomposition-analysis">Advanced LMP Decomposition
+Analysis</h2>
+<p>Understanding LMP components reveals the underlying market
+dynamics:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> decompose_lmp_components(lmp_price, base_energy, transmission_distance_miles):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Decompose LMP into energy, congestion, and loss components.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Reveals which factors drive price at each node, enabling</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    better trading decisions and risk management.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Energy component (marginal cost of generation)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    energy_component <span class="op">=</span> base_energy</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loss component (transmission losses over distance)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Typically 1-2% per 100 miles</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    loss_rate_per_100_miles <span class="op">=</span> <span class="fl">0.015</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    loss_component <span class="op">=</span> base_energy <span class="op">*</span> (transmission_distance_miles <span class="op">/</span> <span class="dv">100</span>) <span class="op">*</span> loss_rate_per_100_miles</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Congestion component (remainder)</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    congestion_component <span class="op">=</span> lmp_price <span class="op">-</span> energy_component <span class="op">-</span> loss_component</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate percentages</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    energy_pct <span class="op">=</span> (energy_component <span class="op">/</span> lmp_price) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    loss_pct <span class="op">=</span> (loss_component <span class="op">/</span> lmp_price) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    congestion_pct <span class="op">=</span> (congestion_component <span class="op">/</span> lmp_price) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_lmp&#39;</span>: lmp_price,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;energy_component&#39;</span>: energy_component,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;loss_component&#39;</span>: loss_component,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;congestion_component&#39;</span>: congestion_component,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;energy_pct&#39;</span>: energy_pct,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;loss_pct&#39;</span>: loss_pct,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;congestion_pct&#39;</span>: congestion_pct,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;congestion_value_mwh&#39;</span>: congestion_component</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Decompose constrained node pricing</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>decomposition <span class="op">=</span> decompose_lmp_components(</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    lmp_price<span class="op">=</span><span class="fl">125.50</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    base_energy<span class="op">=</span><span class="fl">82.00</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    transmission_distance_miles<span class="op">=</span><span class="dv">150</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">LMP Component Decomposition:&quot;</span>)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Total LMP: $</span><span class="sc">{</span>decomposition[<span class="st">&#39;total_lmp&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Energy: $</span><span class="sc">{</span>decomposition[<span class="st">&#39;energy_component&#39;</span>]<span class="sc">:.2f}</span><span class="ss"> (</span><span class="sc">{</span>decomposition[<span class="st">&#39;energy_pct&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Losses: $</span><span class="sc">{</span>decomposition[<span class="st">&#39;loss_component&#39;</span>]<span class="sc">:.2f}</span><span class="ss"> (</span><span class="sc">{</span>decomposition[<span class="st">&#39;loss_pct&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Congestion: $</span><span class="sc">{</span>decomposition[<span class="st">&#39;congestion_component&#39;</span>]<span class="sc">:.2f}</span><span class="ss"> (</span><span class="sc">{</span>decomposition[<span class="st">&#39;congestion_pct&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">  Congestion represents </span><span class="sc">{</span>decomposition[<span class="st">&#39;congestion_pct&#39;</span>]<span class="sc">:.0f}</span><span class="ss">% of price!&quot;</span>)</span></code></pre></div>
+<p>When congestion components exceed 30% of total LMP, it signals severe
+transmission constraints and exceptional arbitrage opportunities. During
+extreme events, congestion can represent 60-80% of the LMP.</p>
+<h2 id="building-a-multi-node-trading-strategy">Building a Multi-Node
+Trading Strategy</h2>
+<p>Integrate LMP analysis into a comprehensive trading approach:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_trading_strategy(node_prices_24h):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Build optimal trading strategy across multiple nodes.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Considers spreads, volatility, execution costs, and risk limits</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    to construct profitable position recommendations.</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    trades <span class="op">=</span> []</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> hour_data <span class="kw">in</span> node_prices_24h:</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        hour <span class="op">=</span> hour_data[<span class="st">&#39;hour&#39;</span>]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Calculate all possible spreads</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        spreads <span class="op">=</span> {</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;hub_to_constrained&#39;</span>: hour_data[<span class="st">&#39;constrained_zone&#39;</span>] <span class="op">-</span> hour_data[<span class="st">&#39;hub_price&#39;</span>],</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;renewable_to_hub&#39;</span>: hour_data[<span class="st">&#39;hub_price&#39;</span>] <span class="op">-</span> hour_data[<span class="st">&#39;renewable_zone&#39;</span>],</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;renewable_to_constrained&#39;</span>: hour_data[<span class="st">&#39;constrained_zone&#39;</span>] <span class="op">-</span> hour_data[<span class="st">&#39;renewable_zone&#39;</span>],</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;hub_to_urban&#39;</span>: hour_data[<span class="st">&#39;urban_center&#39;</span>] <span class="op">-</span> hour_data[<span class="st">&#39;hub_price&#39;</span>]</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Transaction costs (bid-ask spread + execution)</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        transaction_cost <span class="op">=</span> <span class="fl">2.50</span>  <span class="co"># $/MWh</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Evaluate each spread for trading viability</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> strategy_name, spread <span class="kw">in</span> spreads.items():</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>            net_spread <span class="op">=</span> spread <span class="op">-</span> transaction_cost</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> net_spread <span class="op">&gt;</span> <span class="dv">8</span>:  <span class="co"># Minimum profitable threshold</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>                buy_node, sell_node <span class="op">=</span> strategy_name.split(<span class="st">&#39;_to_&#39;</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Position sizing based on spread magnitude</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> net_spread <span class="op">&gt;</span> <span class="dv">20</span>:</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                    position_mw <span class="op">=</span> <span class="dv">150</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>                    confidence <span class="op">=</span> <span class="st">&#39;HIGH&#39;</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>                <span class="cf">elif</span> net_spread <span class="op">&gt;</span> <span class="dv">12</span>:</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>                    position_mw <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>                    confidence <span class="op">=</span> <span class="st">&#39;MEDIUM&#39;</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>                <span class="cf">else</span>:</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>                    position_mw <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>                    confidence <span class="op">=</span> <span class="st">&#39;LOW&#39;</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>                expected_pnl <span class="op">=</span> net_spread <span class="op">*</span> position_mw</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>                trades.append({</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;hour&#39;</span>: hour,</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;strategy&#39;</span>: strategy_name,</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;buy_node&#39;</span>: buy_node,</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;sell_node&#39;</span>: sell_node,</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;gross_spread&#39;</span>: spread,</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;net_spread&#39;</span>: net_spread,</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;position_mw&#39;</span>: position_mw,</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;expected_pnl&#39;</span>: expected_pnl,</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&#39;confidence&#39;</span>: confidence</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>                })</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Aggregate results</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    total_pnl <span class="op">=</span> <span class="bu">sum</span>(t[<span class="st">&#39;expected_pnl&#39;</span>] <span class="cf">for</span> t <span class="kw">in</span> trades)</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    high_confidence_trades <span class="op">=</span> [t <span class="cf">for</span> t <span class="kw">in</span> trades <span class="cf">if</span> t[<span class="st">&#39;confidence&#39;</span>] <span class="op">==</span> <span class="st">&#39;HIGH&#39;</span>]</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    high_confidence_pnl <span class="op">=</span> <span class="bu">sum</span>(t[<span class="st">&#39;expected_pnl&#39;</span>] <span class="cf">for</span> t <span class="kw">in</span> high_confidence_trades)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;trades&#39;</span>: trades,</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_trades&#39;</span>: <span class="bu">len</span>(trades),</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;high_confidence_trades&#39;</span>: <span class="bu">len</span>(high_confidence_trades),</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_pnl&#39;</span>: total_pnl,</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;high_confidence_pnl&#39;</span>: high_confidence_pnl,</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;avg_spread&#39;</span>: np.mean([t[<span class="st">&#39;net_spread&#39;</span>] <span class="cf">for</span> t <span class="kw">in</span> trades]) <span class="cf">if</span> trades <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Build and evaluate strategy</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>strategy <span class="op">=</span> build_trading_strategy(node_prices)</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Multi-Node Trading Strategy:&quot;</span>)</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Total Trade Opportunities: </span><span class="sc">{</span>strategy[<span class="st">&#39;total_trades&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  High Confidence Trades: </span><span class="sc">{</span>strategy[<span class="st">&#39;high_confidence_trades&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Expected Daily P&amp;L: $</span><span class="sc">{</span>strategy[<span class="st">&#39;total_pnl&#39;</span>]<span class="sc">:,.0f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  High Confidence P&amp;L: $</span><span class="sc">{</span>strategy[<span class="st">&#39;high_confidence_pnl&#39;</span>]<span class="sc">:,.0f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Average Net Spread: $</span><span class="sc">{</span>strategy[<span class="st">&#39;avg_spread&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span></code></pre></div>
+<p>A well-constructed multi-node strategy typically generates
+$75,000-$300,000 daily P&amp;L from a diversified portfolio of spread
+trades. During constrained conditions, returns can exceed $500,000 per
+day.</p>
+<h2 id="key-takeaways-for-lmp-traders">Key Takeaways for LMP
+Traders</h2>
+<p>Mastering LMP analysis transforms power trading from commodity
+speculation into spatial arbitrage science:</p>
+<p><strong>1. Location Matters More Than Price</strong>: A $10/MWh
+spread between nodes creates more profit than a $10/MWh price move at a
+single node, because you can simultaneously buy and sell.</p>
+<p><strong>2. Congestion Is Your Friend</strong>: When others fear
+transmission constraints, sophisticated traders see opportunity. High
+congestion components signal profitable arbitrage.</p>
+<p><strong>3. Real-Time Monitoring Is Essential</strong>: LMP
+opportunities emerge and disappear rapidly. Automated monitoring systems
+provide critical milliseconds of advantage.</p>
+<p><strong>4. Component Decomposition Reveals Truth</strong>:
+Understanding whether high LMP reflects energy costs, congestion, or
+losses determines optimal trading response.</p>
+<p><strong>5. FTRs Provide Leverage</strong>: Financial Transmission
+Rights offer concentrated exposure to congestion revenue without
+physical delivery obligations, amplifying returns when spreads
+widen.</p>
+<p>The examples demonstrate how you can deploy this solution. Start with
+basic spread identification, add real-time monitoring, incorporate FTR
+analysis, and refine your strategy based on actual execution
+results.</p>
+<h2 id="implementation-roadmap">Implementation Roadmap</h2>
+<p>Deploy LMP trading capabilities systematically:</p>
+<ol type="1">
+<li><strong>Data Infrastructure</strong>: Establish real-time LMP feeds
+from your ISO (PJM, CAISO, ERCOT, etc.)</li>
+<li><strong>Node Selection</strong>: Identify high-value nodes based on
+historical spread analysis</li>
+<li><strong>Alert Systems</strong>: Deploy automated monitoring for
+spread opportunities</li>
+<li><strong>Position Management</strong>: Build execution infrastructure
+for simultaneous buy/sell trades</li>
+<li><strong>Risk Controls</strong>: Implement limits on spread exposure
+and position concentration</li>
+<li><strong>FTR Integration</strong>: Participate in FTR auctions using
+historical spread analysis</li>
+<li><strong>Performance Tracking</strong>: Measure actual vs. expected
+P&amp;L on executed trades</li>
+</ol>
+<p>Professional LMP trading requires both analytical sophistication and
+operational excellence. While others trade on hub prices alone, you’ll
+be capturing spreads invisible to conventional market
+participants—spreads that generate consistent profits across varying
+market conditions.</p>
+<figure>
+<img src="02_lmp_analysis_accuracy.png" alt="LMP Trading Performance" />
+<figcaption aria-hidden="true">LMP Trading Performance</figcaption>
+</figure>
+</body>
+</html>

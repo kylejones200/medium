@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>08_ore_grade_forecasting_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="ore-grade-forecasting-turning-sparse-drillholes-into-profitable-mining-decisions">Ore
+Grade Forecasting: Turning Sparse Drillholes into Profitable Mining
+Decisions</h1>
+<p>When Barrick Gold acquired the Pueblo Viejo mine in the Dominican
+Republic, their ore reserve estimates varied by nearly 30% depending on
+which interpolation method they used. The difference represented
+billions of dollars in valuation uncertainty. Professional mining
+companies that master spatial grade forecasting gain decisive advantages
+in mine planning, investment decisions, and production
+optimization—advantages that translate directly to shareholder
+returns.</p>
+<p>Ore grade forecasting isn’t just about filling gaps between
+drillholes—it’s about quantifying uncertainty, understanding spatial
+correlation, and making optimal decisions under incomplete information.
+Modern machine learning techniques augment traditional geostatistics,
+delivering more accurate predictions and more realistic uncertainty
+estimates that enable better capital allocation.</p>
+<h2 id="why-grade-forecasting-determines-mine-value">Why Grade
+Forecasting Determines Mine Value</h2>
+<p>Every mining operation is built on grade estimates derived from
+sparse sampling. A typical gold deposit might have drillholes spaced
+50-100 meters apart, yet mining decisions operate at 5-10 meter block
+scales. This means 95-99% of your resource tonnage is based on
+interpolation rather than direct measurement.</p>
+<p>Professional mining companies use grade forecasting to: - Estimate
+mineral resources and ore reserves for regulatory reporting and
+financing - Optimize pit shell designs to maximize net present value -
+Schedule mining sequences that meet mill feed grade targets and blending
+requirements - Assess acquisition targets and bid competitively with
+quantified confidence levels - Manage production risk through realistic
+simulation of grade variability</p>
+<p>The difference between a forecast error of 15% versus 8% can mean the
+difference between a profitable mine and a stranded asset. When copper
+grades decline from 0.8% to 0.6%, operating margins evaporate—accurate
+forecasting provides the early warning needed for adaptive
+management.</p>
+<figure>
+<img src="08_ore_grade_main.png" alt="Ore Grade Spatial Analysis" />
+<figcaption aria-hidden="true">Ore Grade Spatial Analysis</figcaption>
+</figure>
+<h2 id="understanding-spatial-correlation-in-ore-bodies">Understanding
+Spatial Correlation in Ore Bodies</h2>
+<p>Let’s examine how spatial correlation patterns govern grade
+estimation quality:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.gaussian_process <span class="im">import</span> GaussianProcessRegressor</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.gaussian_process.kernels <span class="im">import</span> RBF, WhiteKernel, ConstantKernel</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.spatial.distance <span class="im">import</span> cdist</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_synthetic_drillhole_data(num_holes<span class="op">=</span><span class="dv">100</span>, domain_size<span class="op">=</span><span class="dv">1000</span>, seed<span class="op">=</span><span class="dv">42</span>):</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Generate realistic synthetic drillhole assay data.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Simulates gold deposit with spatial correlation matching</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">    typical orogenic gold system characteristics.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">    -----------</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">    num_holes : int</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">        Number of drillhole collar locations</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">    domain_size : float</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">        Domain extent in meters</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">    seed : int</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">        Random seed for reproducibility</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">    --------</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">    pd.DataFrame : Drillhole assay data with coordinates and grades</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    np.random.seed(seed)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drillhole collar locations (UTM coordinates)</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, domain_size, num_holes)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, domain_size, num_holes)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> np.random.uniform(<span class="op">-</span><span class="dv">200</span>, <span class="op">-</span><span class="dv">50</span>, num_holes)  <span class="co"># Depth below surface</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create spatial field with realistic correlation structure</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gold deposits show strong spatial correlation at short ranges</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    correlation_range <span class="op">=</span> <span class="dv">150</span>  <span class="co"># meters</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Background grade (log-normal distribution typical for gold)</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    log_background <span class="op">=</span> np.random.normal(<span class="op">-</span><span class="dv">2</span>, <span class="fl">0.5</span>, num_holes)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add spatially correlated component</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    coords <span class="op">=</span> np.column_stack([x, y, z])</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    distances <span class="op">=</span> cdist(coords, coords)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    correlation_matrix <span class="op">=</span> np.exp(<span class="op">-</span>(distances <span class="op">/</span> correlation_range) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Correlated random field</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    cholesky <span class="op">=</span> np.linalg.cholesky(correlation_matrix <span class="op">+</span> np.eye(num_holes) <span class="op">*</span> <span class="fl">0.01</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    correlated_field <span class="op">=</span> cholesky <span class="op">@</span> np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, num_holes)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine components</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    log_grade <span class="op">=</span> log_background <span class="op">+</span> <span class="fl">0.8</span> <span class="op">*</span> correlated_field</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    grade_au_ppm <span class="op">=</span> np.exp(log_grade)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add high-grade shoots (common in orogenic gold)</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    n_shoots <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n_shoots):</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>        shoot_center <span class="op">=</span> np.random.randint(<span class="dv">0</span>, num_holes)</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>        shoot_distances <span class="op">=</span> np.linalg.norm(coords <span class="op">-</span> coords[shoot_center], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        shoot_influence <span class="op">=</span> np.exp(<span class="op">-</span>(shoot_distances <span class="op">/</span> <span class="dv">80</span>) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>        grade_au_ppm <span class="op">+=</span> shoot_influence <span class="op">*</span> np.random.uniform(<span class="dv">2</span>, <span class="dv">8</span>)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create DataFrame</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    drillholes <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;hole_id&#39;</span>: [<span class="ss">f&#39;DH</span><span class="sc">{</span>i<span class="sc">:03d}</span><span class="ss">&#39;</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_holes)],</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;x&#39;</span>: x,</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;y&#39;</span>: y,</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;z&#39;</span>: z,</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;au_ppm&#39;</span>: grade_au_ppm,</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;log_au_ppm&#39;</span>: np.log(grade_au_ppm <span class="op">+</span> <span class="fl">0.001</span>)  <span class="co"># Avoid log(0)</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> drillholes</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic dataset</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>drillholes <span class="op">=</span> generate_synthetic_drillhole_data(num_holes<span class="op">=</span><span class="dv">120</span>)</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Generated </span><span class="sc">{</span><span class="bu">len</span>(drillholes)<span class="sc">}</span><span class="ss"> drillhole samples&quot;</span>)</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Grade range: </span><span class="sc">{</span>drillholes[<span class="st">&#39;au_ppm&#39;</span>]<span class="sc">.</span><span class="bu">min</span>()<span class="sc">:.3f}</span><span class="ss"> to </span><span class="sc">{</span>drillholes[<span class="st">&#39;au_ppm&#39;</span>]<span class="sc">.</span><span class="bu">max</span>()<span class="sc">:.2f}</span><span class="ss"> ppm Au&quot;</span>)</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Mean grade: </span><span class="sc">{</span>drillholes[<span class="st">&#39;au_ppm&#39;</span>]<span class="sc">.</span>mean()<span class="sc">:.3f}</span><span class="ss"> ppm Au&quot;</span>)</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Median grade: </span><span class="sc">{</span>drillholes[<span class="st">&#39;au_ppm&#39;</span>]<span class="sc">.</span>median()<span class="sc">:.3f}</span><span class="ss"> ppm Au&quot;</span>)</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;CV (Coefficient of Variation): </span><span class="sc">{</span>drillholes[<span class="st">&#39;au_ppm&#39;</span>]<span class="sc">.</span>std() <span class="op">/</span> drillholes[<span class="st">&#39;au_ppm&#39;</span>]<span class="sc">.</span>mean()<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>This synthetic data mimics real gold deposit characteristics:
+log-normal grade distributions, spatial correlation ranges of 100-200m,
+and high-grade shoots. The coefficient of variation (CV) above 1.0 is
+typical for precious metals—grade variability exceeds the mean.</p>
+<h2 id="variogram-analysis-quantifying-spatial-continuity">Variogram
+Analysis: Quantifying Spatial Continuity</h2>
+<p>Understanding how grades correlate spatially is fundamental to
+accurate forecasting:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_experimental_variogram(data, max_distance<span class="op">=</span><span class="dv">500</span>, n_bins<span class="op">=</span><span class="dv">20</span>):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate experimental variogram to quantify spatial continuity.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    The variogram measures how dissimilar samples become as</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    separation distance increases.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">    -----------</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">    data : pd.DataFrame</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">        Drillhole data with x, y, z coordinates and grades</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">    max_distance : float</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">        Maximum separation distance to analyze</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">    n_bins : int</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">        Number of distance bins</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">    --------</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">    dict : Variogram data and fitted parameters</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    coords <span class="op">=</span> data[[<span class="st">&#39;x&#39;</span>, <span class="st">&#39;y&#39;</span>, <span class="st">&#39;z&#39;</span>]].values</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    grades <span class="op">=</span> data[<span class="st">&#39;log_au_ppm&#39;</span>].values  <span class="co"># Use log-transformed grades</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate all pairwise distances and grade differences</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    n_samples <span class="op">=</span> <span class="bu">len</span>(data)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    distances <span class="op">=</span> []</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    semivariances <span class="op">=</span> []</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_samples):</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i <span class="op">+</span> <span class="dv">1</span>, n_samples):</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>            dist <span class="op">=</span> np.linalg.norm(coords[i] <span class="op">-</span> coords[j])</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> dist <span class="op">&lt;=</span> max_distance:</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Semivariance: half the squared difference</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>                semivar <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (grades[i] <span class="op">-</span> grades[j]) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                distances.append(dist)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>                semivariances.append(semivar)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    distances <span class="op">=</span> np.array(distances)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    semivariances <span class="op">=</span> np.array(semivariances)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Bin the data</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    bins <span class="op">=</span> np.linspace(<span class="dv">0</span>, max_distance, n_bins <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    bin_centers <span class="op">=</span> (bins[:<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> bins[<span class="dv">1</span>:]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    binned_semivariance <span class="op">=</span> []</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    bin_counts <span class="op">=</span> []</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_bins):</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> (distances <span class="op">&gt;=</span> bins[i]) <span class="op">&amp;</span> (distances <span class="op">&lt;</span> bins[i <span class="op">+</span> <span class="dv">1</span>])</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> mask.<span class="bu">sum</span>() <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>            binned_semivariance.append(semivariances[mask].mean())</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>            bin_counts.append(mask.<span class="bu">sum</span>())</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>            binned_semivariance.append(np.nan)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>            bin_counts.append(<span class="dv">0</span>)</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    binned_semivariance <span class="op">=</span> np.array(binned_semivariance)</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fit spherical variogram model</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Spherical model: γ(h) = c0 + c1 * [1.5*(h/a) - 0.5*(h/a)^3] for h &lt; a</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    <span class="co">#                        = c0 + c1 for h &gt;= a</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    valid_mask <span class="op">=</span> <span class="op">~</span>np.isnan(binned_semivariance) <span class="op">&amp;</span> (np.array(bin_counts) <span class="op">&gt;=</span> <span class="dv">10</span>)</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    valid_distances <span class="op">=</span> bin_centers[valid_mask]</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    valid_semivar <span class="op">=</span> binned_semivariance[valid_mask]</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Pythonic variogram fitting with safe defaults</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(valid_semivar) <span class="op">&gt;=</span> <span class="dv">3</span>:</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        nugget <span class="op">=</span> <span class="bu">min</span>(valid_semivar[<span class="dv">0</span>], valid_semivar[<span class="op">-</span><span class="dv">1</span>])  <span class="co"># More readable than ternary</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        sill <span class="op">=</span> valid_semivar[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        range_param <span class="op">=</span> valid_distances[np.argmin(np.<span class="bu">abs</span>(valid_semivar <span class="op">-</span> <span class="fl">0.95</span> <span class="op">*</span> sill))]</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        nugget, sill, range_param <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;bin_centers&#39;</span>: bin_centers,</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;binned_semivariance&#39;</span>: binned_semivariance,</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;bin_counts&#39;</span>: bin_counts,</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;nugget&#39;</span>: nugget,</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;sill&#39;</span>: sill,</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;range&#39;</span>: range_param,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;distances&#39;</span>: distances,</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;semivariances&#39;</span>: semivariances</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate variogram</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>variogram <span class="op">=</span> calculate_experimental_variogram(drillholes)</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Variogram Analysis:&quot;</span>)</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Nugget Effect: </span><span class="sc">{</span>variogram[<span class="st">&#39;nugget&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Sill: </span><span class="sc">{</span>variogram[<span class="st">&#39;sill&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Range: </span><span class="sc">{</span>variogram[<span class="st">&#39;range&#39;</span>]<span class="sc">:.1f}</span><span class="ss"> meters&quot;</span>)</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Nugget/Sill Ratio: </span><span class="sc">{</span>variogram[<span class="st">&#39;nugget&#39;</span>] <span class="op">/</span> variogram[<span class="st">&#39;sill&#39;</span>]<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Interpretation:&quot;</span>)</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  - Spatial correlation extends to ~</span><span class="sc">{</span>variogram[<span class="st">&#39;range&#39;</span>]<span class="sc">:.0f}</span><span class="ss">m&quot;</span>)</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  - Beyond this distance, samples are essentially uncorrelated&quot;</span>)</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  - Nugget represents micro-scale variability + sampling error&quot;</span>)</span></code></pre></div>
+<p>The range parameter (typically 100-200m for gold deposits) defines
+how far spatial influence extends. Beyond this range, knowing a grade at
+one location provides no information about another location. The
+nugget-to-sill ratio indicates short-range variability—high ratios
+(&gt;30%) suggest challenging interpolation conditions.</p>
+<h2 id="gaussian-process-regression-for-grade-estimation">Gaussian
+Process Regression for Grade Estimation</h2>
+<p>Modern machine learning provides powerful alternatives to classical
+kriging:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_gp_grade_model(training_data, kernel_params<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Build Gaussian Process model for grade estimation.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">    GP provides probabilistic predictions with uncertainty quantification.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Mathematically related to kriging but with more flexible kernel options.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">    -----------</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">    training_data : pd.DataFrame</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">        Drillhole assays with coordinates and grades</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">    kernel_params : dict</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">        Optional kernel hyperparameters</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">    --------</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">    dict : Trained GP model and performance metrics</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Prepare features and target</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> training_data[[<span class="st">&#39;x&#39;</span>, <span class="st">&#39;y&#39;</span>, <span class="st">&#39;z&#39;</span>]].values</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> training_data[<span class="st">&#39;log_au_ppm&#39;</span>].values</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalize coordinates for numerical stability</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    X_mean <span class="op">=</span> X.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    X_std <span class="op">=</span> X.std(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    X_normalized <span class="op">=</span> (X <span class="op">-</span> X_mean) <span class="op">/</span> X_std</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define kernel (similar to variogram structure)</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># RBF kernel: k(x, x&#39;) = σ² * exp(-||x - x&#39;||² / (2 * l²))</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> kernel_params <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        length_scale <span class="op">=</span> <span class="fl">1.0</span>  <span class="co"># After normalization</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        signal_variance <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        noise_variance <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        length_scale <span class="op">=</span> kernel_params[<span class="st">&#39;length_scale&#39;</span>]</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        signal_variance <span class="op">=</span> kernel_params[<span class="st">&#39;signal_variance&#39;</span>]</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        noise_variance <span class="op">=</span> kernel_params[<span class="st">&#39;noise_variance&#39;</span>]</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    kernel <span class="op">=</span> (</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        ConstantKernel(signal_variance, (<span class="fl">0.1</span>, <span class="fl">10.0</span>)) <span class="op">*</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        RBF(length_scale<span class="op">=</span>length_scale, length_scale_bounds<span class="op">=</span>(<span class="fl">0.1</span>, <span class="fl">5.0</span>)) <span class="op">+</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        WhiteKernel(noise_level<span class="op">=</span>noise_variance, noise_level_bounds<span class="op">=</span>(<span class="fl">0.01</span>, <span class="fl">1.0</span>))</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Build and train GP</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    gp <span class="op">=</span> GaussianProcessRegressor(</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>        kernel<span class="op">=</span>kernel,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        n_restarts_optimizer<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">1e-6</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>        normalize_y<span class="op">=</span><span class="va">True</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    gp.fit(X_normalized, y)</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Cross-validation assessment</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score, cross_val_predict</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    cv_scores <span class="op">=</span> cross_val_score(gp, X_normalized, y, cv<span class="op">=</span><span class="dv">5</span>, scoring<span class="op">=</span><span class="st">&#39;r2&#39;</span>)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    cv_predictions <span class="op">=</span> cross_val_predict(gp, X_normalized, y, cv<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>    mae <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(y <span class="op">-</span> cv_predictions))</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    rmse <span class="op">=</span> np.sqrt(np.mean((y <span class="op">-</span> cv_predictions) <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    r2 <span class="op">=</span> cv_scores.mean()</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;model&#39;</span>: gp,</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;X_mean&#39;</span>: X_mean,</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;X_std&#39;</span>: X_std,</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;cv_r2&#39;</span>: r2,</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;cv_mae&#39;</span>: mae,</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;cv_rmse&#39;</span>: rmse,</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;kernel_params&#39;</span>: gp.kernel_,</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;log_marginal_likelihood&#39;</span>: gp.log_marginal_likelihood()</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Train GP model</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>gp_model <span class="op">=</span> build_gp_grade_model(drillholes)</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Gaussian Process Model Performance:&quot;</span>)</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Cross-Validated R²: </span><span class="sc">{</span>gp_model[<span class="st">&#39;cv_r2&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Mean Absolute Error: </span><span class="sc">{</span>gp_model[<span class="st">&#39;cv_mae&#39;</span>]<span class="sc">:.3f}</span><span class="ss"> log(ppm)&quot;</span>)</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Root Mean Square Error: </span><span class="sc">{</span>gp_model[<span class="st">&#39;cv_rmse&#39;</span>]<span class="sc">:.3f}</span><span class="ss"> log(ppm)&quot;</span>)</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Optimized Kernel Parameters:&quot;</span>)</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  </span><span class="sc">{</span>gp_model[<span class="st">&#39;kernel_params&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Log Marginal Likelihood: </span><span class="sc">{</span>gp_model[<span class="st">&#39;log_marginal_likelihood&#39;</span>]<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>The Gaussian Process naturally provides uncertainty
+estimates—critical for risk assessment. R² values above 0.6 indicate
+good spatial structure; values below 0.4 suggest highly erratic
+mineralization requiring denser drilling.</p>
+<h2 id="block-model-grade-estimation">Block Model Grade Estimation</h2>
+<p>Production mining requires grade estimates on regular block
+grids:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> estimate_block_model(drillhole_data, gp_model, block_size<span class="op">=</span><span class="dv">25</span>, domain_extent<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Estimate grades on 3D block model grid with uncertainty.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Creates regular grid of mining blocks and estimates grade</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    with confidence intervals at each location.</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">    -----------</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">    drillhole_data : pd.DataFrame</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">        Training drillhole data</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">    gp_model : dict</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">        Trained Gaussian Process model</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">    block_size : float</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">        Block dimension in meters</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">    domain_extent : dict</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">        Domain boundaries, or None to use drillhole extent</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">    --------</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">    pd.DataFrame : Block model with grade estimates and uncertainty</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define block model extent</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> domain_extent <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        x_min, x_max <span class="op">=</span> drillhole_data[<span class="st">&#39;x&#39;</span>].<span class="bu">min</span>(), drillhole_data[<span class="st">&#39;x&#39;</span>].<span class="bu">max</span>()</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        y_min, y_max <span class="op">=</span> drillhole_data[<span class="st">&#39;y&#39;</span>].<span class="bu">min</span>(), drillhole_data[<span class="st">&#39;y&#39;</span>].<span class="bu">max</span>()</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        z_min, z_max <span class="op">=</span> drillhole_data[<span class="st">&#39;z&#39;</span>].<span class="bu">min</span>(), drillhole_data[<span class="st">&#39;z&#39;</span>].<span class="bu">max</span>()</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        x_min, x_max <span class="op">=</span> domain_extent[<span class="st">&#39;x&#39;</span>]</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        y_min, y_max <span class="op">=</span> domain_extent[<span class="st">&#39;y&#39;</span>]</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        z_min, z_max <span class="op">=</span> domain_extent[<span class="st">&#39;z&#39;</span>]</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create regular grid</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    x_blocks <span class="op">=</span> np.arange(x_min, x_max, block_size)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    y_blocks <span class="op">=</span> np.arange(y_min, y_max, block_size)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    z_blocks <span class="op">=</span> np.arange(z_min, z_max, block_size)</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    xx, yy, zz <span class="op">=</span> np.meshgrid(x_blocks, y_blocks, z_blocks, indexing<span class="op">=</span><span class="st">&#39;ij&#39;</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    block_coords <span class="op">=</span> np.column_stack([xx.ravel(), yy.ravel(), zz.ravel()])</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalize coordinates</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    block_coords_normalized <span class="op">=</span> (block_coords <span class="op">-</span> gp_model[<span class="st">&#39;X_mean&#39;</span>]) <span class="op">/</span> gp_model[<span class="st">&#39;X_std&#39;</span>]</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Predict grades with uncertainty</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    mean_pred, std_pred <span class="op">=</span> gp_model[<span class="st">&#39;model&#39;</span>].predict(block_coords_normalized, return_std<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform back to grade space (from log space)</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># For log-normal distribution: mean in original space ≈ exp(μ + σ²/2)</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    grade_mean <span class="op">=</span> np.exp(mean_pred <span class="op">+</span> std_pred <span class="op">**</span> <span class="dv">2</span> <span class="op">/</span> <span class="dv">2</span>)</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    grade_std <span class="op">=</span> grade_mean <span class="op">*</span> np.sqrt(np.exp(std_pred <span class="op">**</span> <span class="dv">2</span>) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate confidence intervals</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    grade_p10 <span class="op">=</span> np.exp(mean_pred <span class="op">-</span> <span class="fl">1.28</span> <span class="op">*</span> std_pred)  <span class="co"># 10th percentile</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    grade_p50 <span class="op">=</span> np.exp(mean_pred)  <span class="co"># Median</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    grade_p90 <span class="op">=</span> np.exp(mean_pred <span class="op">+</span> <span class="fl">1.28</span> <span class="op">*</span> std_pred)  <span class="co"># 90th percentile</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Classification based on uncertainty (Pythonic with pd.cut)</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    coefficient_of_variation <span class="op">=</span> std_pred <span class="op">/</span> np.<span class="bu">abs</span>(mean_pred)</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    classification <span class="op">=</span> pd.cut(coefficient_of_variation,</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>                           bins<span class="op">=</span>[<span class="dv">0</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span>, np.inf],</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>                           labels<span class="op">=</span>[<span class="st">&#39;Measured&#39;</span>, <span class="st">&#39;Indicated&#39;</span>, <span class="st">&#39;Inferred&#39;</span>])</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create block model DataFrame</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    block_model <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;x&#39;</span>: block_coords[:, <span class="dv">0</span>],</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;y&#39;</span>: block_coords[:, <span class="dv">1</span>],</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;z&#39;</span>: block_coords[:, <span class="dv">2</span>],</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;au_ppm_mean&#39;</span>: grade_mean,</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;au_ppm_std&#39;</span>: grade_std,</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;au_ppm_p10&#39;</span>: grade_p10,</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;au_ppm_p50&#39;</span>: grade_p50,</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;au_ppm_p90&#39;</span>: grade_p90,</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;log_uncertainty&#39;</span>: std_pred,</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;classification&#39;</span>: classification,</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;block_volume_m3&#39;</span>: block_size <span class="op">**</span> <span class="dv">3</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> block_model</span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate block model</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>block_model <span class="op">=</span> estimate_block_model(drillholes, gp_model, block_size<span class="op">=</span><span class="dv">25</span>)</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate resource tonnage</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>density_t_m3 <span class="op">=</span> <span class="fl">2.7</span>  <span class="co"># Typical density for mineralized rock</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>block_model[<span class="st">&#39;tonnage&#39;</span>] <span class="op">=</span> block_model[<span class="st">&#39;block_volume_m3&#39;</span>] <span class="op">*</span> density_t_m3</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply cutoff grade</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>cutoff_grade <span class="op">=</span> <span class="fl">0.5</span>  <span class="co"># ppm Au</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>ore_blocks <span class="op">=</span> block_model[block_model[<span class="st">&#39;au_ppm_mean&#39;</span>] <span class="op">&gt;=</span> cutoff_grade]</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate resource estimates</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>total_ore_tonnes <span class="op">=</span> ore_blocks[<span class="st">&#39;tonnage&#39;</span>].<span class="bu">sum</span>()</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>total_contained_gold <span class="op">=</span> (ore_blocks[<span class="st">&#39;tonnage&#39;</span>] <span class="op">*</span> ore_blocks[<span class="st">&#39;au_ppm_mean&#39;</span>]).<span class="bu">sum</span>()</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>average_ore_grade <span class="op">=</span> total_contained_gold <span class="op">/</span> total_ore_tonnes</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate by resource category</span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>resource_summary <span class="op">=</span> ore_blocks.groupby(<span class="st">&#39;classification&#39;</span>).agg({</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;tonnage&#39;</span>: <span class="st">&#39;sum&#39;</span>,</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;au_ppm_mean&#39;</span>: <span class="kw">lambda</span> x: (ore_blocks.loc[x.index, <span class="st">&#39;tonnage&#39;</span>] <span class="op">*</span> x).<span class="bu">sum</span>() <span class="op">/</span> ore_blocks.loc[x.index, <span class="st">&#39;tonnage&#39;</span>].<span class="bu">sum</span>()</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>}).<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Block Model Resource Estimate:&quot;</span>)</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Total Blocks: </span><span class="sc">{</span><span class="bu">len</span>(block_model)<span class="sc">:,}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Ore Blocks (&gt;</span><span class="sc">{</span>cutoff_grade<span class="sc">}</span><span class="ss"> ppm): </span><span class="sc">{</span><span class="bu">len</span>(ore_blocks)<span class="sc">:,}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Total Ore Tonnage: </span><span class="sc">{</span>total_ore_tonnes<span class="sc">:,.0f}</span><span class="ss"> tonnes&quot;</span>)</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Average Ore Grade: </span><span class="sc">{</span>average_ore_grade<span class="sc">:.3f}</span><span class="ss"> ppm Au&quot;</span>)</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Contained Gold: </span><span class="sc">{</span>total_contained_gold <span class="op">/</span> <span class="fl">1e6</span><span class="sc">:.2f}</span><span class="ss"> million grams (</span><span class="sc">{</span>total_contained_gold <span class="op">/</span> <span class="fl">31.1035</span> <span class="op">/</span> <span class="fl">1e6</span><span class="sc">:.1f}</span><span class="ss"> million oz)&quot;</span>)</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Resource Classification:&quot;</span>)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resource_summary)</span></code></pre></div>
+<p>This block model forms the basis for mine planning. Measured and
+Indicated resources support ore reserve declarations, while Inferred
+resources guide exploration targeting. Uncertainty quantification
+enables risk-adjusted economic analysis.</p>
+<h2 id="conditional-simulation-for-production-planning">Conditional
+Simulation for Production Planning</h2>
+<p>Single grade estimates don’t capture variability experienced during
+mining:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> conditional_simulation(drillhole_data, gp_model, block_size<span class="op">=</span><span class="dv">25</span>, n_realizations<span class="op">=</span><span class="dv">20</span>):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Generate multiple equally-probable grade realizations.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Conditional simulation honors drillhole data while reproducing</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    realistic grade variability for production risk analysis.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">    -----------</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">    drillhole_data : pd.DataFrame</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">        Conditioning drillhole data</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">    gp_model : dict</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">        Trained GP model</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">    block_size : float</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">        Block size in meters</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">    n_realizations : int</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">        Number of simulations to generate</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">    --------</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">    dict : Multiple realizations and variability statistics</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate block model coordinates (subset for speed)</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    x_blocks <span class="op">=</span> np.arange(<span class="dv">200</span>, <span class="dv">800</span>, block_size)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    y_blocks <span class="op">=</span> np.arange(<span class="dv">200</span>, <span class="dv">800</span>, block_size)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    z_blocks <span class="op">=</span> np.arange(<span class="op">-</span><span class="dv">150</span>, <span class="op">-</span><span class="dv">100</span>, block_size)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    xx, yy, zz <span class="op">=</span> np.meshgrid(x_blocks, y_blocks, z_blocks, indexing<span class="op">=</span><span class="st">&#39;ij&#39;</span>)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    block_coords <span class="op">=</span> np.column_stack([xx.ravel(), yy.ravel(), zz.ravel()])</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalize</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    block_coords_norm <span class="op">=</span> (block_coords <span class="op">-</span> gp_model[<span class="st">&#39;X_mean&#39;</span>]) <span class="op">/</span> gp_model[<span class="st">&#39;X_std&#39;</span>]</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate realizations</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    realizations <span class="op">=</span> []</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_realizations):</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sample from GP posterior</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        sample <span class="op">=</span> gp_model[<span class="st">&#39;model&#39;</span>].sample_y(block_coords_norm, n_samples<span class="op">=</span><span class="dv">1</span>, random_state<span class="op">=</span>i)</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        grade_realization <span class="op">=</span> np.exp(sample.ravel())</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        realizations.append(grade_realization)</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    realizations <span class="op">=</span> np.array(realizations)</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate simulation statistics</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    mean_grade <span class="op">=</span> realizations.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    std_grade <span class="op">=</span> realizations.std(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    p10_grade <span class="op">=</span> np.percentile(realizations, <span class="dv">10</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    p90_grade <span class="op">=</span> np.percentile(realizations, <span class="dv">90</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate global statistics (mine-wide)</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    global_means <span class="op">=</span> realizations.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    global_p10 <span class="op">=</span> np.percentile(global_means, <span class="dv">10</span>)</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    global_p50 <span class="op">=</span> np.percentile(global_means, <span class="dv">50</span>)</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    global_p90 <span class="op">=</span> np.percentile(global_means, <span class="dv">90</span>)</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;realizations&#39;</span>: realizations,</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;block_coords&#39;</span>: block_coords,</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;mean_grade&#39;</span>: mean_grade,</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;std_grade&#39;</span>: std_grade,</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;p10_grade&#39;</span>: p10_grade,</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;p90_grade&#39;</span>: p90_grade,</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;global_p10&#39;</span>: global_p10,</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;global_p50&#39;</span>: global_p50,</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;global_p90&#39;</span>: global_p90</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate simulations</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>simulations <span class="op">=</span> conditional_simulation(drillholes, gp_model, n_realizations<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Conditional Simulation Results:&quot;</span>)</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Realizations Generated: 30&quot;</span>)</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Blocks per Realization: </span><span class="sc">{</span><span class="bu">len</span>(simulations[<span class="st">&#39;mean_grade&#39;</span>])<span class="sc">:,}</span><span class="ss">&quot;</span>)</span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Global Grade Statistics (ppm Au):&quot;</span>)</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  P10 (pessimistic): </span><span class="sc">{</span>simulations[<span class="st">&#39;global_p10&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  P50 (expected): </span><span class="sc">{</span>simulations[<span class="st">&#39;global_p50&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  P90 (optimistic): </span><span class="sc">{</span>simulations[<span class="st">&#39;global_p90&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Range: </span><span class="sc">{</span>simulations[<span class="st">&#39;global_p90&#39;</span>] <span class="op">-</span> simulations[<span class="st">&#39;global_p10&#39;</span>]<span class="sc">:.3f}</span><span class="ss"> ppm&quot;</span>)</span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Interpretation:&quot;</span>)</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  - There&#39;s 80% probability the average grade falls between P10 and P90&quot;</span>)</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  - This range quantifies production risk for financial modeling&quot;</span>)</span></code></pre></div>
+<p>Simulation provides realistic grade distributions for each mining
+block. Running mine plans through multiple realizations reveals
+production risk—will mill feed stay within target grades? Do stockpile
+strategies buffer variability effectively?</p>
+<h2 id="key-takeaways-for-mining-professionals">Key Takeaways for Mining
+Professionals</h2>
+<p>Ore grade forecasting transforms sparse drillhole data into
+actionable mining intelligence. The analysis presented here demonstrates
+several critical principles:</p>
+<p><strong>1. Spatial Correlation Structure Determines Estimation
+Quality</strong>: Understanding variogram range and structure reveals
+how far information propagates. Short ranges require dense drilling;
+long ranges enable wider spacing.</p>
+<p><strong>2. Uncertainty Quantification Enables Risk
+Management</strong>: Single “best estimate” models hide production risk.
+Probability distributions and simulation reveal the range of outcomes
+for robust planning.</p>
+<p><strong>3. Log-Normal Transformation Improves Estimates</strong>:
+Grade data typically follows log-normal distributions. Working in
+log-space produces more stable interpolations and better uncertainty
+estimates.</p>
+<p><strong>4. Machine Learning Augments Traditional Methods</strong>:
+Gaussian Processes provide flexible alternatives to kriging with
+automated hyperparameter selection and comparable theoretical
+foundations.</p>
+<p><strong>5. Block Model Resolution Affects Decisions</strong>: Fine
+blocks (5-10m) support operational planning; coarse blocks (25-50m) suit
+reserve estimation. Match resolution to decision scale.</p>
+<p>The examples show working code using freely available Python
+scientific computing libraries. Start with variogram analysis, implement
+GP estimation, generate block models, and incorporate simulation for
+risk assessment.</p>
+<h2 id="implementation-strategy">Implementation Strategy</h2>
+<p>To implement advanced grade forecasting in your mining operation:</p>
+<ol type="1">
+<li><strong>Data Quality Assessment</strong>: Audit drillhole database
+for location errors, assay outliers, and compositional consistency</li>
+<li><strong>Domain Definition</strong>: Establish geological domains
+with distinct grade populations and spatial characteristics<br />
+</li>
+<li><strong>Variogram Modeling</strong>: Calculate experimental
+variograms by domain and direction to quantify anisotropy</li>
+<li><strong>Model Selection</strong>: Compare ordinary kriging, GP
+regression, and ensemble methods through cross-validation</li>
+<li><strong>Block Model Generation</strong>: Estimate grades on
+appropriate block sizes with uncertainty metrics</li>
+<li><strong>Conditional Simulation</strong>: Generate multiple
+realizations for production risk analysis</li>
+<li><strong>Validation</strong>: Compare predictions against production
+data to calibrate and improve models</li>
+</ol>
+<p>The mining companies that master grade forecasting gain decisive
+advantages in resource valuation, mine planning optimization, and
+production risk management. While others rely on deterministic
+estimates, you’ll quantify uncertainty and make better decisions under
+incomplete information.</p>
+<figure>
+<img src="08_ore_grade_accuracy.png"
+alt="Ore Grade Forecasting Accuracy" />
+<figcaption aria-hidden="true">Ore Grade Forecasting
+Accuracy</figcaption>
+</figure>
+</body>
+</html>

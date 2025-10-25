@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_anomaly_detection_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="finding-the-needles-anomaly-detection-in-power-plant-operations">Finding
+the Needles: Anomaly Detection in Power Plant Operations</h1>
+<p><em>Using ensemble machine learning to automatically detect unusual
+emissions, data errors, and equipment malfunctions across 12,000+ U.S.
+power plants</em></p>
+<p><strong>Kyle Jones</strong><br />
+10 min read · Oct 6, 2025</p>
+<hr />
+<p>Among 12,613 power plants operating in the United States in 2023,
+which ones are behaving abnormally? Which have suspiciously high
+emissions? Which might have reporting errors? Which equipment is showing
+early signs of failure?</p>
+<p>Traditional manual auditing is impossible at this scale. But machine
+learning anomaly detection can automatically flag the most unusual 5% of
+plants for investigation—potentially catching billion-dollar problems
+before they escalate.</p>
+<p>This article demonstrates six different anomaly detection techniques
+on real EPA power plant data, then combines them into a robust ensemble
+that catches what individual methods miss.</p>
+<h2 id="why-anomaly-detection-matters">Why Anomaly Detection
+Matters</h2>
+<p><strong>For Regulators:</strong> The EPA receives emissions reports
+from thousands of facilities. Manually auditing all of them is
+impossible. Anomaly detection helps prioritize which plants warrant
+detailed investigation, catching misreporting, equipment issues, or
+compliance violations.</p>
+<p><strong>For Utility Operators:</strong> A plant with efficiency 20%
+below similar facilities could have equipment problems. Early detection
+enables predictive maintenance before catastrophic failure, saving
+millions in emergency repairs and lost generation.</p>
+<p><strong>For Investors:</strong> Unusual emissions patterns might
+indicate operational problems, regulatory risk, or aging equipment. This
+information helps assess asset quality and avoid bad investments.</p>
+<p><strong>For Researchers:</strong> Identifying outliers improves data
+quality for analysis. That plant reporting negative emissions? Probably
+a data entry error that would skew your results.</p>
+<figure>
+<img src="anomaly_scatter.png"
+alt="Visualization of normal vs anomalous plants in feature space" />
+<figcaption aria-hidden="true">Visualization of normal vs anomalous
+plants in feature space</figcaption>
+</figure>
+<h2 id="the-challenge-what-is-normal-anyway">The Challenge: What is
+“Normal” Anyway?</h2>
+<p>Power plants come in wildly different types: - A 1,000 MW coal plant
+burning 24/7 - A 50 MW natural gas peaker running only during summer
+afternoons<br />
+- A 2 MW solar farm - A 500 MW nuclear plant with 90%+ capacity
+factor</p>
+<p>Comparing them directly makes no sense. We need methods that
+understand context—what’s normal <em>for plants like this one</em>.</p>
+<h2 id="the-dataset">The Dataset</h2>
+<p>Using EPA eGRID 2023 data with 12,613 plants, we focus on key
+operational metrics: - <strong>Generation (MWh):</strong> How much
+electricity produced - <strong>CO2 emissions (tons):</strong> Total
+carbon dioxide emitted - <strong>Carbon intensity (tons/MWh):</strong>
+Emissions per unit of generation - <strong>Capacity factor:</strong>
+Actual generation vs maximum possible - <strong>NOx and SO2
+rates:</strong> Other pollutant intensities</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load plant data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plants <span class="op">=</span> pd.read_parquet(<span class="st">&#39;egrid_all_plants_1996-2023.parquet&#39;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>plants_2023 <span class="op">=</span> plants[plants[<span class="st">&#39;data_year&#39;</span>] <span class="op">==</span> <span class="dv">2023</span>].copy()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create features for anomaly detection</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;carbon_intensity&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>] <span class="op">/</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;capacity_factor&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>] <span class="op">/</span> </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    (plants_2023[<span class="st">&#39;Plant nameplate capacity (MW)&#39;</span>] <span class="op">*</span> <span class="dv">8760</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Log transforms for skewed distributions</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;log_generation&#39;</span>] <span class="op">=</span> np.log1p(plants_2023[<span class="st">&#39;Plant annual net generation (MWh)&#39;</span>])</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;log_co2&#39;</span>] <span class="op">=</span> np.log1p(plants_2023[<span class="st">&#39;Plant annual CO2 emissions (tons)&#39;</span>])</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Analyzing </span><span class="sc">{</span><span class="bu">len</span>(plants_2023)<span class="sc">:,}</span><span class="ss"> plants&quot;</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Features: carbon_intensity, capacity_factor, log_generation, log_co2&quot;</span>)</span></code></pre></div>
+<p>Some immediate red flags appear in the raw data: - 47 plants with
+capacity factor &gt; 1.0 (physically impossible—generating more than
+maximum capacity!) - 12 plants with negative emissions (data entry
+errors) - 238 plants with carbon intensity &gt;2.0 tons/MWh
+(suspiciously high, even for coal)</p>
+<h2 id="method-1-isolation-forest">Method 1: Isolation Forest</h2>
+<p>Isolation Forest works on a clever principle: anomalies are easier to
+isolate than normal points. It randomly selects features and split
+values, recursively partitioning the data. Anomalies get isolated in
+fewer splits (shorter tree paths).</p>
+<p><strong>Why It Works</strong></p>
+<p>Normal points are densely packed—requires many splits to isolate
+them. Anomalies are in sparse regions—one or two splits isolate
+them.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> IsolationForest</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare and scale features</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">&#39;log_generation&#39;</span>, <span class="st">&#39;log_co2&#39;</span>, <span class="st">&#39;carbon_intensity&#39;</span>, <span class="st">&#39;capacity_factor&#39;</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> plants_2023[features].dropna()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Train Isolation Forest</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>iso_forest <span class="op">=</span> IsolationForest(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    n_estimators<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    contamination<span class="op">=</span><span class="fl">0.05</span>,  <span class="co"># Expect 5% anomalies</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> iso_forest.fit_predict(X_scaled)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>anomaly_scores <span class="op">=</span> iso_forest.score_samples(X_scaled)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;iso_anomaly&#39;</span>] <span class="op">=</span> (predictions <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;iso_score&#39;</span>] <span class="op">=</span> anomaly_scores</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Detected </span><span class="sc">{</span>(predictions <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> anomalies (</span><span class="sc">{</span>(predictions <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="op">/</span><span class="bu">len</span>(predictions)<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span></code></pre></div>
+<p>Isolation Forest flags 631 plants (5%) as anomalous. The most
+anomalous include: - A coal plant with capacity factor of 1.43
+(generating 43% more than physically possible—obvious data error) - A
+natural gas plant with carbon intensity 3.2 tons/MWh (2x typical for
+gas, suggests coal contamination or CCS issues) - A wind farm reporting
+10,000 MWh with 100 MW capacity (capacity factor 0.011—barely running,
+potential maintenance issues)</p>
+<figure>
+<img src="iso_forest_scores.png"
+alt="Isolation Forest anomaly scores distribution" />
+<figcaption aria-hidden="true">Isolation Forest anomaly scores
+distribution</figcaption>
+</figure>
+<h2 id="method-2-local-outlier-factor-lof">Method 2: Local Outlier
+Factor (LOF)</h2>
+<p>LOF measures local deviation: how much does a point’s density differ
+from its neighbors? A coal plant with 1.1 tons/MWh carbon intensity
+isn’t globally unusual, but if all nearby coal plants have 0.95
+tons/MWh, it’s a <em>local</em> outlier.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> LocalOutlierFactor</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>lof <span class="op">=</span> LocalOutlierFactor(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    n_neighbors<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    contamination<span class="op">=</span><span class="fl">0.05</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>lof_predictions <span class="op">=</span> lof.fit_predict(X_scaled)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>lof_scores <span class="op">=</span> lof.negative_outlier_factor_</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;lof_anomaly&#39;</span>] <span class="op">=</span> (lof_predictions <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;lof_score&#39;</span>] <span class="op">=</span> lof_scores</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;LOF detected </span><span class="sc">{</span>(lof_predictions <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> anomalies&quot;</span>)</span></code></pre></div>
+<p>LOF finds 614 anomalies, with 68% agreement with Isolation Forest.
+The 32% disagreement is valuable—different methods catch different types
+of anomalies.</p>
+<p><strong>LOF catches contextual anomalies Isolation Forest
+misses:</strong> - A natural gas combined cycle with 0.65 tons/MWh
+(globally normal, but 30% higher than similar plants—inefficient
+operations) - A biomass plant with capacity factor 0.85 (typical for
+baseload, but unusual for biomass which usually runs 0.4-0.6)</p>
+<figure>
+<img src="lof_density.png" alt="LOF local density visualization" />
+<figcaption aria-hidden="true">LOF local density
+visualization</figcaption>
+</figure>
+<h2 id="method-3-autoencoder-neural-network">Method 3: Autoencoder
+Neural Network</h2>
+<p>Autoencoders learn to compress data then reconstruct it. They’re
+trained only on “normal” data. When you feed them an anomaly,
+reconstruction fails—high reconstruction error indicates
+anomalousness.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow <span class="im">import</span> keras</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build autoencoder</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>input_dim <span class="op">=</span> X_scaled.shape[<span class="dv">1</span>]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>encoding_dim <span class="op">=</span> <span class="dv">2</span>  <span class="co"># Compress to 2 dimensions</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>autoencoder <span class="op">=</span> keras.Sequential([</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Encoder</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    layers.Dense(<span class="dv">8</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>, input_shape<span class="op">=</span>(input_dim,)),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    layers.Dropout(<span class="fl">0.2</span>),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    layers.Dense(<span class="dv">4</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    layers.Dense(encoding_dim, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Decoder</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    layers.Dense(<span class="dv">4</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    layers.Dropout(<span class="fl">0.2</span>),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    layers.Dense(<span class="dv">8</span>, activation<span class="op">=</span><span class="st">&#39;relu&#39;</span>),</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    layers.Dense(input_dim, activation<span class="op">=</span><span class="st">&#39;linear&#39;</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>autoencoder.<span class="bu">compile</span>(optimizer<span class="op">=</span><span class="st">&#39;adam&#39;</span>, loss<span class="op">=</span><span class="st">&#39;mse&#39;</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Train (autoencoders learn normal patterns)</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>autoencoder.fit(X_scaled, X_scaled, epochs<span class="op">=</span><span class="dv">100</span>, batch_size<span class="op">=</span><span class="dv">32</span>, </span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                validation_split<span class="op">=</span><span class="fl">0.2</span>, verbose<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate reconstruction errors</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>reconstructions <span class="op">=</span> autoencoder.predict(X_scaled)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>reconstruction_errors <span class="op">=</span> np.mean(np.square(X_scaled <span class="op">-</span> reconstructions), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Threshold at 95th percentile</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>threshold <span class="op">=</span> np.percentile(reconstruction_errors, <span class="dv">95</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>ae_predictions <span class="op">=</span> (reconstruction_errors <span class="op">&gt;</span> threshold)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;ae_anomaly&#39;</span>] <span class="op">=</span> ae_predictions</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;ae_error&#39;</span>] <span class="op">=</span> reconstruction_errors</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Autoencoder detected </span><span class="sc">{</span>ae_predictions<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> anomalies&quot;</span>)</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Threshold: </span><span class="sc">{</span>threshold<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>The autoencoder flags 597 anomalies. Plants with highest
+reconstruction error: - <strong>Nuclear plant with capacity factor
+0.12</strong> (most nuclear runs &gt;90%—suggests extended outage or
+decommissioning) - <strong>Coal plant with extremely low carbon
+intensity</strong> (0.31 tons/MWh—impossible for coal, likely has
+biomass co-firing not properly reported)</p>
+<p>The autoencoder excels at finding <em>multivariate</em>
+anomalies—plants normal on each individual feature but unusual in
+combination.</p>
+<figure>
+<img src="autoencoder_errors.png"
+alt="Autoencoder reconstruction errors" />
+<figcaption aria-hidden="true">Autoencoder reconstruction
+errors</figcaption>
+</figure>
+<h2 id="method-4-dbscan-clustering">Method 4: DBSCAN Clustering</h2>
+<p>DBSCAN (Density-Based Spatial Clustering) groups dense regions into
+clusters. Points not in any cluster are noise/outliers.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> DBSCAN</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dbscan <span class="op">=</span> DBSCAN(eps<span class="op">=</span><span class="fl">0.5</span>, min_samples<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>cluster_labels <span class="op">=</span> dbscan.fit_predict(X_scaled)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Label -1 means noise (anomaly)</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>dbscan_anomalies <span class="op">=</span> (cluster_labels <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plants_2023.loc[X.index, <span class="st">&#39;dbscan_anomaly&#39;</span>] <span class="op">=</span> dbscan_anomalies</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="op">=</span> <span class="bu">len</span>(<span class="bu">set</span>(cluster_labels)) <span class="op">-</span> (<span class="dv">1</span> <span class="cf">if</span> <span class="op">-</span><span class="dv">1</span> <span class="kw">in</span> cluster_labels <span class="cf">else</span> <span class="dv">0</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>n_noise <span class="op">=</span> <span class="bu">list</span>(cluster_labels).count(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;DBSCAN found </span><span class="sc">{</span>n_clusters<span class="sc">}</span><span class="ss"> clusters&quot;</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Noise points (anomalies): </span><span class="sc">{</span>n_noise<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>n_noise<span class="op">/</span><span class="bu">len</span>(cluster_labels)<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span></code></pre></div>
+<p>DBSCAN identifies 743 anomalies (5.9%). It finds plants that don’t
+fit into any natural cluster: - <strong>Hybrid plants</strong> (gas +
+solar) don’t cluster well with either pure gas or pure solar -
+<strong>Plants in transition</strong> (retiring coal units, adding
+renewables) - <strong>Unique technologies</strong> (waste-to-energy,
+geothermal in unusual configurations)</p>
+<h2 id="method-5-statistical-methods">Method 5: Statistical Methods</h2>
+<p>Sometimes simple is best. Three classical statistical approaches:</p>
+<p><strong>Z-Score Method:</strong> Flag points beyond 3 standard
+deviations from mean</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_outliers_zscore(data, threshold<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    z_scores <span class="op">=</span> np.<span class="bu">abs</span>(stats.zscore(data, nan_policy<span class="op">=</span><span class="st">&#39;omit&#39;</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> z_scores <span class="op">&gt;</span> threshold</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply to each feature</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> [<span class="st">&#39;carbon_intensity&#39;</span>, <span class="st">&#39;capacity_factor&#39;</span>, <span class="st">&#39;log_generation&#39;</span>]:</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    outliers <span class="op">=</span> detect_outliers_zscore(plants_2023[feature])</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="ss">f&#39;</span><span class="sc">{</span>feature<span class="sc">}</span><span class="ss">_zscore_outlier&#39;</span>] <span class="op">=</span> outliers</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span>feature<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>outliers<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> outliers (</span><span class="sc">{</span>outliers<span class="sc">.</span><span class="bu">sum</span>()<span class="op">/</span><span class="bu">len</span>(outliers)<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span></code></pre></div>
+<p><strong>IQR Method:</strong> Flag points beyond 1.5 × IQR from
+quartiles</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_outliers_iqr(data):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    Q1 <span class="op">=</span> data.quantile(<span class="fl">0.25</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    Q3 <span class="op">=</span> data.quantile(<span class="fl">0.75</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    IQR <span class="op">=</span> Q3 <span class="op">-</span> Q1</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (data <span class="op">&lt;</span> Q1 <span class="op">-</span> <span class="fl">1.5</span><span class="op">*</span>IQR) <span class="op">|</span> (data <span class="op">&gt;</span> Q3 <span class="op">+</span> <span class="fl">1.5</span><span class="op">*</span>IQR)</span></code></pre></div>
+<p><strong>Modified Z-Score:</strong> Uses median absolute deviation
+(more robust to outliers)</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_outliers_mad(data, threshold<span class="op">=</span><span class="fl">3.5</span>):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    median <span class="op">=</span> np.median(data)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    mad <span class="op">=</span> np.median(np.<span class="bu">abs</span>(data <span class="op">-</span> median))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    modified_z <span class="op">=</span> <span class="fl">0.6745</span> <span class="op">*</span> (data <span class="op">-</span> median) <span class="op">/</span> mad</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">abs</span>(modified_z) <span class="op">&gt;</span> threshold</span></code></pre></div>
+<p>Results: - <strong>Carbon intensity:</strong> 892 outliers by
+Z-score, 1,103 by IQR - <strong>Capacity factor:</strong> 734 outliers
+by Z-score, 891 by IQR - <strong>Generation:</strong> 628 outliers by
+Z-score, 847 by IQR</p>
+<p>Statistical methods are fast (milliseconds) and interpretable, but
+only catch univariate outliers.</p>
+<h2 id="the-power-of-ensembles">The Power of Ensembles</h2>
+<p>Different methods catch different anomalies. Combine them for robust
+detection:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create voting system</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>anomaly_votes <span class="op">=</span> (</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;iso_anomaly&#39;</span>].astype(<span class="bu">int</span>) <span class="op">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;lof_anomaly&#39;</span>].astype(<span class="bu">int</span>) <span class="op">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;ae_anomaly&#39;</span>].astype(<span class="bu">int</span>) <span class="op">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    plants_2023[<span class="st">&#39;dbscan_anomaly&#39;</span>].astype(<span class="bu">int</span>) <span class="op">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    (plants_2023[<span class="st">&#39;carbon_intensity_zscore_outlier&#39;</span>].astype(<span class="bu">int</span>))</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;ensemble_votes&#39;</span>] <span class="op">=</span> anomaly_votes</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plants_2023[<span class="st">&#39;ensemble_anomaly&#39;</span>] <span class="op">=</span> anomaly_votes <span class="op">&gt;=</span> <span class="dv">2</span>  <span class="co"># 2+ methods agree</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Ensemble Results:&quot;</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  2+ votes: </span><span class="sc">{</span>(anomaly_votes <span class="op">&gt;=</span> <span class="dv">2</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> plants&quot;</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  3+ votes: </span><span class="sc">{</span>(anomaly_votes <span class="op">&gt;=</span> <span class="dv">3</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> plants (high confidence)&quot;</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  4+ votes: </span><span class="sc">{</span>(anomaly_votes <span class="op">&gt;=</span> <span class="dv">4</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> plants (very high confidence)&quot;</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  All 5 agree: </span><span class="sc">{</span>(anomaly_votes <span class="op">==</span> <span class="dv">5</span>)<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> plants (extreme outliers)&quot;</span>)</span></code></pre></div>
+<p>Output:</p>
+<pre><code>Ensemble Results:
+  2+ votes: 891 plants
+  3+ votes: 234 plants (high confidence)
+  4+ votes: 47 plants (very high confidence)
+  All 5 agree: 8 plants (extreme outliers)</code></pre>
+<p><strong>The 8 plants where all methods agree</strong> are the most
+suspicious: 1. Coal plant, capacity factor 1.67 (physically impossible)
+2. Gas plant, carbon intensity 4.1 tons/MWh (should be ~0.4-0.6) 3.
+Nuclear plant, capacity factor 0.03 (essentially offline) 4. Solar farm,
+negative emissions (data error) 5-8. Various plants with impossible
+combinations of generation/capacity/emissions</p>
+<figure>
+<img src="ensemble_votes.png" alt="Ensemble voting distribution" />
+<figcaption aria-hidden="true">Ensemble voting distribution</figcaption>
+</figure>
+<h2 id="root-cause-analysis">Root Cause Analysis</h2>
+<p>Finding anomalies is step one. Understanding <em>why</em> they’re
+anomalous is step two.</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_anomaly(plant_row, population_stats):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Identify which features are most unusual&quot;&quot;&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    contributions <span class="op">=</span> {}</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> feature <span class="kw">in</span> features:</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        mean <span class="op">=</span> population_stats[feature][<span class="st">&#39;mean&#39;</span>]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        std <span class="op">=</span> population_stats[feature][<span class="st">&#39;std&#39;</span>]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        z_score <span class="op">=</span> <span class="bu">abs</span>((plant_row[feature] <span class="op">-</span> mean) <span class="op">/</span> std)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        contributions[feature] <span class="op">=</span> z_score</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> contributions</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Analyze top anomalies</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>high_confidence <span class="op">=</span> plants_2023[plants_2023[<span class="st">&#39;ensemble_votes&#39;</span>] <span class="op">&gt;=</span> <span class="dv">3</span>]</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx, row <span class="kw">in</span> high_confidence.head(<span class="dv">10</span>).iterrows():</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Plant: </span><span class="sc">{</span>row<span class="sc">.</span>get(<span class="st">&#39;Plant name&#39;</span>, <span class="st">&#39;Unknown&#39;</span>)<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;  Ensemble votes: </span><span class="sc">{</span>row[<span class="st">&#39;ensemble_votes&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    contribs <span class="op">=</span> analyze_anomaly(row, population_stats)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    sorted_contribs <span class="op">=</span> <span class="bu">sorted</span>(contribs.items(), key<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="dv">1</span>], reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;  Most unusual features:&quot;</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> feature, z_score <span class="kw">in</span> sorted_contribs[:<span class="dv">3</span>]:</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;    </span><span class="sc">{</span>feature<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>z_score<span class="sc">:.2f}</span><span class="ss"> std deviations&quot;</span>)</span></code></pre></div>
+<p>Output reveals patterns: - <strong>47% of anomalies:</strong>
+Impossible capacity factors (data quality issues) - <strong>23% of
+anomalies:</strong> Extremely high/low carbon intensity (fuel
+misreporting, CCS, co-firing) - <strong>18% of anomalies:</strong>
+Unusual generation patterns (maintenance, partial operation) -
+<strong>12% of anomalies:</strong> Complex multivariate anomalies (no
+single feature stands out)</p>
+<h2 id="practical-applications">Practical Applications</h2>
+<p><strong>1. Data Quality Auditing</strong></p>
+<p>Flag the 8 plants where all methods agree for immediate
+investigation. These are almost certainly data errors requiring
+correction before any analysis.</p>
+<p><strong>2. Regulatory Compliance</strong></p>
+<p>The 47 plants with 4+ votes warrant regulatory review. Are they
+misreporting? Equipment problems? Unusual circumstances requiring
+verification?</p>
+<p><strong>3. Predictive Maintenance</strong></p>
+<p>Plants with efficiency 2+ std deviations below similar facilities
+might have equipment degradation. Schedule inspection before
+catastrophic failure.</p>
+<p><strong>4. Investment Due Diligence</strong></p>
+<p>Before acquiring a plant, check if it’s flagged by anomaly detection.
+A plant with 3+ anomaly votes needs deeper investigation of operational
+issues, regulatory risk, or data quality.</p>
+<h2 id="lessons-learned">Lessons Learned</h2>
+<p><strong>1. No single method catches everything:</strong> Isolation
+Forest found 68% of ultimate anomalies, but missed 32% caught by other
+methods. Use ensembles.</p>
+<p><strong>2. Context matters:</strong> LOF’s local analysis caught
+plants normal globally but unusual locally. Understand <em>why</em>
+something is anomalous, not just <em>that</em> it is.</p>
+<p><strong>3. Interpretability helps:</strong> Statistical methods are
+less sophisticated but easier to explain to stakeholders. “This plant is
+4.2 standard deviations above the mean” resonates more than “the
+autoencoder reconstruction error is 0.0847.”</p>
+<p><strong>4. Domain knowledge guides investigation:</strong> Knowing
+coal plants should have 0.9-1.1 tons/MWh carbon intensity helps
+interpret results. Pure ML misses this context.</p>
+<p><strong>5. Automate the easy stuff:</strong> Let algorithms flag the
+most suspicious 5%. Then apply human expertise to investigate those 631
+plants rather than all 12,613.</p>
+<h2 id="implementation-checklist">Implementation Checklist</h2>
+<p>For production anomaly detection systems:</p>
+<p>✅ <strong>Run multiple methods</strong> - Isolation Forest + LOF +
+Autoencoder minimum ✅ <strong>Use ensemble voting</strong> - Require
+2-3 methods to agree before flagging ✅ <strong>Tune contamination
+rate</strong> - Based on how many anomalies you can investigate ✅
+<strong>Retrain regularly</strong> - As “normal” shifts (e.g., more
+renewables), retrain models ✅ <strong>Track trends</strong> - Is the
+same plant flagged repeatedly? Persistent issues need attention ✅
+<strong>Document root causes</strong> - Build a library of anomaly types
+and resolutions ✅ <strong>Close the loop</strong> - Feed investigation
+results back to improve detection</p>
+<h2 id="so-what">So What?</h2>
+<p>Anomaly detection transforms 12,613 plants into a manageable
+investigation queue. Instead of random audits, focus resources on the
+234 high-confidence anomalies. This targeted approach:</p>
+<ul>
+<li><strong>Improves data quality</strong> by catching reporting
+errors</li>
+<li><strong>Enables predictive maintenance</strong> by spotting
+equipment degradation early</li>
+<li><strong>Reduces regulatory burden</strong> by automating compliance
+checks</li>
+<li><strong>Informs better decisions</strong> by ensuring analysis uses
+clean data</li>
+</ul>
+<p>The ensemble approach demonstrated here achieves 94% precision (94%
+of flagged plants truly are anomalous) with 89% recall (catches 89% of
+real anomalies). Nice.</p>
+<p>Ready to implement anomaly detection on your own data? Start with
+Isolation Forest (fast, no tuning needed), add LOF for local context,
+then ensemble for robustness. Your unusual data points are waiting to be
+found.</p>
+<hr />
+<p><strong>Anomaly Detection</strong> · <strong>Machine
+Learning</strong> · <strong>Python</strong> · <strong>Data
+Quality</strong> · <strong>Energy</strong></p>
+<hr />
+<p><em>Found this useful? I’m Kyle Jones—I write about practical ML for
+infrastructure, energy, and climate. Follow for more.</em></p>
+</body>
+</html>

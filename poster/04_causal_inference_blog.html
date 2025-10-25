@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_causal_inference_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="did-that-policy-actually-work-causal-inference-for-power-sector-analysis">Did
+That Policy Actually Work? Causal Inference for Power Sector
+Analysis</h1>
+<p><em>Using Difference-in-Differences, Synthetic Control, and
+Propensity Score Matching to rigorously evaluate environmental policy
+impacts</em></p>
+<p><strong>Kyle Jones</strong><br />
+13 min read · Oct 6, 2025</p>
+<hr />
+<p>In 2018, several states implemented carbon pricing policies. Five
+years later, their emissions are down 15%. Success, right?</p>
+<p>Not so fast. Emissions might have declined anyway due to: - Cheaper
+natural gas displacing coal - Falling renewable energy costs - Economic
+recession reducing electricity demand - Federal efficiency standards for
+appliances</p>
+<p>How do we know what would have happened <em>without</em> the policy?
+That’s the fundamental problem of causal inference: we can’t observe the
+same state both with and without treatment.</p>
+<p>This article demonstrates three rigorous
+methods—Difference-in-Differences, Synthetic Control, and Propensity
+Score Matching—to estimate causal effects using 27 years of EPA power
+plant data. These techniques power billion-dollar policy decisions and
+academic research worldwide.</p>
+<figure>
+<img src="04_causal_inference_main.png"
+alt="Causal inference visualization showing treatment effects" />
+<figcaption aria-hidden="true">Causal inference visualization showing
+treatment effects</figcaption>
+</figure>
+<h2 id="the-fundamental-problem">The Fundamental Problem</h2>
+<p>Imagine California implements carbon pricing in 2018. Emissions drop
+20% by 2023. Did the policy work?</p>
+<p><strong>What we observe:</strong> - California with policy: Emissions
+down 20%</p>
+<p><strong>What we don’t observe but need:</strong> - California without
+policy: What would emissions have been?</p>
+<p>The <strong>counterfactual</strong> (California without policy) is
+impossible to observe—California can’t exist in both states
+simultaneously. Causal inference constructs this counterfactual from
+data.</p>
+<p><strong>Naive Comparison Fails:</strong></p>
+<p>You might think: “Compare California to a state without the policy!”
+But states differ in many ways: - Different energy mix (CA has more
+renewables) - Different economy (CA’s GDP growth differs) - Different
+regulations (CA has stricter standards pre-policy) - Different weather
+(affects electricity demand)</p>
+<p>Simply comparing California to, say, Texas would confound the policy
+effect with these pre-existing differences. We need methods that account
+for this.</p>
+<h2 id="method-1-difference-in-differences-did">Method 1:
+Difference-in-Differences (DiD)</h2>
+<p>DiD is the workhorse of policy evaluation. The intuition is
+elegant:</p>
+<ol type="1">
+<li>Compare California before/after policy (difference #1)</li>
+<li>Compare control states before/after same period (difference #2)</li>
+<li>Subtract difference #2 from difference #1</li>
+</ol>
+<p>The second difference removes trends that would have happened anyway.
+What remains is the causal effect.</p>
+<h3 id="the-key-assumption-parallel-trends">The Key Assumption: Parallel
+Trends</h3>
+<p><strong>DiD assumes:</strong> Without treatment, treated and control
+groups would have followed parallel trends.</p>
+<p>This is testable! Look at pre-treatment trends:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load state-level data</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> pd.read_parquet(<span class="st">&#39;merged_data/egrid_state_1996-2023.parquet&#39;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Define treatment (hypothetical carbon pricing states)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>treated_states <span class="op">=</span> [<span class="st">&#39;CA&#39;</span>, <span class="st">&#39;NY&#39;</span>, <span class="st">&#39;MA&#39;</span>, <span class="st">&#39;WA&#39;</span>, <span class="st">&#39;OR&#39;</span>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>treatment_year <span class="op">=</span> <span class="dv">2018</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>states[<span class="st">&#39;treated&#39;</span>] <span class="op">=</span> states[<span class="st">&#39;Plant state abbreviation&#39;</span>].isin(treated_states).astype(<span class="bu">int</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>states[<span class="st">&#39;post&#39;</span>] <span class="op">=</span> (states[<span class="st">&#39;data_year&#39;</span>] <span class="op">&gt;=</span> treatment_year).astype(<span class="bu">int</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate carbon intensity</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>states[<span class="st">&#39;carbon_intensity&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    states[<span class="st">&#39;State annual CO2 emissions (tons)&#39;</span>] <span class="op">/</span> </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    states[<span class="st">&#39;State annual net generation (MWh)&#39;</span>]</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Check parallel trends visually</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>pre_period <span class="op">=</span> states[states[<span class="st">&#39;data_year&#39;</span>] <span class="op">&lt;</span> treatment_year]</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>pre_trends <span class="op">=</span> pre_period.groupby([<span class="st">&#39;data_year&#39;</span>, <span class="st">&#39;treated&#39;</span>])[<span class="st">&#39;carbon_intensity&#39;</span>].mean().unstack()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>plt.plot(pre_trends.index, pre_trends[<span class="dv">0</span>], <span class="st">&#39;o-&#39;</span>, label<span class="op">=</span><span class="st">&#39;Control States&#39;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>plt.plot(pre_trends.index, pre_trends[<span class="dv">1</span>], <span class="st">&#39;s-&#39;</span>, label<span class="op">=</span><span class="st">&#39;Treated States&#39;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&#39;Year&#39;</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&#39;Carbon Intensity&#39;</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&#39;Pre-Treatment Trends: Are They Parallel?&#39;</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;parallel_trends.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
+<p>If lines are roughly parallel pre-2018, the parallel trends
+assumption holds. If treated states were already declining faster, we
+can’t use basic DiD.</p>
+<h3 id="estimating-the-treatment-effect">Estimating the Treatment
+Effect</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create interaction term</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>states[<span class="st">&#39;treat_post&#39;</span>] <span class="op">=</span> states[<span class="st">&#39;treated&#39;</span>] <span class="op">*</span> states[<span class="st">&#39;post&#39;</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># DiD regression: Y = β0 + β1*treated + β2*post + β3*(treated*post) + ε</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># β3 is the DiD estimate</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;carbon_intensity ~ treated + post + treat_post&#39;</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    data<span class="op">=</span>states</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>).fit(cov_type<span class="op">=</span><span class="st">&#39;cluster&#39;</span>, cov_kwds<span class="op">=</span>{<span class="st">&#39;groups&#39;</span>: states[<span class="st">&#39;state_abbr&#39;</span>]})</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.summary())</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>did_effect <span class="op">=</span> model.params[<span class="st">&#39;treat_post&#39;</span>]</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>did_se <span class="op">=</span> model.bse[<span class="st">&#39;treat_post&#39;</span>]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>did_pval <span class="op">=</span> model.pvalues[<span class="st">&#39;treat_post&#39;</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Treatment Effect: </span><span class="sc">{</span>did_effect<span class="sc">:.6f}</span><span class="ss"> tons/MWh&quot;</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Standard Error: </span><span class="sc">{</span>did_se<span class="sc">:.6f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;P-value: </span><span class="sc">{</span>did_pval<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> did_pval <span class="op">&lt;</span> <span class="fl">0.05</span>:</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">✓ Policy significantly </span><span class="sc">{</span><span class="st">&#39;reduced&#39;</span> <span class="cf">if</span> did_effect <span class="op">&lt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">&#39;increased&#39;</span><span class="sc">}</span><span class="ss"> emissions&quot;</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;  by </span><span class="sc">{</span><span class="bu">abs</span>(did_effect)<span class="sc">:.6f}</span><span class="ss"> tons/MWh (</span><span class="sc">{</span><span class="bu">abs</span>(did_effect)<span class="op">/</span>states[<span class="st">&#39;carbon_intensity&#39;</span>]<span class="sc">.</span>mean()<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%)&quot;</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">✗ No significant policy effect detected&quot;</span>)</span></code></pre></div>
+<p>Output might show:</p>
+<pre><code>Treatment Effect: -0.042 tons/MWh
+Standard Error: 0.018
+P-value: 0.020
+
+✓ Policy significantly reduced emissions
+  by 0.042 tons/MWh (7.8%)</code></pre>
+<p><strong>Interpretation:</strong> Carbon pricing reduced emissions
+intensity by 0.042 tons/MWh (about 8%), controlling for national trends
+affecting all states.</p>
+<h3 id="event-study-dynamic-treatment-effects">Event Study: Dynamic
+Treatment Effects</h3>
+<p>Was the effect immediate or gradual? Event studies show treatment
+effects over time:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create year dummies relative to treatment</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>states[<span class="st">&#39;years_to_treatment&#39;</span>] <span class="op">=</span> states[<span class="st">&#39;data_year&#39;</span>] <span class="op">-</span> treatment_year</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create interactions (omit year -1 as reference)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">6</span>):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> year <span class="op">!=</span> <span class="op">-</span><span class="dv">1</span>:</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        states[<span class="ss">f&#39;treated_year_</span><span class="sc">{</span>year<span class="sc">}</span><span class="ss">&#39;</span>] <span class="op">=</span> (</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            states[<span class="st">&#39;treated&#39;</span>] <span class="op">*</span> (states[<span class="st">&#39;years_to_treatment&#39;</span>] <span class="op">==</span> year)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        ).astype(<span class="bu">int</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Run event study regression</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>formula <span class="op">=</span> <span class="st">&#39;carbon_intensity ~ treated + &#39;</span> <span class="op">+</span> <span class="st">&#39; + &#39;</span>.join([</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f&#39;treated_year_</span><span class="sc">{</span>y<span class="sc">}</span><span class="ss">&#39;</span> <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">6</span>) <span class="cf">if</span> y <span class="op">!=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>event_model <span class="op">=</span> smf.ols(formula, data<span class="op">=</span>states).fit(cov_type<span class="op">=</span><span class="st">&#39;HC1&#39;</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract coefficients</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>event_time <span class="op">=</span> []</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>coefficients <span class="op">=</span> []</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>conf_int <span class="op">=</span> []</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> year <span class="kw">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">6</span>):</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    event_time.append(year)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> year <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>:</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        coefficients.append(<span class="dv">0</span>)  <span class="co"># Reference period</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        conf_int.append((<span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        coef_name <span class="op">=</span> <span class="ss">f&#39;treated_year_</span><span class="sc">{</span>year<span class="sc">}</span><span class="ss">&#39;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        coefficients.append(event_model.params.get(coef_name, <span class="dv">0</span>))</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        ci <span class="op">=</span> event_model.conf_int().loc[coef_name] <span class="cf">if</span> coef_name <span class="kw">in</span> event_model.params <span class="cf">else</span> (<span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        conf_int.append(ci)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot event study</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>plt.plot(event_time, coefficients, <span class="st">&#39;o-&#39;</span>, linewidth<span class="op">=</span><span class="dv">2</span>, markersize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>plt.fill_between(event_time, </span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>                 [ci[<span class="dv">0</span>] <span class="cf">for</span> ci <span class="kw">in</span> conf_int], </span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>                 [ci[<span class="dv">1</span>] <span class="cf">for</span> ci <span class="kw">in</span> conf_int], </span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>                 alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">&#39;black&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>)</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="op">-</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">&#39;red&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>, label<span class="op">=</span><span class="st">&#39;Policy Implementation&#39;</span>)</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&#39;Years Relative to Policy&#39;</span>)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&#39;Treatment Effect&#39;</span>)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&#39;Event Study: Dynamic Policy Effects&#39;</span>)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;event_study.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
+<p><strong>What to look for:</strong> - <strong>Pre-treatment
+coefficients near zero:</strong> Confirms parallel trends -
+<strong>Post-treatment pattern:</strong> Immediate effect? Gradual?
+Growing over time? - <strong>Confidence intervals:</strong> Narrow
+post-treatment means precise estimates</p>
+<h2 id="method-2-synthetic-control">Method 2: Synthetic Control</h2>
+<p>What if you have only ONE treated unit? DiD needs multiple units.
+Enter Synthetic Control.</p>
+<p><strong>The idea:</strong> Create a “synthetic California” by
+weighting control states to match pre-treatment California as closely as
+possible. Then compare real California to synthetic California after
+treatment.</p>
+<h3 id="building-the-synthetic-control">Building the Synthetic
+Control</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> minimize</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> synthetic_control(treated_pre, control_pre, control_post):</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Find optimal weights for synthetic control</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns: weights that minimize distance between treated and synthetic control</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> objective(weights):</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        synthetic <span class="op">=</span> control_pre <span class="op">@</span> weights</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.<span class="bu">sum</span>((treated_pre <span class="op">-</span> synthetic)<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    n_controls <span class="op">=</span> control_pre.shape[<span class="dv">1</span>]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Constraints: weights sum to 1, all non-negative</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    constraints <span class="op">=</span> ({<span class="st">&#39;type&#39;</span>: <span class="st">&#39;eq&#39;</span>, <span class="st">&#39;fun&#39;</span>: <span class="kw">lambda</span> w: np.<span class="bu">sum</span>(w) <span class="op">-</span> <span class="dv">1</span>})</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    bounds <span class="op">=</span> [(<span class="dv">0</span>, <span class="dv">1</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n_controls)]</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    initial <span class="op">=</span> np.ones(n_controls) <span class="op">/</span> n_controls</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> minimize(objective, initial, method<span class="op">=</span><span class="st">&#39;SLSQP&#39;</span>, </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>                     bounds<span class="op">=</span>bounds, constraints<span class="op">=</span>constraints)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result.x</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare data: California as treated unit</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>ca_data <span class="op">=</span> states[states[<span class="st">&#39;Plant state abbreviation&#39;</span>] <span class="op">==</span> <span class="st">&#39;CA&#39;</span>].sort_values(<span class="st">&#39;data_year&#39;</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>control_data <span class="op">=</span> states[<span class="op">~</span>states[<span class="st">&#39;Plant state abbreviation&#39;</span>].isin(treated_states)].sort_values([<span class="st">&#39;Plant state abbreviation&#39;</span>, <span class="st">&#39;data_year&#39;</span>])</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Get pre-treatment outcomes</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>pre_years <span class="op">=</span> [y <span class="cf">for</span> y <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2012</span>, <span class="dv">2018</span>)]</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>ca_pre <span class="op">=</span> ca_data[ca_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&lt;</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Build control matrices</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>control_states_list <span class="op">=</span> control_data[<span class="st">&#39;Plant state abbreviation&#39;</span>].unique()</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>control_pre_matrix <span class="op">=</span> []</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>control_post_matrix <span class="op">=</span> []</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> state <span class="kw">in</span> control_states_list:</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    state_data <span class="op">=</span> control_data[control_data[<span class="st">&#39;Plant state abbreviation&#39;</span>] <span class="op">==</span> state]</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    pre <span class="op">=</span> state_data[state_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&lt;</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    post <span class="op">=</span> state_data[state_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&gt;=</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(pre) <span class="op">==</span> <span class="bu">len</span>(ca_pre):  <span class="co"># Same length</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>        control_pre_matrix.append(pre)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        control_post_matrix.append(post)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>control_pre_matrix <span class="op">=</span> np.array(control_pre_matrix).T</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>control_post_matrix <span class="op">=</span> np.array(control_post_matrix).T</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Find optimal weights</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> synthetic_control(ca_pre, control_pre_matrix, control_post_matrix)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Synthetic California composed of:&quot;</span>)</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, weight <span class="kw">in</span> <span class="bu">enumerate</span>(weights):</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> weight <span class="op">&gt;</span> <span class="fl">0.01</span>:  <span class="co"># Only show states with &gt;1% weight</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> control_states_list[i]</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;  </span><span class="sc">{</span>state<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>weight<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span></code></pre></div>
+<p>Output might show:</p>
+<pre><code>Synthetic California composed of:
+  TX: 28.3%
+  PA: 22.1%
+  FL: 18.7%
+  OH: 15.2%
+  IL: 10.9%
+  GA: 4.8%</code></pre>
+<p>Synthetic California is mostly Texas, Pennsylvania, and
+Florida—states that, when weighted properly, match California’s
+pre-treatment trajectory.</p>
+<h3 id="comparing-real-vs-synthetic">Comparing Real vs Synthetic</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate synthetic control series</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>synthetic_ca_pre <span class="op">=</span> control_pre_matrix <span class="op">@</span> weights</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>synthetic_ca_post <span class="op">=</span> control_post_matrix <span class="op">@</span> weights</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ca_post <span class="op">=</span> ca_data[ca_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&gt;=</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate treatment effect</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>gap <span class="op">=</span> ca_post <span class="op">-</span> synthetic_ca_post</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>avg_effect <span class="op">=</span> gap.mean()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Average Treatment Effect: </span><span class="sc">{</span>avg_effect<span class="sc">:.6f}</span><span class="ss"> tons/MWh&quot;</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>all_years <span class="op">=</span> <span class="bu">list</span>(pre_years) <span class="op">+</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">2018</span>, <span class="dv">2024</span>))</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>plt.plot(pre_years, ca_pre, <span class="st">&#39;o-&#39;</span>, label<span class="op">=</span><span class="st">&#39;California (Actual)&#39;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">2018</span>, <span class="dv">2024</span>), ca_post, <span class="st">&#39;o-&#39;</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>plt.plot(pre_years, synthetic_ca_pre, <span class="st">&#39;s--&#39;</span>, label<span class="op">=</span><span class="st">&#39;Synthetic California&#39;</span>, linewidth<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">&#39;red&#39;</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">2018</span>, <span class="dv">2024</span>), synthetic_ca_post, <span class="st">&#39;s--&#39;</span>, linewidth<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">&#39;red&#39;</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="fl">2017.5</span>, color<span class="op">=</span><span class="st">&#39;black&#39;</span>, linestyle<span class="op">=</span><span class="st">&#39;--&#39;</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>plt.fill_between(<span class="bu">range</span>(<span class="dv">2018</span>, <span class="dv">2024</span>), ca_post, synthetic_ca_post, alpha<span class="op">=</span><span class="fl">0.3</span>, color<span class="op">=</span><span class="st">&#39;green&#39;</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&#39;Year&#39;</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&#39;Carbon Intensity&#39;</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&#39;Synthetic Control: California vs Synthetic California&#39;</span>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;synthetic_control.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
+<p>The gap between real and synthetic California after 2018 is the
+treatment effect.</p>
+<h3 id="inference-placebo-tests">Inference: Placebo Tests</h3>
+<p>How do we know the effect is real and not chance? Run placebo
+tests—apply synthetic control to states that DIDN’T get treatment:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run synthetic control on each control state (placebos)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>placebo_effects <span class="op">=</span> []</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> placebo_state <span class="kw">in</span> control_states_list[:<span class="dv">20</span>]:  <span class="co"># Limit for speed</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create synthetic control for this placebo state</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    placebo_data <span class="op">=</span> control_data[control_data[<span class="st">&#39;Plant state abbreviation&#39;</span>] <span class="op">==</span> placebo_state]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    placebo_pre <span class="op">=</span> placebo_data[placebo_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&lt;</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    placebo_post <span class="op">=</span> placebo_data[placebo_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&gt;=</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(placebo_pre) <span class="op">==</span> <span class="bu">len</span>(ca_pre):</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Build control matrix excluding this placebo</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        other_controls_pre <span class="op">=</span> []</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        other_controls_post <span class="op">=</span> []</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> other_state <span class="kw">in</span> control_states_list:</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> other_state <span class="op">!=</span> placebo_state:</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                other_data <span class="op">=</span> control_data[control_data[<span class="st">&#39;Plant state abbreviation&#39;</span>] <span class="op">==</span> other_state]</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                pre <span class="op">=</span> other_data[other_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&lt;</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                post <span class="op">=</span> other_data[other_data[<span class="st">&#39;data_year&#39;</span>] <span class="op">&gt;=</span> <span class="dv">2018</span>][<span class="st">&#39;carbon_intensity&#39;</span>].values</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="bu">len</span>(pre) <span class="op">==</span> <span class="bu">len</span>(placebo_pre):</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                    other_controls_pre.append(pre)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>                    other_controls_post.append(post)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(other_controls_pre) <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>            other_controls_pre <span class="op">=</span> np.array(other_controls_pre).T</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>            other_controls_post <span class="op">=</span> np.array(other_controls_post).T</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>            placebo_weights <span class="op">=</span> synthetic_control(placebo_pre, other_controls_pre, other_controls_post)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>            synthetic_placebo_post <span class="op">=</span> other_controls_post <span class="op">@</span> placebo_weights</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>            placebo_gap <span class="op">=</span> (placebo_post <span class="op">-</span> synthetic_placebo_post).mean()</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>            placebo_effects.append(placebo_gap)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare CA effect to placebo distribution</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>p_value <span class="op">=</span> (np.<span class="bu">abs</span>(placebo_effects) <span class="op">&gt;=</span> np.<span class="bu">abs</span>(avg_effect)).mean()</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Placebo Test Results:&quot;</span>)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  California effect: </span><span class="sc">{</span>avg_effect<span class="sc">:.6f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Mean placebo effect: </span><span class="sc">{</span>np<span class="sc">.</span>mean(placebo_effects)<span class="sc">:.6f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  P-value: </span><span class="sc">{</span>p_value<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> p_value <span class="op">&lt;</span> <span class="fl">0.05</span>:</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;  ✓ California&#39;s effect is statistically significant&quot;</span>)</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;  ✗ Effect not distinguishable from random chance&quot;</span>)</span></code></pre></div>
+<p>If California’s effect is larger than 95% of placebos, it’s
+statistically significant at the 5% level.</p>
+<h2 id="method-3-propensity-score-matching">Method 3: Propensity Score
+Matching</h2>
+<p>DiD and Synthetic Control work at aggregate levels. What about
+plant-level interventions?</p>
+<p><strong>Example:</strong> Some plants adopted efficiency upgrades in
+2020. Did they reduce emissions?</p>
+<p>Challenge: Plants chose to upgrade. Selection bias—perhaps only
+well-run plants with capital upgraded. Comparing upgraders to
+non-upgraders confounds treatment effect with plant quality.</p>
+<p><strong>Solution:</strong> Propensity Score Matching creates balanced
+groups.</p>
+<h3 id="step-1-estimate-propensity-scores">Step 1: Estimate Propensity
+Scores</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plant-level data (hypothetical treatment)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plants_2020 <span class="op">=</span> plants[plants[<span class="st">&#39;data_year&#39;</span>] <span class="op">==</span> <span class="dv">2020</span>].copy()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create features predicting treatment</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>X_features <span class="op">=</span> [<span class="st">&#39;log_generation&#39;</span>, <span class="st">&#39;log_capacity&#39;</span>, <span class="st">&#39;capacity_factor&#39;</span>, <span class="st">&#39;plant_age&#39;</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate treatment based on covariates (in practice, use actual treatment)</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>treatment_prob <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>(plants_2020[<span class="st">&#39;log_generation&#39;</span>] <span class="op">-</span> <span class="dv">10</span>) <span class="op">/</span> <span class="dv">2</span>))</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>plants_2020[<span class="st">&#39;treated&#39;</span>] <span class="op">=</span> (np.random.random(<span class="bu">len</span>(plants_2020)) <span class="op">&lt;</span> treatment_prob).astype(<span class="bu">int</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Outcome: 2021 carbon intensity</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>plants_2021 <span class="op">=</span> plants[plants[<span class="st">&#39;data_year&#39;</span>] <span class="op">==</span> <span class="dv">2021</span>]</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>outcome_map <span class="op">=</span> plants_2021.set_index(<span class="st">&#39;Plant ID&#39;</span>)[<span class="st">&#39;carbon_intensity&#39;</span>]</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>plants_2020[<span class="st">&#39;outcome_2021&#39;</span>] <span class="op">=</span> plants_2020[<span class="st">&#39;Plant ID&#39;</span>].<span class="bu">map</span>(outcome_map)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop missing</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>psm_data <span class="op">=</span> plants_2020[X_features <span class="op">+</span> [<span class="st">&#39;treated&#39;</span>, <span class="st">&#39;outcome_2021&#39;</span>]].dropna()</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate propensity scores</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> psm_data[X_features]</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>X_scaled <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>ps_model <span class="op">=</span> LogisticRegression(random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>ps_model.fit(X_scaled, psm_data[<span class="st">&#39;treated&#39;</span>])</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>psm_data[<span class="st">&#39;propensity_score&#39;</span>] <span class="op">=</span> ps_model.predict_proba(X_scaled)[:, <span class="dv">1</span>]</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Propensity Score Distribution:&quot;</span>)</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(psm_data.groupby(<span class="st">&#39;treated&#39;</span>)[<span class="st">&#39;propensity_score&#39;</span>].describe())</span></code></pre></div>
+<h3 id="step-2-check-common-support">Step 2: Check Common Support</h3>
+<p>Propensity scores should overlap between treated and control. If
+treated plants have scores 0.7-0.9 and controls have 0.1-0.3, no
+overlap—can’t match.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>psm_data[psm_data[<span class="st">&#39;treated&#39;</span>]<span class="op">==</span><span class="dv">0</span>][<span class="st">&#39;propensity_score&#39;</span>].hist(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">&#39;Control&#39;</span>, color<span class="op">=</span><span class="st">&#39;blue&#39;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>psm_data[psm_data[<span class="st">&#39;treated&#39;</span>]<span class="op">==</span><span class="dv">1</span>][<span class="st">&#39;propensity_score&#39;</span>].hist(</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    bins<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">&#39;Treated&#39;</span>, color<span class="op">=</span><span class="st">&#39;red&#39;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&#39;Propensity Score&#39;</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&#39;Frequency&#39;</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&#39;Propensity Score Overlap&#39;</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;propensity_overlap.png&#39;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
+<p>Good overlap means matching will work well.</p>
+<h3 id="step-3-match-and-estimate-effect">Step 3: Match and Estimate
+Effect</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> NearestNeighbors</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Nearest neighbor matching</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>treated <span class="op">=</span> psm_data[psm_data[<span class="st">&#39;treated&#39;</span>]<span class="op">==</span><span class="dv">1</span>]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>control <span class="op">=</span> psm_data[psm_data[<span class="st">&#39;treated&#39;</span>]<span class="op">==</span><span class="dv">0</span>]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>nn <span class="op">=</span> NearestNeighbors(n_neighbors<span class="op">=</span><span class="dv">1</span>, metric<span class="op">=</span><span class="st">&#39;euclidean&#39;</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>nn.fit(control[[<span class="st">&#39;propensity_score&#39;</span>]])</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>distances, indices <span class="op">=</span> nn.kneighbors(treated[[<span class="st">&#39;propensity_score&#39;</span>]])</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Get matched pairs</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>matched_control_idx <span class="op">=</span> control.index[indices.flatten()]</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>matched_treated_idx <span class="op">=</span> treated.index</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate ATT (Average Treatment Effect on Treated)</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>treated_outcomes <span class="op">=</span> psm_data.loc[matched_treated_idx, <span class="st">&#39;outcome_2021&#39;</span>]</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>control_outcomes <span class="op">=</span> psm_data.loc[matched_control_idx, <span class="st">&#39;outcome_2021&#39;</span>]</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>att <span class="op">=</span> (treated_outcomes.values <span class="op">-</span> control_outcomes.values).mean()</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> (treated_outcomes.values <span class="op">-</span> control_outcomes.values).std() <span class="op">/</span> np.sqrt(<span class="bu">len</span>(matched_treated_idx))</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Average Treatment Effect on Treated (ATT): </span><span class="sc">{</span>att<span class="sc">:.6f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Standard Error: </span><span class="sc">{</span>se<span class="sc">:.6f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;95% CI: [</span><span class="sc">{</span>att <span class="op">-</span> <span class="fl">1.96</span><span class="op">*</span>se<span class="sc">:.6f}</span><span class="ss">, </span><span class="sc">{</span>att <span class="op">+</span> <span class="fl">1.96</span><span class="op">*</span>se<span class="sc">:.6f}</span><span class="ss">]&quot;</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">abs</span>(att) <span class="op">/</span> se <span class="op">&gt;</span> <span class="fl">1.96</span>:</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;✓ Statistically significant effect at 5% level&quot;</span>)</span></code></pre></div>
+<h3 id="step-4-check-balance">Step 4: Check Balance</h3>
+<p>Did matching create balanced groups?</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Covariate Balance After Matching:&quot;</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> var <span class="kw">in</span> X_features:</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    treated_mean <span class="op">=</span> psm_data.loc[matched_treated_idx, var].mean()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    control_mean <span class="op">=</span> psm_data.loc[matched_control_idx, var].mean()</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    pooled_std <span class="op">=</span> psm_data[var].std()</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    std_diff <span class="op">=</span> (treated_mean <span class="op">-</span> control_mean) <span class="op">/</span> pooled_std <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;  </span><span class="sc">{</span>var<span class="sc">}</span><span class="ss">:&quot;</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;    Treated mean: </span><span class="sc">{</span>treated_mean<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;    Control mean: </span><span class="sc">{</span>control_mean<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;    Standardized difference: </span><span class="sc">{</span>std_diff<span class="sc">:.2f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;    </span><span class="sc">{</span><span class="st">&#39;✓ Good balance&#39;</span> <span class="cf">if</span> <span class="bu">abs</span>(std_diff) <span class="op">&lt;</span> <span class="dv">10</span> <span class="cf">else</span> <span class="st">&#39;✗ Poor balance&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p>Standard differences &lt; 10% indicate good balance.</p>
+<h2 id="when-to-use-which-method">When to Use Which Method?</h2>
+<p><strong>Difference-in-Differences:</strong> - ✓ Multiple treated and
+control units - ✓ Clear before/after period - ✓ Parallel trends
+assumption holds - ✓ Policy affects groups (states, regions) - Example:
+State-level carbon pricing</p>
+<p><strong>Synthetic Control:</strong> - ✓ Single treated unit - ✓ Many
+control units - ✓ Long pre-treatment period - ✓ Policy affects one
+entity - Example: Germany’s nuclear phase-out</p>
+<p><strong>Propensity Score Matching:</strong> - ✓ Individual-level
+treatment - ✓ Selection on observables - ✓ Good covariate overlap - ✓
+Cross-sectional or panel data - Example: Plant efficiency upgrades</p>
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<p>❌ <strong>Assuming correlation = causation:</strong> Just because
+emissions fell after a policy doesn’t mean the policy caused it.</p>
+<p>❌ <strong>Ignoring parallel trends:</strong> If treated group was
+already trending differently, DiD fails.</p>
+<p>❌ <strong>Poor overlap in PSM:</strong> Can’t match if groups are
+too different.</p>
+<p>❌ <strong>P-hacking:</strong> Testing many specifications and
+reporting the one that works.</p>
+<p>❌ <strong>Confusing statistical and practical significance:</strong>
+A tiny effect might be statistically significant but practically
+meaningless.</p>
+<p>✅ <strong>Do:</strong> Pre-register analyses, test assumptions,
+report robustness checks, be transparent about limitations.</p>
+<h2 id="so-what">So What?</h2>
+<p>Causal inference transforms policy evaluation from guesswork to
+science. Instead of “emissions fell 15% after the policy,” we can say
+“the policy caused a 7-8% reduction, after accounting for other
+factors—a $2.3B annual benefit.”</p>
+<p>These methods enable:</p>
+<p><strong>Evidence-based policy:</strong> Know what works before
+scaling nationwide. A/B test policies like tech companies A/B test
+features.</p>
+<p><strong>Accountability:</strong> Did the promised benefits
+materialize? Rigorous evaluation holds policymakers accountable.</p>
+<p><strong>Efficient allocation:</strong> Invest in policies with proven
+effects, not politically popular but ineffective ones.</p>
+<p><strong>Learning:</strong> Understand why some policies work and
+others fail. Refine and improve.</p>
+<p>The methods shown here—DiD for group-level policies, Synthetic
+Control for single units, PSM for individual interventions—cover most
+policy evaluation scenarios. Combined with domain expertise and careful
+thinking about identification assumptions, they provide credible answers
+to causal questions.</p>
+<p>The complete code is in the tutorial. Ready to evaluate your own
+policies rigorously? Start with DiD if you have treated and control
+groups, synthetic control if you have one treated unit, and PSM for
+individual-level interventions. Test your assumptions, check robustness,
+and be transparent about limitations.</p>
+<p>Correlation isn’t causation—but with these tools, you can find out
+what is.</p>
+<hr />
+<p><strong>Causal Inference</strong> · <strong>Policy Analysis</strong>
+· <strong>Statistics</strong> · <strong>Energy</strong> ·
+<strong>Python</strong></p>
+<hr />
+<p><em>Found this useful? I’m Kyle Jones—I write about rigorous data
+analysis for policy, energy, and climate. Follow for more evidence-based
+insights.</em></p>
+</body>
+</html>

@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_power_options_blog</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+</head>
+<body>
+<h1
+id="power-options-and-swing-options-mastering-flexibility-in-volatile-energy-markets">Power
+Options and Swing Options: Mastering Flexibility in Volatile Energy
+Markets</h1>
+<p>When Hurricane Ida shut down Louisiana’s power grid in August 2021,
+electricity prices in neighboring markets spiked to $1,500/MWh. Traders
+holding call options on power made fortunes—their $8/MWh premiums turned
+into $1,400/MWh payoffs overnight. Meanwhile, generators locked into
+fixed-price forward contracts faced catastrophic losses, watching spot
+prices soar 1,800% above their contracted rates.</p>
+<p>Power options aren’t just insurance policies—they’re sophisticated
+instruments that monetize volatility, hedge price risk, and create
+leverage that amplifies gains while limiting losses. In markets where
+prices can swing 500% in hours, options separate professionals from
+amateurs.</p>
+<h2 id="why-options-are-essential-for-power-trading">Why Options Are
+Essential for Power Trading</h2>
+<p>Power markets exhibit extreme volatility compared to other
+commodities. Oil prices might move 3-5% daily; power prices routinely
+swing 50-200% within hours. This volatility creates both enormous risk
+and extraordinary opportunity.</p>
+<p>Traditional forward contracts lock in prices, eliminating both upside
+and downside. Options provide asymmetric payoffs—participate in
+favorable moves while limiting losses during adverse moves. For power
+traders, this asymmetry is invaluable:</p>
+<ul>
+<li><strong>Generators</strong>: Buy put options to protect against low
+prices without capping upside</li>
+<li><strong>Load-Serving Entities</strong>: Buy call options to cap
+purchase costs while benefiting from low prices</li>
+<li><strong>Speculators</strong>: Sell options to collect premiums,
+profiting from volatility itself</li>
+<li><strong>Asset Managers</strong>: Use options to enhance returns
+through structured products</li>
+</ul>
+<figure>
+<img src="04_power_options_main.png" alt="Power Options Analysis" />
+<figcaption aria-hidden="true">Power Options Analysis</figcaption>
+</figure>
+<h2 id="understanding-european-vs.-american-power-options">Understanding
+European vs. American Power Options</h2>
+<p>Power options come in two fundamental varieties, each with distinct
+pricing and exercise characteristics:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> norm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> black_scholes_power_option(spot_price, strike_price, time_to_expiry_days, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                               volatility, option_type<span class="op">=</span><span class="st">&#39;call&#39;</span>, american<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculate power option value using Black-Scholes framework.</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Adapted for power markets with mean reversion and seasonality.</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">    European options can only be exercised at expiration.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">    American options can be exercised anytime before expiration.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert days to years</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> time_to_expiry_days <span class="op">/</span> <span class="fl">365.0</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Risk-free rate (approximation)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Volatility adjustment for power markets (typically 50-200%)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> volatility <span class="op">/</span> <span class="fl">100.0</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Black-Scholes components</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    d1 <span class="op">=</span> (np.log(spot_price <span class="op">/</span> strike_price) <span class="op">+</span> (r <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> sigma<span class="op">**</span><span class="dv">2</span>) <span class="op">*</span> T) <span class="op">/</span> (sigma <span class="op">*</span> np.sqrt(T))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    d2 <span class="op">=</span> d1 <span class="op">-</span> sigma <span class="op">*</span> np.sqrt(T)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Option value calculators by type</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    is_call <span class="op">=</span> (option_type <span class="op">==</span> <span class="st">&#39;call&#39;</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Call and put value calculations</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    call_value <span class="op">=</span> spot_price <span class="op">*</span> norm.cdf(d1) <span class="op">-</span> strike_price <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(d2)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    put_value <span class="op">=</span> strike_price <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(<span class="op">-</span>d2) <span class="op">-</span> spot_price <span class="op">*</span> norm.cdf(<span class="op">-</span>d1)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select value based on option type</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    european_value <span class="op">=</span> is_call <span class="op">*</span> call_value <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> is_call) <span class="op">*</span> put_value</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># American option adjustment (put early exercise premium only)</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    put_intrinsic <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, strike_price <span class="op">-</span> spot_price)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    american_adjustment <span class="op">=</span> american <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> is_call) <span class="op">*</span> <span class="bu">max</span>(<span class="dv">0</span>, put_intrinsic <span class="op">-</span> european_value)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    option_value <span class="op">=</span> european_value <span class="op">+</span> american_adjustment</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate Greeks</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    greeks <span class="op">=</span> calculate_option_greeks(spot_price, strike_price, T, volatility, d1, d2, option_type)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Intrinsic and time value calculations</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    call_intrinsic <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, spot_price <span class="op">-</span> strike_price)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    put_intrinsic <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, strike_price <span class="op">-</span> spot_price)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    intrinsic_value <span class="op">=</span> is_call <span class="op">*</span> call_intrinsic <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> is_call) <span class="op">*</span> put_intrinsic</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;option_value&#39;</span>: option_value,</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;intrinsic_value&#39;</span>: intrinsic_value,</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;time_value&#39;</span>: option_value <span class="op">-</span> intrinsic_value,</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;greeks&#39;</span>: greeks,</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;spot_price&#39;</span>: spot_price,</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;strike_price&#39;</span>: strike_price,</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;volatility&#39;</span>: volatility,</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;days_to_expiry&#39;</span>: time_to_expiry_days,</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;option_type&#39;</span>: option_type,</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;american&#39;</span>: american</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_option_greeks(S, K, T, volatility, d1, d2, option_type):</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Calculate option Greeks for risk management.&quot;&quot;&quot;</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    sigma <span class="op">=</span> volatility <span class="op">/</span> <span class="fl">100.0</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Delta calculation using boolean arithmetic</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    is_call <span class="op">=</span> (option_type <span class="op">==</span> <span class="st">&#39;call&#39;</span>)</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> is_call <span class="op">*</span> norm.cdf(d1) <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> is_call) <span class="op">*</span> (norm.cdf(d1) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gamma: Rate of change of delta with respect to underlying price</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    gamma <span class="op">=</span> (norm.pdf(d1) <span class="op">/</span> (S <span class="op">*</span> sigma <span class="op">*</span> np.sqrt(T))) <span class="op">*</span> (T <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Theta calculation using boolean arithmetic</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    base_theta <span class="op">=</span> <span class="op">-</span>S <span class="op">*</span> norm.pdf(d1) <span class="op">*</span> sigma <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> np.sqrt(T))</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    call_theta_adjustment <span class="op">=</span> <span class="op">-</span>r <span class="op">*</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(d2)</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    put_theta_adjustment <span class="op">=</span> r <span class="op">*</span> K <span class="op">*</span> np.exp(<span class="op">-</span>r <span class="op">*</span> T) <span class="op">*</span> norm.cdf(<span class="op">-</span>d2)</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>    theta <span class="op">=</span> (base_theta <span class="op">+</span> is_call <span class="op">*</span> call_theta_adjustment <span class="op">+</span> (<span class="dv">1</span> <span class="op">-</span> is_call) <span class="op">*</span> put_theta_adjustment) <span class="op">/</span> <span class="dv">365</span></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Vega: Rate of change of option value with respect to volatility</span></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>    vega <span class="op">=</span> S <span class="op">*</span> norm.pdf(d1) <span class="op">*</span> np.sqrt(T) <span class="op">/</span> <span class="dv">100</span>  <span class="co"># Per 1% change in volatility</span></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;delta&#39;</span>: delta,</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;gamma&#39;</span>: gamma,</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;theta&#39;</span>: theta,</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;vega&#39;</span>: vega</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Price a call option on power</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>call_option <span class="op">=</span> black_scholes_power_option(</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>    spot_price<span class="op">=</span><span class="fl">85.00</span>,      <span class="co"># Current LMP</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>    strike_price<span class="op">=</span><span class="fl">100.00</span>,   <span class="co"># Strike price</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>    time_to_expiry_days<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>    volatility<span class="op">=</span><span class="dv">75</span>,         <span class="co"># 75% annualized volatility</span></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>    option_type<span class="op">=</span><span class="st">&#39;call&#39;</span>,</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>    american<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;European Call Option Valuation:&quot;</span>)</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Spot Price: $</span><span class="sc">{</span>call_option[<span class="st">&#39;spot_price&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Strike Price: $</span><span class="sc">{</span>call_option[<span class="st">&#39;strike_price&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Option Value: $</span><span class="sc">{</span>call_option[<span class="st">&#39;option_value&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Intrinsic Value: $</span><span class="sc">{</span>call_option[<span class="st">&#39;intrinsic_value&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Time Value: $</span><span class="sc">{</span>call_option[<span class="st">&#39;time_value&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Greeks:&quot;</span>)</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Delta: </span><span class="sc">{</span>call_option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;delta&#39;</span>]<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Gamma: </span><span class="sc">{</span>call_option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;gamma&#39;</span>]<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Theta: $</span><span class="sc">{</span>call_option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;theta&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/day&quot;</span>)</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Vega: $</span><span class="sc">{</span>call_option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;vega&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/vol%&quot;</span>)</span></code></pre></div>
+<p>This code demonstrates that even out-of-the-money options have
+significant value in power markets due to extreme volatility. A call
+struck $15 above current prices still trades at $8-12/MWh because prices
+could spike dramatically.</p>
+<h2 id="swing-options-the-ultimate-flexibility-instrument">Swing
+Options: The Ultimate Flexibility Instrument</h2>
+<p>Swing options—also called take-or-pay options—grant the holder
+flexibility to vary delivery quantities within limits. These instruments
+are particularly valuable for managing load uncertainty and generation
+variability:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> value_swing_option(base_quantity_mw, swing_range_mw, forward_prices, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                      strike_price, volatility, num_exercise_rights):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Value a swing option using simplified dynamic programming.</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Swing options allow the holder to increase or decrease delivery</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">    quantities a limited number of times, providing operational flexibility.</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    n_periods <span class="op">=</span> <span class="bu">len</span>(forward_prices)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create state space for remaining exercise rights</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Value[period][exercises_remaining]</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    option_values <span class="op">=</span> np.zeros((n_periods <span class="op">+</span> <span class="dv">1</span>, num_exercise_rights <span class="op">+</span> <span class="dv">1</span>))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Backward induction from final period</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> period <span class="kw">in</span> <span class="bu">range</span>(n_periods <span class="op">-</span> <span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>):</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        forward_price <span class="op">=</span> forward_prices[period]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> exercises_left <span class="kw">in</span> <span class="bu">range</span>(num_exercise_rights <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Option 1: Take base quantity (no exercise)</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            base_payoff <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, forward_price <span class="op">-</span> strike_price) <span class="op">*</span> base_quantity_mw</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Option 2: Swing up (exercise right)</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            swing_up_payoff <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> exercises_left <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                swing_up_quantity <span class="op">=</span> base_quantity_mw <span class="op">+</span> swing_range_mw</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                swing_up_payoff <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, forward_price <span class="op">-</span> strike_price) <span class="op">*</span> swing_up_quantity</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Option 3: Swing down (exercise right)</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            swing_down_payoff <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> exercises_left <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                swing_down_quantity <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, base_quantity_mw <span class="op">-</span> swing_range_mw)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>                swing_down_payoff <span class="op">=</span> <span class="bu">max</span>(<span class="dv">0</span>, forward_price <span class="op">-</span> strike_price) <span class="op">*</span> swing_down_quantity</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Choose best option</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> exercises_left <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Compare all three choices</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>                option_values[period][exercises_left] <span class="op">=</span> <span class="bu">max</span>(</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>                    base_payoff <span class="op">+</span> option_values[period <span class="op">+</span> <span class="dv">1</span>][exercises_left],</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>                    swing_up_payoff <span class="op">+</span> option_values[period <span class="op">+</span> <span class="dv">1</span>][exercises_left <span class="op">-</span> <span class="dv">1</span>],</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>                    swing_down_payoff <span class="op">+</span> option_values[period <span class="op">+</span> <span class="dv">1</span>][exercises_left <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                <span class="co"># No exercises left, must take base</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>                option_values[period][exercises_left] <span class="op">=</span> base_payoff <span class="op">+</span> option_values[period <span class="op">+</span> <span class="dv">1</span>][exercises_left]</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate intrinsic value (value without optionality)</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    intrinsic_value <span class="op">=</span> <span class="bu">sum</span>(<span class="bu">max</span>(<span class="dv">0</span>, fp <span class="op">-</span> strike_price) <span class="op">*</span> base_quantity_mw <span class="cf">for</span> fp <span class="kw">in</span> forward_prices)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Option value is difference between optimal strategy and intrinsic</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    swing_value <span class="op">=</span> option_values[<span class="dv">0</span>][num_exercise_rights]</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    optionality_value <span class="op">=</span> swing_value <span class="op">-</span> intrinsic_value</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_value&#39;</span>: swing_value,</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;intrinsic_value&#39;</span>: intrinsic_value,</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;optionality_value&#39;</span>: optionality_value,</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;optionality_percentage&#39;</span>: (optionality_value <span class="op">/</span> intrinsic_value <span class="op">*</span> <span class="dv">100</span>) <span class="cf">if</span> intrinsic_value <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span>,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;per_mwh_value&#39;</span>: swing_value <span class="op">/</span> (base_quantity_mw <span class="op">*</span> n_periods)</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Value a monthly swing option</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>monthly_forwards <span class="op">=</span> [<span class="dv">82</span>, <span class="dv">85</span>, <span class="dv">88</span>, <span class="dv">92</span>, <span class="dv">95</span>, <span class="dv">98</span>, <span class="dv">105</span>, <span class="dv">110</span>, <span class="dv">108</span>, <span class="dv">102</span>, <span class="dv">96</span>, <span class="dv">90</span>,  <span class="co"># Day prices</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">88</span>, <span class="dv">86</span>, <span class="dv">84</span>, <span class="dv">82</span>, <span class="dv">85</span>, <span class="dv">90</span>, <span class="dv">95</span>, <span class="dv">105</span>, <span class="dv">108</span>, <span class="dv">106</span>, <span class="dv">98</span>, <span class="dv">92</span>,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">85</span>, <span class="dv">83</span>, <span class="dv">82</span>, <span class="dv">84</span>, <span class="dv">87</span>, <span class="dv">92</span>]  <span class="co"># 30 days</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>swing_result <span class="op">=</span> value_swing_option(</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    base_quantity_mw<span class="op">=</span><span class="dv">100</span>,        <span class="co"># Base delivery of 100 MW</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    swing_range_mw<span class="op">=</span><span class="dv">30</span>,           <span class="co"># Can swing +/- 30 MW</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>    forward_prices<span class="op">=</span>monthly_forwards,</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>    strike_price<span class="op">=</span><span class="fl">85.00</span>,          <span class="co"># Strike price</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>    volatility<span class="op">=</span><span class="dv">75</span>,               <span class="co"># Market volatility</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>    num_exercise_rights<span class="op">=</span><span class="dv">10</span>       <span class="co"># Can swing 10 times during month</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Swing Option Valuation:&quot;</span>)</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Total Value: $</span><span class="sc">{</span>swing_result[<span class="st">&#39;total_value&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Intrinsic Value: $</span><span class="sc">{</span>swing_result[<span class="st">&#39;intrinsic_value&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Optionality Value: $</span><span class="sc">{</span>swing_result[<span class="st">&#39;optionality_value&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Optionality Premium: </span><span class="sc">{</span>swing_result[<span class="st">&#39;optionality_percentage&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Value per MWh: $</span><span class="sc">{</span>swing_result[<span class="st">&#39;per_mwh_value&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/MWh&quot;</span>)</span></code></pre></div>
+<p>Swing options typically trade at 20-40% premiums above plain vanilla
+options because the flexibility to adjust quantities has enormous value
+when prices or loads deviate from forecasts.</p>
+<h2 id="volatility-smile-and-implied-volatility-surface">Volatility
+Smile and Implied Volatility Surface</h2>
+<p>Power markets exhibit pronounced volatility smiles—implied volatility
+varies by strike price:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_implied_volatility_smile(spot_price, strikes, option_prices, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                      time_to_expiry_days, option_type<span class="op">=</span><span class="st">&#39;call&#39;</span>):</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Extract implied volatility from market option prices.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Creates volatility smile showing how implied vol varies by strike.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    In power markets, out-of-money options typically show higher implied vol</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    due to jump risk and extreme price spikes.</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> scipy.optimize <span class="im">import</span> brentq</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    implied_vols <span class="op">=</span> []</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> strike, market_price <span class="kw">in</span> <span class="bu">zip</span>(strikes, option_prices):</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Define function to find volatility that matches market price</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> vol_objective(vol):</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">try</span>:</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                option <span class="op">=</span> black_scholes_power_option(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                    spot_price<span class="op">=</span>spot_price,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                    strike_price<span class="op">=</span>strike,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                    time_to_expiry_days<span class="op">=</span>time_to_expiry_days,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                    volatility<span class="op">=</span>vol,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                    option_type<span class="op">=</span>option_type</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> option[<span class="st">&#39;option_value&#39;</span>] <span class="op">-</span> market_price</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">except</span>:</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="fl">1e6</span>  <span class="co"># Large error if calculation fails</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Search for implied volatility between 10% and 300%</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            implied_vol <span class="op">=</span> brentq(vol_objective, <span class="dv">10</span>, <span class="dv">300</span>, maxiter<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            implied_vols.append(implied_vol)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span>:</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If no solution found, append NaN</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            implied_vols.append(np.nan)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate smile characteristics</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    atm_strike <span class="op">=</span> <span class="bu">min</span>(strikes, key<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">abs</span>(x <span class="op">-</span> spot_price))</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    atm_vol <span class="op">=</span> implied_vols[strikes.index(atm_strike)] <span class="cf">if</span> atm_strike <span class="kw">in</span> strikes <span class="cf">else</span> np.nan</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Skew: difference between OTM put vol and ATM vol</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    otm_put_strikes <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> strikes <span class="cf">if</span> s <span class="op">&lt;</span> spot_price <span class="op">*</span> <span class="fl">0.9</span>]</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    otm_put_vols <span class="op">=</span> [iv <span class="cf">for</span> s, iv <span class="kw">in</span> <span class="bu">zip</span>(strikes, implied_vols) <span class="cf">if</span> s <span class="kw">in</span> otm_put_strikes]</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Smile convexity</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    smile_convexity <span class="op">=</span> <span class="bu">max</span>(implied_vols) <span class="op">-</span> atm_vol <span class="cf">if</span> implied_vols <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;strikes&#39;</span>: strikes,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;implied_vols&#39;</span>: implied_vols,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;atm_vol&#39;</span>: atm_vol,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;smile_convexity&#39;</span>: smile_convexity,</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;vol_range&#39;</span>: (<span class="bu">min</span>(implied_vols), <span class="bu">max</span>(implied_vols))</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Analyze volatility smile</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>strikes <span class="op">=</span> [<span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>, <span class="dv">85</span>, <span class="dv">90</span>, <span class="dv">100</span>, <span class="dv">110</span>, <span class="dv">120</span>]</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="co"># Market prices showing typical power option smile (higher vol at extremes)</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>market_prices <span class="op">=</span> [<span class="fl">28.5</span>, <span class="fl">18.2</span>, <span class="fl">10.5</span>, <span class="fl">7.8</span>, <span class="fl">5.2</span>, <span class="fl">2.1</span>, <span class="fl">0.8</span>, <span class="fl">0.3</span>]</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>smile_analysis <span class="op">=</span> calculate_implied_volatility_smile(</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    spot_price<span class="op">=</span><span class="fl">85.00</span>,</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    strikes<span class="op">=</span>strikes,</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    option_prices<span class="op">=</span>market_prices,</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    time_to_expiry_days<span class="op">=</span><span class="dv">30</span>,</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    option_type<span class="op">=</span><span class="st">&#39;call&#39;</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Volatility Smile Analysis:&quot;</span>)</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  ATM Volatility: </span><span class="sc">{</span>smile_analysis[<span class="st">&#39;atm_vol&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Volatility Range: </span><span class="sc">{</span>smile_analysis[<span class="st">&#39;vol_range&#39;</span>][<span class="dv">0</span>]<span class="sc">:.1f}</span><span class="ss">% - </span><span class="sc">{</span>smile_analysis[<span class="st">&#39;vol_range&#39;</span>][<span class="dv">1</span>]<span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Smile Convexity: </span><span class="sc">{</span>smile_analysis[<span class="st">&#39;smile_convexity&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Implied Volatility by Strike:&quot;</span>)</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> strike, impl_vol <span class="kw">in</span> <span class="bu">zip</span>(strikes, smile_analysis[<span class="st">&#39;implied_vols&#39;</span>]):</span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    moneyness <span class="op">=</span> (strike <span class="op">-</span> <span class="fl">85.00</span>) <span class="op">/</span> <span class="fl">85.00</span> <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;  Strike $</span><span class="sc">{</span>strike<span class="sc">:.0f}</span><span class="ss"> (</span><span class="sc">{</span>moneyness<span class="sc">:+.1f}</span><span class="ss">%): </span><span class="sc">{</span>impl_vol<span class="sc">:.1f}</span><span class="ss">% vol&quot;</span>)</span></code></pre></div>
+<p>The volatility smile in power markets is pronounced—deep out-of-money
+options show 2-3x higher implied volatility than at-the-money options,
+reflecting the market’s assessment of extreme price spike
+probability.</p>
+<h2 id="option-portfolio-construction-and-greeks-management">Option
+Portfolio Construction and Greeks Management</h2>
+<p>Professional option traders don’t trade single options—they construct
+portfolios optimized for specific risk/return profiles:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> construct_option_portfolio(position_specs, current_spot_price):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Construct and analyze option portfolio with multiple positions.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Calculates aggregate Greeks and P&amp;L profile across price scenarios.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    portfolio_positions <span class="op">=</span> []</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> spec <span class="kw">in</span> position_specs:</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        option <span class="op">=</span> black_scholes_power_option(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>            spot_price<span class="op">=</span>current_spot_price,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>            strike_price<span class="op">=</span>spec[<span class="st">&#39;strike&#39;</span>],</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>            time_to_expiry_days<span class="op">=</span>spec[<span class="st">&#39;days_to_expiry&#39;</span>],</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>            volatility<span class="op">=</span>spec[<span class="st">&#39;volatility&#39;</span>],</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            option_type<span class="op">=</span>spec[<span class="st">&#39;option_type&#39;</span>]</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        position <span class="op">=</span> {</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;quantity&#39;</span>: spec[<span class="st">&#39;quantity&#39;</span>],  <span class="co"># Positive = long, negative = short</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;option&#39;</span>: option,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;position_value&#39;</span>: option[<span class="st">&#39;option_value&#39;</span>] <span class="op">*</span> spec[<span class="st">&#39;quantity&#39;</span>],</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;position_delta&#39;</span>: option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;delta&#39;</span>] <span class="op">*</span> spec[<span class="st">&#39;quantity&#39;</span>],</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;position_gamma&#39;</span>: option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;gamma&#39;</span>] <span class="op">*</span> spec[<span class="st">&#39;quantity&#39;</span>],</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;position_vega&#39;</span>: option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;vega&#39;</span>] <span class="op">*</span> spec[<span class="st">&#39;quantity&#39;</span>],</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;position_theta&#39;</span>: option[<span class="st">&#39;greeks&#39;</span>][<span class="st">&#39;theta&#39;</span>] <span class="op">*</span> spec[<span class="st">&#39;quantity&#39;</span>]</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        portfolio_positions.append(position)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate portfolio Greeks</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    portfolio_delta <span class="op">=</span> <span class="bu">sum</span>(p[<span class="st">&#39;position_delta&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> portfolio_positions)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    portfolio_gamma <span class="op">=</span> <span class="bu">sum</span>(p[<span class="st">&#39;position_gamma&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> portfolio_positions)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    portfolio_vega <span class="op">=</span> <span class="bu">sum</span>(p[<span class="st">&#39;position_vega&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> portfolio_positions)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    portfolio_theta <span class="op">=</span> <span class="bu">sum</span>(p[<span class="st">&#39;position_theta&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> portfolio_positions)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    portfolio_value <span class="op">=</span> <span class="bu">sum</span>(p[<span class="st">&#39;position_value&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> portfolio_positions)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Simulate P&amp;L across price scenarios</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    price_scenarios <span class="op">=</span> np.linspace(current_spot_price <span class="op">*</span> <span class="fl">0.5</span>, current_spot_price <span class="op">*</span> <span class="fl">1.5</span>, <span class="dv">50</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    pnl_profile <span class="op">=</span> []</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> scenario_price <span class="kw">in</span> price_scenarios:</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        scenario_pnl <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i, position <span class="kw">in</span> <span class="bu">enumerate</span>(portfolio_positions):</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>            spec <span class="op">=</span> position_specs[i]</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Calculate option value at scenario price</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>            scenario_option <span class="op">=</span> black_scholes_power_option(</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>                spot_price<span class="op">=</span>scenario_price,</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>                strike_price<span class="op">=</span>spec[<span class="st">&#39;strike&#39;</span>],</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>                time_to_expiry_days<span class="op">=</span>spec[<span class="st">&#39;days_to_expiry&#39;</span>],</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>                volatility<span class="op">=</span>spec[<span class="st">&#39;volatility&#39;</span>],</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>                option_type<span class="op">=</span>spec[<span class="st">&#39;option_type&#39;</span>]</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>            <span class="co"># P&amp;L is difference from current value</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>            pnl <span class="op">=</span> (scenario_option[<span class="st">&#39;option_value&#39;</span>] <span class="op">-</span> position[<span class="st">&#39;option&#39;</span>][<span class="st">&#39;option_value&#39;</span>]) <span class="op">*</span> spec[<span class="st">&#39;quantity&#39;</span>]</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>            scenario_pnl <span class="op">+=</span> pnl</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        pnl_profile.append({</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;scenario_price&#39;</span>: scenario_price,</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;portfolio_pnl&#39;</span>: scenario_pnl</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;positions&#39;</span>: portfolio_positions,</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;portfolio_value&#39;</span>: portfolio_value,</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;portfolio_greeks&#39;</span>: {</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;delta&#39;</span>: portfolio_delta,</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;gamma&#39;</span>: portfolio_gamma,</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;vega&#39;</span>: portfolio_vega,</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;theta&#39;</span>: portfolio_theta</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;pnl_profile&#39;</span>: pnl_profile,</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;max_profit&#39;</span>: <span class="bu">max</span>(p[<span class="st">&#39;portfolio_pnl&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> pnl_profile),</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;max_loss&#39;</span>: <span class="bu">min</span>(p[<span class="st">&#39;portfolio_pnl&#39;</span>] <span class="cf">for</span> p <span class="kw">in</span> pnl_profile)</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Construct a bull call spread</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>bull_call_spread <span class="op">=</span> [</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&#39;strike&#39;</span>: <span class="dv">85</span>, <span class="st">&#39;quantity&#39;</span>: <span class="dv">100</span>, <span class="st">&#39;days_to_expiry&#39;</span>: <span class="dv">30</span>, <span class="st">&#39;volatility&#39;</span>: <span class="dv">75</span>, <span class="st">&#39;option_type&#39;</span>: <span class="st">&#39;call&#39;</span>},   <span class="co"># Long ATM call</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>    {<span class="st">&#39;strike&#39;</span>: <span class="dv">100</span>, <span class="st">&#39;quantity&#39;</span>: <span class="op">-</span><span class="dv">100</span>, <span class="st">&#39;days_to_expiry&#39;</span>: <span class="dv">30</span>, <span class="st">&#39;volatility&#39;</span>: <span class="dv">75</span>, <span class="st">&#39;option_type&#39;</span>: <span class="st">&#39;call&#39;</span>}  <span class="co"># Short OTM call</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>portfolio <span class="op">=</span> construct_option_portfolio(bull_call_spread, current_spot_price<span class="op">=</span><span class="fl">85.00</span>)</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Bull Call Spread Portfolio:&quot;</span>)</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Portfolio Value: $</span><span class="sc">{</span>portfolio[<span class="st">&#39;portfolio_value&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Max Profit Potential: $</span><span class="sc">{</span>portfolio[<span class="st">&#39;max_profit&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Max Loss Potential: $</span><span class="sc">{</span>portfolio[<span class="st">&#39;max_loss&#39;</span>]<span class="sc">:,.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">Portfolio Greeks:&quot;</span>)</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Delta: </span><span class="sc">{</span>portfolio[<span class="st">&#39;portfolio_greeks&#39;</span>][<span class="st">&#39;delta&#39;</span>]<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Gamma: </span><span class="sc">{</span>portfolio[<span class="st">&#39;portfolio_greeks&#39;</span>][<span class="st">&#39;gamma&#39;</span>]<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Vega: $</span><span class="sc">{</span>portfolio[<span class="st">&#39;portfolio_greeks&#39;</span>][<span class="st">&#39;vega&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/vol%&quot;</span>)</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;  Theta: $</span><span class="sc">{</span>portfolio[<span class="st">&#39;portfolio_greeks&#39;</span>][<span class="st">&#39;theta&#39;</span>]<span class="sc">:.2f}</span><span class="ss">/day&quot;</span>)</span></code></pre></div>
+<p>Bull call spreads limit upside but also limit downside—ideal when
+you’re moderately bullish but want to reduce option premium costs.
+Portfolio Greeks reveal how the position responds to market
+movements.</p>
+<h2 id="real-time-options-trading-strategy">Real-Time Options Trading
+Strategy</h2>
+<p>Integrate option analytics into live trading decisions:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_option_trading_signals(current_market, volatility_regime, position_limits):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Generate option trading signals based on market conditions.</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Identifies opportunities in option mispricing, volatility, and hedging needs.</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    signals <span class="op">=</span> []</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    spot_price <span class="op">=</span> current_market[<span class="st">&#39;spot_price&#39;</span>]</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    historical_vol <span class="op">=</span> current_market[<span class="st">&#39;historical_volatility&#39;</span>]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    implied_vol <span class="op">=</span> current_market[<span class="st">&#39;implied_volatility&#39;</span>]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Signal 1: Volatility arbitrage</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    vol_differential <span class="op">=</span> implied_vol <span class="op">-</span> historical_vol</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> vol_differential <span class="op">&gt;</span> <span class="dv">15</span>:  <span class="co"># Implied vol significantly above historical</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        signals.append({</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;signal&#39;</span>: <span class="st">&#39;SELL_VOLATILITY&#39;</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;strategy&#39;</span>: <span class="st">&#39;Sell straddle (sell call + sell put at ATM)&#39;</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;rationale&#39;</span>: <span class="ss">f&#39;Implied vol </span><span class="sc">{</span>implied_vol<span class="sc">:.0f}</span><span class="ss">% vs historical </span><span class="sc">{</span>historical_vol<span class="sc">:.0f}</span><span class="ss">% - overpriced options&#39;</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;HIGH&#39;</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: vol_differential <span class="op">*</span> <span class="fl">0.5</span>  <span class="co"># Approximate edge</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> vol_differential <span class="op">&lt;</span> <span class="op">-</span><span class="dv">10</span>:  <span class="co"># Implied vol below historical</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        signals.append({</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;signal&#39;</span>: <span class="st">&#39;BUY_VOLATILITY&#39;</span>,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;strategy&#39;</span>: <span class="st">&#39;Buy straddle (buy call + buy put at ATM)&#39;</span>,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;rationale&#39;</span>: <span class="ss">f&#39;Implied vol </span><span class="sc">{</span>implied_vol<span class="sc">:.0f}</span><span class="ss">% vs historical </span><span class="sc">{</span>historical_vol<span class="sc">:.0f}</span><span class="ss">% - cheap options&#39;</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;MEDIUM&#39;</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: <span class="bu">abs</span>(vol_differential) <span class="op">*</span> <span class="fl">0.3</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Signal 2: Directional opportunity</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    forward_price <span class="op">=</span> current_market.get(<span class="st">&#39;forward_price_30d&#39;</span>, spot_price)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    price_momentum <span class="op">=</span> (forward_price <span class="op">-</span> spot_price) <span class="op">/</span> spot_price <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> price_momentum <span class="op">&gt;</span> <span class="dv">10</span>:  <span class="co"># Strong bullish momentum</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        signals.append({</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;signal&#39;</span>: <span class="st">&#39;BUY_CALLS&#39;</span>,</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;strategy&#39;</span>: <span class="ss">f&#39;Buy call options, strike $</span><span class="sc">{</span>spot_price <span class="op">*</span> <span class="fl">1.05</span><span class="sc">:.2f}</span><span class="ss">&#39;</span>,</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;rationale&#39;</span>: <span class="ss">f&#39;Bullish momentum </span><span class="sc">{</span>price_momentum<span class="sc">:.1f}</span><span class="ss">% - forward prices rising&#39;</span>,</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;HIGH&#39;</span>,</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: price_momentum <span class="op">*</span> <span class="dv">2</span>  <span class="co"># Options provide leverage</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> price_momentum <span class="op">&lt;</span> <span class="op">-</span><span class="dv">10</span>:  <span class="co"># Strong bearish momentum</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        signals.append({</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;signal&#39;</span>: <span class="st">&#39;BUY_PUTS&#39;</span>,</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;strategy&#39;</span>: <span class="ss">f&#39;Buy put options, strike $</span><span class="sc">{</span>spot_price <span class="op">*</span> <span class="fl">0.95</span><span class="sc">:.2f}</span><span class="ss">&#39;</span>,</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;rationale&#39;</span>: <span class="ss">f&#39;Bearish momentum </span><span class="sc">{</span>price_momentum<span class="sc">:.1f}</span><span class="ss">% - forward prices falling&#39;</span>,</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;HIGH&#39;</span>,</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: <span class="bu">abs</span>(price_momentum) <span class="op">*</span> <span class="dv">2</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Signal 3: Calendar spread (time decay arbitrage)</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> volatility_regime <span class="op">==</span> <span class="st">&#39;LOW&#39;</span>:</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>        signals.append({</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;signal&#39;</span>: <span class="st">&#39;CALENDAR_SPREAD&#39;</span>,</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;strategy&#39;</span>: <span class="st">&#39;Sell near-term option, buy far-term option (same strike)&#39;</span>,</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;rationale&#39;</span>: <span class="st">&#39;Low volatility regime - capture time decay differential&#39;</span>,</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;MEDIUM&#39;</span>,</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: <span class="fl">8.5</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Signal 4: Hedge recommendation</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> current_market.get(<span class="st">&#39;var_95_exposure&#39;</span>, <span class="dv">0</span>) <span class="op">&gt;</span> position_limits[<span class="st">&#39;max_var&#39;</span>]:</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        signals.append({</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;signal&#39;</span>: <span class="st">&#39;HEDGE_REQUIRED&#39;</span>,</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;strategy&#39;</span>: <span class="st">&#39;Buy protective puts to reduce VaR&#39;</span>,</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;rationale&#39;</span>: <span class="st">&#39;Portfolio VaR exceeds risk limits&#39;</span>,</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;confidence&#39;</span>: <span class="st">&#39;CRITICAL&#39;</span>,</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;expected_return&#39;</span>: <span class="dv">0</span>  <span class="co"># Hedging cost, not profit opportunity</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rank signals by confidence and expected return</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>    signals.sort(key<span class="op">=</span><span class="kw">lambda</span> x: (x[<span class="st">&#39;confidence&#39;</span>] <span class="op">==</span> <span class="st">&#39;HIGH&#39;</span>, x[<span class="st">&#39;expected_return&#39;</span>]), reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> signals</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Generate trading signals</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>current_market <span class="op">=</span> {</span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;spot_price&#39;</span>: <span class="fl">92.50</span>,</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;historical_volatility&#39;</span>: <span class="dv">65</span>,</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;implied_volatility&#39;</span>: <span class="dv">85</span>,</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;forward_price_30d&#39;</span>: <span class="fl">98.20</span>,</span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;var_95_exposure&#39;</span>: <span class="fl">2.5</span>  <span class="co"># Million $</span></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>position_limits <span class="op">=</span> {</span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_var&#39;</span>: <span class="fl">3.0</span>,  <span class="co"># Million $</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_vega&#39;</span>: <span class="dv">50000</span>,</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;max_delta&#39;</span>: <span class="dv">1000</span></span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>signals <span class="op">=</span> generate_option_trading_signals(current_market, <span class="st">&#39;MODERATE&#39;</span>, position_limits)</span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Option Trading Signals:&quot;</span>)</span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, signal <span class="kw">in</span> <span class="bu">enumerate</span>(signals, <span class="dv">1</span>):</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">. </span><span class="sc">{</span>signal[<span class="st">&#39;signal&#39;</span>]<span class="sc">}</span><span class="ss"> [</span><span class="sc">{</span>signal[<span class="st">&#39;confidence&#39;</span>]<span class="sc">}</span><span class="ss">]&quot;</span>)</span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;   Strategy: </span><span class="sc">{</span>signal[<span class="st">&#39;strategy&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;   Rationale: </span><span class="sc">{</span>signal[<span class="st">&#39;rationale&#39;</span>]<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;   Expected Return: </span><span class="sc">{</span>signal[<span class="st">&#39;expected_return&#39;</span>]<span class="sc">:.1f}</span><span class="ss">%&quot;</span>)</span></code></pre></div>
+<p>Automated signal generation enables rapid response to changing market
+conditions. When implied volatility spikes 20+ points above historical,
+selling options becomes compelling—premium收益 often exceeds expected
+payouts.</p>
+<h2 id="key-takeaways-for-power-options-trading">Key Takeaways for Power
+Options Trading</h2>
+<p>Mastering power options transforms risk management and creates profit
+opportunities unavailable through physical trading:</p>
+<p><strong>1. Volatility Is Your Friend</strong>: Power’s extreme
+volatility makes options valuable. Even deep out-of-money strikes trade
+at significant premiums.</p>
+<p><strong>2. Greeks Guide Risk Management</strong>: Delta, gamma, vega,
+and theta reveal how positions respond to market changes. Managing
+Greeks is more important than managing notional exposure.</p>
+<p><strong>3. Swing Options Monetize Flexibility</strong>: Operational
+flexibility has quantifiable value. Swing options capture this value
+better than static forward contracts.</p>
+<p><strong>4. Volatility Smile Reflects Jump Risk</strong>: Higher
+implied volatility at extreme strikes shows the market prices in tail
+risk—use this information to position accordingly.</p>
+<p><strong>5. Portfolios Beat Single Options</strong>: Combining
+multiple options creates tailored payoff profiles matching specific
+risk/return objectives better than any single instrument.</p>
+<p>The code examples provide option analytics. Start with basic
+Black-Scholes pricing, add Greeks calculation, implement swing option
+valuation, and deploy real-time signal generation for comprehensive
+option trading capabilities.</p>
+<h2 id="implementation-roadmap">Implementation Roadmap</h2>
+<p>Deploy power options trading systematically:</p>
+<ol type="1">
+<li><strong>Pricing Infrastructure</strong>: Implement Black-Scholes
+with power market adjustments</li>
+<li><strong>Greeks Calculation</strong>: Build real-time Greeks
+monitoring for all positions</li>
+<li><strong>Volatility Surface</strong>: Construct and maintain implied
+volatility surface</li>
+<li><strong>Signal Generation</strong>: Deploy automated opportunity
+identification</li>
+<li><strong>Risk Management</strong>: Set Greeks limits and monitor
+continuously</li>
+<li><strong>Strategy Backtesting</strong>: Test option strategies
+against historical price data</li>
+<li><strong>Execution Platform</strong>: Integrate with broker APIs for
+order routing</li>
+</ol>
+<p>Professional options trading requires both analytical sophistication
+and operational discipline. While forward contracts lock in certainty,
+options create flexibility—flexibility that generates alpha when markets
+move in your favor and limits losses when they don’t.</p>
+<figure>
+<img src="04_power_options_performance.png"
+alt="Option Strategies Performance" />
+<figcaption aria-hidden="true">Option Strategies
+Performance</figcaption>
+</figure>
+</body>
+</html>
