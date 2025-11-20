@@ -1,0 +1,9 @@
+terraform:
+  project_dir: "."
+  validate_structure: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

@@ -1,0 +1,26 @@
+data:
+  source: "train_FD001.txt"
+  separator: "\\s+"
+
+model:
+  selected_sensors:
+    - "sensor_9"
+    - "sensor_14"
+    - "sensor_4"
+    - "sensor_3"
+    - "sensor_17"
+    - "sensor_2"
+  n_components: 3
+  threshold: 4.0
+
+analysis:
+  units_to_plot:
+    - 3
+    - 72
+    - 78
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

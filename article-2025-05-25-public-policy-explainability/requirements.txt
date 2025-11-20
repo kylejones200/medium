@@ -1,3 +1,7 @@
 pandas
-sklearn
+numpy
+scikit-learn
 shap
+matplotlib
+pyyaml
+pytest

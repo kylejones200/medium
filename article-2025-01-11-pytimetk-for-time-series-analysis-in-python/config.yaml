@@ -1,0 +1,20 @@
+data:
+  source: null
+  date_column: "date"
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 200
+  seed: 42
+
+pytimetk:
+  features:
+    - "mean"
+    - "std"
+    - "trend"
+  window_size: 30
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

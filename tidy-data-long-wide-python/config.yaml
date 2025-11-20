@@ -1,0 +1,27 @@
+data:
+  stores:
+    - "A"
+    - "B"
+  months:
+    - "Jan_Sales"
+    - "Feb_Sales"
+    - "Mar_Sales"
+  weekly_stores:
+    - "North"
+    - "South"
+    - "East"
+    - "West"
+  weeks: 3
+
+transformations:
+  wide_to_long: true
+  long_to_wide: true
+  pivot_table: true
+  groupby: true
+  weekly_analysis: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

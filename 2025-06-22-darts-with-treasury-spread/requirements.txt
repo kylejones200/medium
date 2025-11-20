@@ -1,4 +1,6 @@
-pandas>=1.3.0
-matplotlib>=3.4.0
-pandas_datareader>=0.10.0
-u8darts[all]>=0.24.0
+pandas
+matplotlib
+pandas_datareader
+darts
+pyyaml
+pytest

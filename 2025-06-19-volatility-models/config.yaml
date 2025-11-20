@@ -1,0 +1,18 @@
+simulation:
+  n: 1000
+  omega: 0.1
+  alpha: 0.8
+  seed: 42
+
+model:
+  vol_type: "ARCH"
+  p: 1
+
+forecast:
+  horizon: 10
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

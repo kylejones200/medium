@@ -1,0 +1,21 @@
+data:
+  months: 12
+  regions:
+    - "North"
+    - "South"
+    - "West"
+  seed: 42
+
+visualization:
+  seaborn_line: true
+  weekly_trend: true
+  store_comparison: true
+  interactive_plotly: false
+  interactive_altair: false
+  streamlit_dashboard: false
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

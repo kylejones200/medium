@@ -1,0 +1,15 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_periods: 500
+  seed: 42
+
+model:
+  lag: 5
+  fine_tune: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

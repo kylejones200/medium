@@ -1,0 +1,17 @@
+data:
+  source: null
+  date_column: "date"
+  sales_column: "sales"
+  generate_synthetic: true
+  n_periods: 365
+  seed: 42
+
+model:
+  lag: 7
+  train_size: 0.8
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

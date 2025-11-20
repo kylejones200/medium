@@ -1,0 +1,17 @@
+data:
+  source: null
+  timestamp_column: "timestamp"
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 1000
+  seed: 42
+
+nerc_cip:
+  compliance_check: true
+  security_zones: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

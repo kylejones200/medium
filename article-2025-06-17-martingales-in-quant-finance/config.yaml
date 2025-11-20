@@ -1,0 +1,24 @@
+simulation:
+  binomial:
+    S0: 100
+    u: 1.1
+    d: 0.9
+    r: 0.05
+    steps: 50
+    seed: null
+  exponential_martingale:
+    theta: 0.7
+    T: 1.0
+    steps: 1000
+    seed: null
+  girsanov:
+    theta: 0.7
+    T: 1.0
+    steps: 1000
+    seed: null
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

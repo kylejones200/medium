@@ -1,4 +1,7 @@
-aeon==0.8.0
-scikit-learn==1.2.2
+aeon
+scikit-learn
 matplotlib
-pandas==1.4.0
+pandas
+numpy
+pyyaml
+pytest

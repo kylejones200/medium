@@ -1,6 +1,7 @@
-pandas>=1.5
-numpy>=1.23
-matplotlib>=3.6
-seaborn>=0.12
-yfinance>=0.2
-statsmodels>=0.13
+pandas
+numpy
+matplotlib
+yfinance
+statsmodels
+pyyaml
+pytest

@@ -1,0 +1,19 @@
+data:
+  start_date: "2023-01-01"
+  periods: 240
+  frequency: "H"
+  seed: 42
+
+model:
+  season_length: 24
+  freq: "h"
+  n_jobs: -1
+
+forecast:
+  hold_out_hours: 24
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

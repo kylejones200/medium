@@ -1,0 +1,17 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_samples: 200
+  seed: 42
+
+model:
+  feature_columns:
+    - "feature1"
+    - "feature2"
+  target_column: "target"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

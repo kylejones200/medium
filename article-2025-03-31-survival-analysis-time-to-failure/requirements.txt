@@ -1,1 +1,6 @@
-# Add required packages here
+numpy
+pandas
+lifelines
+matplotlib
+pyyaml
+pytest

@@ -1,0 +1,22 @@
+data:
+  source: "Ercot_Native_Load_2025 (1).csv"
+  date_column: "Date"
+  value_column: "ERCOT"
+  frequency: "h"
+
+model:
+  size: "small"
+  prediction_length: 64
+  context_length: 200
+  patch_size: "auto"
+  num_samples: 100
+  batch_size: 32
+
+test:
+  test_size: 64
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

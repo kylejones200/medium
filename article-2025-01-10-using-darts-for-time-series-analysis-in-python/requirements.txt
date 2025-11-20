@@ -1,5 +1,7 @@
-pandas 
-numpy 
+pandas
+numpy
 matplotlib
-seaborn
 darts
+pyyaml
+requests
+pytest

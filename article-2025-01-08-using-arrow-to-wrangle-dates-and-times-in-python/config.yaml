@@ -1,0 +1,17 @@
+demo:
+  time_operations:
+    shift_hours: -2
+    shift_weeks: 1
+    timezone: "US/Central"
+    format_string: "YYYY-MM-DD HH:mm:ss ZZ"
+    precision: "hour"
+  interval:
+    start: "2025-01-01T08:00:00-05:00"
+    end: "2025-01-01T11:30:00-05:00"
+  parse_example: "2025-01-01T12:00:00-05:00"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

@@ -65,51 +65,55 @@ if __name__ == "__main__":
     # Get data
     series = fetch_fred_series(series_id, api_key)
     series = MissingValuesFiller().transform(series)
-    scaler = Scaler()
-    series = scaler.fit_transform(series)
 
-    # Split
+    # Split first
     train, val = series.split_before(pd.Timestamp("2020-01-01"))
+
+    # Scale after split - fit on training data only
+    scaler = Scaler()
+    scaler.fit(train)
+    train_scaled = scaler.transform(train)
+    val_scaled = scaler.transform(val)
 
     # ARIMA
     model = ARIMA(1, 1, 1)
-    model.fit(train)
-    forecast = model.predict(len(val))
+    model.fit(train_scaled)
+    forecast = model.predict(len(val_scaled))
     forecast = scaler.inverse_transform(forecast)
-    actual = scaler.inverse_transform(series)
+    actual = series
     plot_forecast(actual, forecast, "ARIMA Forecast", "ARIMA.png")
 
     # Exponential Smoothing
     model = ExponentialSmoothing()
-    model.fit(train)
-    forecast = model.predict(len(val))
+    model.fit(train_scaled)
+    forecast = model.predict(len(val_scaled))
     forecast = scaler.inverse_transform(forecast)
     plot_forecast(actual, forecast, "Exponential Smoothing", "ExponentialSmoothing.png")
 
     # LightGBM
     model = LightGBMModel(lags=30)
-    model.fit(train)
-    forecast = model.predict(len(val))
+    model.fit(train_scaled)
+    forecast = model.predict(len(val_scaled))
     forecast = scaler.inverse_transform(forecast)
     plot_forecast(actual, forecast, "LightGBM Forecast", "LightGBM.png")
 
     # LSTM
     model = RNNModel(model="LSTM", input_chunk_length=30, output_chunk_length=7, n_epochs=50)
-    model.fit(train)
-    forecast = model.predict(len(val))
+    model.fit(train_scaled)
+    forecast = model.predict(len(val_scaled))
     forecast = scaler.inverse_transform(forecast)
     plot_forecast(actual, forecast, "LSTM Forecast", "LSTM.png")
 
     # NBEATS
     model = NBEATSModel(input_chunk_length=30, output_chunk_length=7, n_epochs=50, random_state=42, **torch_config())
-    model.fit(train, val_series=val)
-    forecast = model.predict(len(val))
+    model.fit(train_scaled, val_series=val_scaled)
+    forecast = model.predict(len(val_scaled))
     forecast = scaler.inverse_transform(forecast)
     plot_forecast(actual, forecast, "NBEATS Forecast", "NBEATS.png")
 
     # FFT
     model = FFT()
-    model.fit(train)
-    forecast = model.predict(len(val))
+    model.fit(train_scaled)
+    forecast = model.predict(len(val_scaled))
     forecast = scaler.inverse_transform(forecast)
     plot_forecast(actual, forecast, "FFT Forecast", "FFT.png")

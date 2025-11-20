@@ -1,4 +1,7 @@
-pandas>=1.5
-matplotlib>=3.6
-pandas_datareader>=0.10
-statsmodels>=0.13
+pandas
+matplotlib
+pandas_datareader
+statsmodels
+pyyaml
+pytest
+numpy

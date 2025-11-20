@@ -1,1 +1,6 @@
-# Add required packages here
+numpy
+pandas
+scikit-learn
+matplotlib
+pyyaml
+pytest

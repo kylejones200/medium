@@ -1,0 +1,19 @@
+data:
+  source: null
+  date_column: "date"
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 300
+  seed: 42
+
+preprocessing:
+  handle_missing: true
+  remove_duplicates: true
+  handle_outliers: true
+  outlier_method: "iqr"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

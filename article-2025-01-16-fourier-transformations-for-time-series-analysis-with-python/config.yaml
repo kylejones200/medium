@@ -1,0 +1,22 @@
+data:
+  synthetic:
+    time_end: 10
+    n_samples: 500
+    freq1: 2
+    freq2: 5
+    amplitude2: 0.5
+    seed: 42
+  noise:
+    level: 50
+    threshold: 0.1
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+
+analysis:
+  run_synthetic: true
+  run_airline: true
+  run_noise_filtering: true
+

@@ -1,0 +1,19 @@
+data:
+  source_url: "https://raw.githubusercontent.com/jbrownlee/Datasets/master/daily-min-temperatures.csv"
+  target_column: "Temp"
+  split_date: "1989-01-01"
+
+features:
+  max_lag: 7
+
+model:
+  knn:
+    n_neighbors: 5
+  kernel:
+    bandwidth: "cv_ls"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

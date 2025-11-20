@@ -1,4 +1,83 @@
-# Value At Risk And Expected Shortfall In Quantitative Finance
+# Value at Risk and Expected Shortfall in Quantitative Finance
 
-This folder contains code and resources for the Medium article:
-[https://medium.com/@kylejones_47003/value-at-risk-var-and-expected-shortfall-in-quantitative-finance-76fab1b35b35](https://medium.com/@kylejones_47003/value-at-risk-var-and-expected-shortfall-in-quantitative-finance-76fab1b35b35)
+This project demonstrates Value at Risk (VaR) and Expected Shortfall (ES) calculations for risk management.
+
+## Article
+
+Medium article: [Value at Risk (VaR) and Expected Shortfall in Quantitative Finance](https://medium.com/@kylejones_47003/value-at-risk-var-and-expected-shortfall-in-quantitative-finance-76fab1b35b35)
+
+## Project Structure
+
+```
+.
+├── README.md           # This file
+├── main.py            # Main entry point
+├── config.yaml        # Configuration file
+├── requirements.txt   # Python dependencies
+├── src/               # Core functions
+│   ├── core.py        # VaR and ES functions
+│   └── plotting.py    # Tufte-style plotting utilities
+├── tests/             # Unit tests
+├── data/              # Data files
+└── images/            # Generated plots and figures
+```
+
+## Setup
+
+1. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run with default settings (generates synthetic data):
+```bash
+python main.py
+```
+
+Run with your own data:
+```bash
+python main.py --data-path data/returns.csv
+```
+
+## Configuration
+
+Edit `config.yaml` to customize:
+- Data source or synthetic generation
+- VaR methods (parametric, historical, monte_carlo)
+- Confidence levels
+- Output settings
+
+## Risk Metrics
+
+### Value at Risk (VaR)
+- **Parametric**: Assumes normal distribution
+- **Historical**: Uses actual historical returns
+- **Monte Carlo**: Simulates from return distribution
+
+### Expected Shortfall (ES)
+- Also known as Conditional VaR (CVaR)
+- Average loss beyond VaR threshold
+- More conservative than VaR
+
+## Plotting Style
+
+All plots use a minimalist Tufte-style design:
+- No gridlines
+- No top or right spines
+- Descriptive titles
+- Muted, professional color palette
+
+## Caveats
+
+- By default, generates synthetic returns for demonstration.
+- Parametric VaR assumes normal distribution; may underestimate tail risk.
+- Historical VaR requires sufficient historical data.
+- Monte Carlo VaR depends on distribution assumptions.

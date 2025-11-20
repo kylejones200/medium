@@ -1,0 +1,14 @@
+data:
+  images_dir: "data/images"
+  generate_demo: true
+  n_images: 10
+
+model:
+  clip_model: "openai/clip-vit-base-patch32"
+  threshold: 0.5
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

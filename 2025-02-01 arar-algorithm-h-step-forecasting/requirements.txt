@@ -1,1 +1,7 @@
-# Add Python package requirements here
+numpy
+pandas
+matplotlib
+statsmodels
+scikit-learn
+pyyaml
+pytest

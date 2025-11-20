@@ -1,0 +1,19 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_periods: 100
+  change_point: 50
+  before_mean: 10
+  after_mean: 20
+  std: 2
+  seed: 42
+
+model:
+  detection_window: 10
+  method: "sliding_window"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

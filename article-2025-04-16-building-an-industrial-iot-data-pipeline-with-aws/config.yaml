@@ -1,0 +1,20 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_points: 1000
+  n_sensors: 5
+  seed: 42
+
+aws:
+  services:
+    - "IoT Core"
+    - "Kinesis"
+    - "S3"
+    - "Lambda"
+    - "DynamoDB"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

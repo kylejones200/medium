@@ -1,5 +1,6 @@
 pandas
 numpy
 matplotlib
-statsforecast
-utilsforecast
+tsfresh
+pyyaml
+pytest

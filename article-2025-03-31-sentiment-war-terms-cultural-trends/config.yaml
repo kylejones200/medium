@@ -1,0 +1,23 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_periods: 100
+  seed: 42
+
+sentiment:
+  positive_words:
+    - "peace"
+    - "hope"
+    - "unity"
+    - "progress"
+  negative_words:
+    - "war"
+    - "conflict"
+    - "crisis"
+    - "violence"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

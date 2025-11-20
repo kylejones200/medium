@@ -1,0 +1,26 @@
+data:
+  source: null
+  n_samples: 200
+  start_date: "2023-01-01"
+  frequency: "D"
+  seed: 42
+
+model:
+  arima_order: [2, 1, 2]
+  hold_out_days: 30
+  seasonal_periods: 30
+  decomposition_period: 30
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+
+analysis:
+  run_arima: true
+  run_holt_winters: true
+  run_decomposition: true
+  run_stationarity_test: true
+  run_acf_pacf: true
+  run_residuals_diagnostics: true
+

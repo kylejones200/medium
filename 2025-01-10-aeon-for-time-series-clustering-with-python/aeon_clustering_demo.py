@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from aeon.datasets import make_example_3_class_dataset
 from aeon.visualisation import plot_series
 from aeon.classification.distance_based import KNeighborsTimeSeriesClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, shuffle=False
 from sklearn.metrics import accuracy_score
 
 # Generate synthetic dataset
@@ -16,7 +16,7 @@ plt.title("Sample Series from Each Class")
 plt.show()
 
 # Train/test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, shuffle=False)
 
 # Classifier
 clf = KNeighborsTimeSeriesClassifier(n_neighbors=1)

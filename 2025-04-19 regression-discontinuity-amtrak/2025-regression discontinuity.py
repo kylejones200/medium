@@ -80,7 +80,7 @@ def minimalist_rd_plot(x, y, title, ylabel, filename, ylim_zero=False):
     lowess_y = lowess_fit[:, 1]
     interp_y = np.interp(x, lowess_x, lowess_y)
     residuals = y - interp_y
-    rolling_std = pd.Series(residuals).rolling(window=3, center=True).std()
+    rolling_std = pd.Series(residuals).rolling(window=3, center=False).shift(1).std()
     interp_std = np.interp(lowess_x, x, rolling_std)
     upper = lowess_y + 1.96 * interp_std
     lower = lowess_y - 1.96 * interp_std

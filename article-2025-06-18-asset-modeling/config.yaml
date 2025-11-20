@@ -1,0 +1,18 @@
+simulation:
+  wiener:
+    n_steps: 1000
+    T: 1.0
+    seed: null
+  gbm:
+    S0: 100
+    mu: 0.05
+    sigma: 0.2
+    T: 1.0
+    n_steps: 1000
+    seed: null
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

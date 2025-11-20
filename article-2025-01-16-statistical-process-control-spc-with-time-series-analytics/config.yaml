@@ -1,0 +1,16 @@
+data:
+  start_date: "2023-01-01"
+  periods: 100
+  frequency: "D"
+  mean: 50
+  std: 2
+  seed: 42
+
+control_limits:
+  sigma_multiplier: 3.0
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

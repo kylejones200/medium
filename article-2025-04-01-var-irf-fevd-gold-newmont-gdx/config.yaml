@@ -1,0 +1,45 @@
+data:
+  source: "yfinance"
+  tickers:
+    - "GC=F"
+    - "NEM"
+    - "GDX"
+  start_date: "2018-01-01"
+  end_date: "2023-01-01"
+  resample_freq: "M"
+  column_names:
+    - "Gold"
+    - "NEM"
+    - "GDX"
+
+model:
+  max_lag: 12
+  lag_selection_criterion: "aic"
+
+analysis:
+  irf:
+    periods: 12
+    orthogonal: false
+  fevd:
+    periods: 12
+  granger_causality:
+    enabled: true
+    maxlag: 3
+    test_pairs:
+      - y: "GDX"
+        x: "Gold"
+        description: "Gold → GDX"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+  plot_irf: true
+  plot_fevd: true
+  plot_cumulative_irf: true
+  cumulative_irf_shock: "Gold"
+  cumulative_irf_responses:
+    - "GDX"
+    - "NEM"
+    - "Gold"
+

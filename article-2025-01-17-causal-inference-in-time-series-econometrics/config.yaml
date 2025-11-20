@@ -1,0 +1,19 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_periods: 200
+  seed: 42
+
+analysis:
+  granger_causality:
+    enabled: true
+    maxlag: 4
+  difference_in_differences:
+    enabled: true
+    treatment_period: 100
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

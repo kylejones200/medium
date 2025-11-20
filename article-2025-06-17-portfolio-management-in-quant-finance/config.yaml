@@ -1,0 +1,22 @@
+simulation:
+  asset_returns:
+    n_assets: 3
+    n_periods: 1000
+    seed: 42
+  efficient_frontier:
+    n_portfolios: 1000
+    seed: null
+  alpha_beta:
+    market_mean: 0.1
+    market_std: 0.15
+    asset_beta: 1.1
+    asset_noise_std: 0.05
+    n_periods: 1000
+    risk_free: 0.0
+    seed: null
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

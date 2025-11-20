@@ -1,0 +1,17 @@
+data:
+  time_steps: 500
+  seed: 42
+
+copula:
+  stock_interest:
+    type: "clayton"
+    n_samples: 100
+  inflation_unemployment:
+    type: "studentt"
+    n_samples: 100
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

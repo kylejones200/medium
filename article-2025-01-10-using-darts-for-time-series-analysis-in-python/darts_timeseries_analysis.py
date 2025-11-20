@@ -425,14 +425,18 @@ if __name__ == "__main__":
     # Create TimeSeries
     series = TimeSeries.from_dataframe(df, 'date', 'value')
 
-    # Handle missing values and scale the data
+    # Handle missing values
     filler = MissingValuesFiller()
-    scaler = Scaler()
     series_filled = filler.transform(series)
-    series_scaled = scaler.fit_transform(series_filled)
 
-    # Split the data
-    train, val = series_scaled.split_before(pd.Timestamp("2020-01-01"))
+    # Split the data first
+    train, val = series_filled.split_before(pd.Timestamp("2020-01-01"))
+
+    # Scale after split - fit on training data only
+    scaler = Scaler()
+    scaler.fit(train)
+    train = scaler.transform(train)
+    val = scaler.transform(val)
 
     # Create and train the model
     model = NBEATSModel(
@@ -444,7 +448,8 @@ if __name__ == "__main__":
     )
     model.fit(train, val_series=val)
 
-    # Make predictions
+    # Make predictions - scale full series for historical forecasts
+    series_scaled = scaler.transform(series_filled)
     historic_predictions = model.historical_forecasts(
         series_scaled,
         start=pd.Timestamp("2020-01-01"),
@@ -459,7 +464,7 @@ if __name__ == "__main__":
     # Inverse transform the predictions and actual data
     historic_predictions = scaler.inverse_transform(historic_predictions)
     future_predictions = scaler.inverse_transform(future_predictions)
-    series_original = scaler.inverse_transform(series_scaled)
+    series_original = series_filled
 
     # Display forecasts
     display_forecast(historic_predictions, series_original, "historical", start_date=pd.Timestamp("2020-01-01"))

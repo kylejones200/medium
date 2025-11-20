@@ -1,1 +1,8 @@
-# Add required packages here
+numpy
+pandas
+matplotlib
+pyyaml
+pytest
+torch
+transformers
+pillow

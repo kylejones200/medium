@@ -1,0 +1,20 @@
+data:
+  source: null
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 1000
+  seed: 42
+
+model:
+  lag: 10
+  train_size: 0.8
+  lstm_units: 50
+  epochs: 50
+  batch_size: 32
+  validation_split: 0.2
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

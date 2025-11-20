@@ -4,3 +4,6 @@ pyinform
 matplotlib
 tqdm
 yfinance
+statsmodels
+pyyaml
+pytest

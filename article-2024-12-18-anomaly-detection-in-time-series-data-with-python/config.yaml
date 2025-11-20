@@ -1,0 +1,17 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_periods: 500
+  seed: 42
+
+model:
+  method: "isolation_forest"
+  lag: 5
+  contamination: 0.1
+  statistical_threshold: 3.0
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

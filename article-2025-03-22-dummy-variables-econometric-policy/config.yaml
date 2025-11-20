@@ -1,0 +1,20 @@
+data:
+  source: null
+  date_column: "date"
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 200
+  seed: 42
+
+policy:
+  policy_date: "2023-06-01"
+  effect_size: 5.0
+
+model:
+  include_trend: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

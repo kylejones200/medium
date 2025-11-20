@@ -1,0 +1,20 @@
+data:
+  source: "public_health_data.csv"
+  target_column: "Disease_Risk"
+
+model:
+  test_size: 0.3
+  random_state: 42
+  n_estimators: 100
+
+shap:
+  enabled: true
+  plot_summary: true
+  plot_bar: true
+  plot_force: false
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

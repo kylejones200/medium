@@ -1,0 +1,19 @@
+data:
+  source: null
+  duration_column: "duration"
+  event_column: "event"
+  generate_synthetic: true
+  n_samples: 200
+  seed: 42
+
+model:
+  kaplan_meier: true
+  weibull: true
+  cox_ph: false
+  covariates: []
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

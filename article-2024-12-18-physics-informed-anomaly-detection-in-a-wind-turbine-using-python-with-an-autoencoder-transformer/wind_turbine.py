@@ -7,7 +7,7 @@ import os
 import time
 import torch
 import torch.nn as nn
-from sklearn.model_selection import KFold
+from sklearn.model_selection import TimeSeriesSplit
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -55,7 +55,7 @@ def train(args):
     best_loss = float('inf')
     X = load_data(args.train)
     criterion = nn.MSELoss()
-    kf = KFold(n_splits=args.k_fold_splits, shuffle=True)
+    kf = TimeSeriesSplit(n_splits=args.k_fold_splits)
 
     for i, (train_idx, test_idx) in enumerate(kf.split(X)):
         if args.k_index_only >= 0 and args.k_index_only != i:

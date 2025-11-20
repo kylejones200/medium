@@ -1,0 +1,19 @@
+data:
+  series_id: "T10Y2Y"
+  start_date: "2000-01-01"
+  end_date: null
+
+model:
+  forecast_horizon: 30
+  num_samples: 1000
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+  display_window: 365
+
+analysis:
+  print_summary: true
+  evaluate_forecast: true
+

@@ -1,0 +1,17 @@
+data:
+  source: null
+  date_column: "date"
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 365
+  seed: 42
+
+manipulation:
+  rolling_window: 7
+  resample_freq: "W"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

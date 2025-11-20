@@ -1,0 +1,18 @@
+data:
+  source: null
+  price_columns:
+    - "natural_gas"
+    - "lng"
+  generate_synthetic: true
+  n_periods: 500
+  seed: 42
+
+analysis:
+  volatility_window: 30
+  correlation_threshold: 0.5
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

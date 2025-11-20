@@ -1,0 +1,29 @@
+data:
+  source: "ercot_load_data.csv"
+  date_column: "date"
+  value_column: "values"
+  resample_freq: null
+
+model:
+  arar:
+    lag_selection_strategy: "powers_of_2"
+    max_lag: 20
+    lags: [1, 2, 4, 8, 16]
+  arima:
+    order: [2, 1, 2]
+    enabled: true
+
+forecast:
+  horizon: 100
+  test_size: null
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+
+analysis:
+  run_arar: true
+  run_arima_comparison: true
+  plot_series_comparison: true
+

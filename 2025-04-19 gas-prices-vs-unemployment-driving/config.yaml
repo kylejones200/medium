@@ -1,0 +1,16 @@
+data:
+  source: null
+  gas_column: "gas_price"
+  unemployment_column: "unemployment"
+  generate_synthetic: true
+  n_periods: 100
+  seed: 42
+
+analysis:
+  correlation_threshold: 0.3
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

@@ -1,0 +1,28 @@
+data:
+  source: "fred"
+  series:
+    - "UNRATE"
+    - "PCE"
+  start_date: "2010-01-01"
+  end_date: "2022-12-31"
+  column_mapping:
+    UNRATE: "unemployment_rate"
+    PCE: "consumer_spending"
+  save_csv: true
+  csv_path: "data/unemployment_spending.csv"
+
+analysis:
+  maxlag: 4
+  test_directions:
+    - y: "consumer_spending_diff"
+      x: "unemployment_rate_diff"
+      description: "Does unemployment rate Granger-cause consumer spending?"
+    - y: "unemployment_rate_diff"
+      x: "consumer_spending_diff"
+      description: "Does consumer spending Granger-cause unemployment rate?"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

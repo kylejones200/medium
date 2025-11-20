@@ -34,8 +34,8 @@ def create_features(df, leakage=False):
     """Create features with or without data leakage"""
     df = df.copy()
     if leakage:
-        df['rolling_mean'] = df['value'].rolling(window=7, center=True).mean()
-        df['volatility'] = df['value'].rolling(window=10, center=True).std()
+        df['rolling_mean'] = df['value'].rolling(window=7, center=False).shift(1).mean()
+        df['volatility'] = df['value'].rolling(window=10, center=False).shift(1).std()
     else:
         df['rolling_mean'] = df['value'].rolling(window=7).mean().shift(1)
         df['volatility'] = df['value'].rolling(window=10).std().shift(1)
@@ -48,8 +48,8 @@ def create_features_with_lookahead(df):
     """Create features improperly with lookahead bias"""
     df = df.copy()
     df['next_day_price'] = df['value'].shift(-1)  # target
-    df['future_5day_ma'] = df['value'].rolling(window=5, center=True).mean()
-    df['future_volatility'] = df['value'].rolling(window=10, center=True).std()
+    df['future_5day_ma'] = df['value'].rolling(window=5, center=False).shift(1).mean()
+    df['future_volatility'] = df['value'].rolling(window=10, center=False).shift(1).std()
     return df
 
 def create_features_proper(df):

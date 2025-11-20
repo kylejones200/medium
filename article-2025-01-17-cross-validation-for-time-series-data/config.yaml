@@ -1,0 +1,32 @@
+data:
+  source: null
+  date_column: "date"
+  target_column: "value"
+
+cross_validation:
+  time_series_cv:
+    n_splits: 5
+    enabled: true
+  rolling_window:
+    window_size: 100
+    step_size: 10
+    enabled: false
+  nested_cv:
+    n_splits_outer: 5
+    n_splits_inner: 3
+    enabled: false
+  blocking_cv:
+    block_size: 50
+    n_splits: 5
+    enabled: false
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+
+analysis:
+  check_temporal_dependencies: true
+  max_lag: 10
+  check_data_leakage: true
+

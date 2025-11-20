@@ -4,6 +4,5 @@ matplotlib
 seaborn
 scikit-learn
 pywt
-torch
-boto3
-sagemaker
+pyyaml
+pytest

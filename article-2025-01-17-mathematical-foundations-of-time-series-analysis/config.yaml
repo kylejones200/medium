@@ -1,0 +1,17 @@
+data:
+  source: null
+  date_column: "date"
+  value_column: "value"
+  generate_synthetic: true
+  n_periods: 200
+  seed: 42
+
+analysis:
+  max_lag: 10
+  calculate_acf: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

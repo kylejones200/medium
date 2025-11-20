@@ -3,3 +3,5 @@ numpy
 matplotlib
 statsforecast
 utilsforecast
+pyyaml
+pytest

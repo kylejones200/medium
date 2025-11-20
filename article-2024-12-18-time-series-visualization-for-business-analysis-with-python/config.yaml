@@ -1,0 +1,17 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_periods: 365
+  seed: 42
+
+visualization:
+  time_series: true
+  multiple_series: false
+  seasonal_decomposition: true
+  seasonal_period: 30
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

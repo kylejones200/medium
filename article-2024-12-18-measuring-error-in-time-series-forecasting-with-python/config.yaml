@@ -1,0 +1,11 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_periods: 200
+  seed: 42
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

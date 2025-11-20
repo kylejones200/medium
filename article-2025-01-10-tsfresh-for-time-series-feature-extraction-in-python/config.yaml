@@ -1,0 +1,19 @@
+data:
+  n_series: 10
+  n_timesteps: 100
+  seed: 42
+  column_id: "id"
+  column_sort: "time"
+  column_value: "value"
+
+feature_extraction:
+  use_comprehensive: true
+  fdr_level: 0.05
+  feature_selection: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+  n_series_to_plot: 3
+

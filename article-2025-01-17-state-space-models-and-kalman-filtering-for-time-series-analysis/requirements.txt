@@ -1,1 +1,7 @@
-# Add required packages here
+numpy
+pandas
+scipy
+statsmodels
+matplotlib
+pyyaml
+pytest

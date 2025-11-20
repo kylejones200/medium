@@ -1,4 +1,84 @@
 # Time Series Visualization for Business Analysis with Python
 
-This folder contains code and resources for the Medium article:
-https://medium.com/@kylejones_47003/time-series-visualization-for-business-analysis-with-python-5df695543d4a?source=your_stories_page--------------------------------------------
+This project demonstrates time series visualization techniques for business analysis.
+
+## Article
+
+Medium article: [Time Series Visualization for Business Analysis with Python](https://medium.com/@kylejones_47003/time-series-visualization-for-business-analysis-with-python-5df695543d4a)
+
+## Project Structure
+
+```
+.
+├── README.md           # This file
+├── main.py            # Main entry point
+├── config.yaml        # Configuration file
+├── requirements.txt   # Python dependencies
+├── src/               # Core functions
+│   ├── core.py        # Visualization functions
+│   └── plotting.py    # Tufte-style plotting utilities
+├── tests/             # Unit tests
+├── data/              # Data files
+└── images/            # Generated plots and figures
+```
+
+## Setup
+
+1. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+Run with default settings (generates synthetic data):
+```bash
+python main.py
+```
+
+Run with your own data:
+```bash
+python main.py --data-path data/business_data.csv
+```
+
+## Configuration
+
+Edit `config.yaml` to customize:
+- Data source or synthetic generation
+- Visualization options (time_series, multiple_series, seasonal_decomposition)
+- Seasonal period for decomposition
+- Output settings
+
+## Visualization Types
+
+### Time Series Plot
+- Basic line plot of time series
+- Clean, minimalist design
+
+### Multiple Series
+- Compare multiple time series
+- Useful for business metrics
+
+### Seasonal Decomposition
+- Trend, seasonal, and residual components
+- Helps understand patterns
+
+## Plotting Style
+
+All plots use a minimalist Tufte-style design:
+- No gridlines
+- No top or right spines
+- Descriptive titles
+- Muted, professional color palette
+
+## Caveats
+
+- By default, generates synthetic business data.
+- Seasonal period should match data frequency.
+- Visualizations are optimized for business reporting.

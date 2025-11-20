@@ -1,0 +1,20 @@
+data:
+  source: null
+  timestamp_column: "timestamp"
+  production_column: "production"
+  generate_synthetic: true
+  n_periods: 500
+  seed: 42
+
+aws:
+  region: "us-east-1"
+  services:
+    - "s3"
+    - "lambda"
+    - "dynamodb"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

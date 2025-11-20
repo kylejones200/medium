@@ -4,7 +4,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, shuffle=False
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.metrics import accuracy_score, mean_absolute_error
 from statsmodels.tsa.arima.model import ARIMA
@@ -34,8 +34,8 @@ X = df[['value', 'lag_1', 'lag_2', 'rate_of_change']]
 y_class = df['direction']
 y_reg = df['next_value']
 
-X_train, X_test, y_class_train, y_class_test, y_reg_train, y_reg_test = train_test_split(
-    X, y_class, y_reg, test_size=0.2, random_state=42
+X_train, X_test, y_class_train, y_class_test, y_reg_train, y_reg_test = train_test_split(, shuffle=False
+    X, y_class, y_reg, test_size=0.2, random_state=42, shuffle=False
 )
 
 clf = RandomForestClassifier(random_state=42)

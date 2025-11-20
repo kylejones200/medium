@@ -1,0 +1,18 @@
+data:
+  n_samples: 500
+  regime_probs: [0.7, 0.3]
+  stds: [1, 5]
+  seed: 42
+
+model:
+  k_regimes: 2
+  switching_variance: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+
+analysis:
+  run_all_plots: true
+

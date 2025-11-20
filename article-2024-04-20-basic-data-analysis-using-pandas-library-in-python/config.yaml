@@ -1,0 +1,15 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_rows: 1000
+  seed: 42
+
+analysis:
+  columns_to_analyze: []
+  plot_distributions: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

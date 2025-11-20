@@ -1,0 +1,16 @@
+data:
+  n_series: 10
+  n_timesteps: 100
+  time_end: 10
+  noise_std: 0.3
+  seed: 42
+
+model:
+  n_components: 3
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+  n_series_to_plot: 3
+

@@ -1,0 +1,17 @@
+data:
+  source: null
+  timestamp_column: "timestamp"
+  production_column: "production"
+  generate_synthetic: true
+  n_periods: 500
+  seed: 42
+
+monitoring:
+  alert_threshold: 0.75
+  check_efficiency: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

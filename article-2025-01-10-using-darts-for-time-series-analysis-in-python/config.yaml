@@ -1,0 +1,35 @@
+data:
+  source: null
+  series_id: "T10Y2Y"
+  api_key: null
+  start_date: "2000-01-01"
+  split_date: "2020-01-01"
+
+models:
+  arima:
+    order: [1, 1, 1]
+    enabled: true
+  exponential_smoothing:
+    enabled: true
+  lightgbm:
+    lags: 30
+    enabled: true
+  lstm:
+    input_chunk_length: 30
+    output_chunk_length: 7
+    n_epochs: 50
+    enabled: false
+  nbeats:
+    input_chunk_length: 30
+    output_chunk_length: 7
+    n_epochs: 50
+    random_state: 42
+    enabled: false
+  fft:
+    enabled: true
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

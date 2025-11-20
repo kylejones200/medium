@@ -1,0 +1,10 @@
+data:
+  n_samples: 200
+  seed: 42
+  rolling_window: 12
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+
