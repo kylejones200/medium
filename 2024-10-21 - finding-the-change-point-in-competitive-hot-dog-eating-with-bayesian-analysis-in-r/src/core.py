@@ -5,8 +5,10 @@ import pandas as pd
 from pathlib import Path
 from typing import Tuple, Dict
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def simulate_change_point_data(n: int = 100, change_point: int = 50,
                                before_mean: float = 10, after_mean: float = 20,
@@ -21,7 +23,6 @@ def simulate_change_point_data(n: int = 100, change_point: int = 50,
         'time': np.arange(n),
         'value': data
     })
-
 
 def detect_change_point_basic(data: np.ndarray, window: int = 10) -> int:
     """Basic change point detection using sliding window."""
@@ -40,21 +41,19 @@ def detect_change_point_basic(data: np.ndarray, window: int = 10) -> int:
     
     return change_point
 
-
 def plot_change_point_detection(df: pd.DataFrame, detected_cp: int,
                                 title: str, output_path: Path):
-    """Plot change point detection with Tufte style."""
-    setup_tufte_style()
+ """Plot change point detection """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     ax.plot(df['time'], df['value'], color="#4A90A4", linewidth=1.2)
     ax.axvline(detected_cp, color='red', linestyle='--', linewidth=1.5, 
               label=f'Detected Change Point: {detected_cp}')
     
-    apply_tufte_style(ax, title=title)
     ax.set_xlabel("Time")
     ax.set_ylabel("Value")
     ax.legend(loc='best')
     
-    save_tufte_figure(output_path)
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 

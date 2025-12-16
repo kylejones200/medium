@@ -22,45 +22,12 @@ Medium article: [Aeon for Time Series Clustering with Python](https://medium.com
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run the analysis with default settings:
-```bash
-python main.py
-```
-
-Run with custom configuration:
-```bash
-python main.py --config custom_config.yaml
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
 - Dataset parameters (n_instances, n_timepoints, seed)
 - Model parameters (test_size, n_neighbors)
 - Output settings
-
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles
-- Muted, professional color palette
 
 ## Caveats
 

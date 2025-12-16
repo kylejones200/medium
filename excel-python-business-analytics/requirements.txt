@@ -1,1 +1,6 @@
-# Add required packages here
+numpy
+pandas
+openpyxl
+matplotlib
+pyyaml
+pytest

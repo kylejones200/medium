@@ -5,7 +5,12 @@ import missingno as msno
 from sklearn.impute import SimpleImputer
 from sklearn.experimental import enable_iterative_imputer  # noqa
 from sklearn.impute import IterativeImputer
+import logging
 # Load sample dataset with missing values
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+
 df = pd.read_csv("https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv")
 df.columns = ['Month', 'Passengers']  # Rename for clarity
 # Create artificial missingness for demonstration
@@ -26,10 +31,10 @@ plt.title("Missingness Correlation Heatmap")
 plt.savefig("missing_heatmap.png")
 plt.show()
 # Basic stats
-print("Missing values summary:\n", df.isnull().sum())
+logging.info("Missing values summary:\n", df.isnull().sum())
 # Strategy 1: Drop rows with missing values
 df_dropped = df.dropna()
-print(f"After dropping, shape: {df_dropped.shape}")
+logging.info(f"After dropping, shape: {df_dropped.shape}")
 # Strategy 2: Simple mean imputation
 simple_imputer = SimpleImputer(strategy='mean')
 df['Passengers_mean'] = simple_imputer.fit_transform(df[['Passengers']])
@@ -44,8 +49,8 @@ df[['Passengers_iter', 'Revenue_iter']] = multi_imputer.fit_transform(df[['Passe
 df['Revenue_missing'] = df['Revenue'].isna().astype(int)
 df['Passengers_missing'] = df['Passengers'].isna().astype(int)
 # Display final preview
-print("\nImputed Data Preview:")
-print(df[['Month', 'Passengers', 'Passengers_mean', 'Passengers_iter',
+logging.info("\nImputed Data Preview:")
+logging.info(df[['Month', 'Passengers', 'Passengers_mean', 'Passengers_iter',
           'Revenue', 'Revenue_mean', 'Revenue_median_group', 'Revenue_iter',
           'Revenue_missing', 'Passengers_missing']].head(12))
 # Save to CSV

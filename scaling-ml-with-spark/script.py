@@ -1,6 +1,10 @@
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import LogisticRegression
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 spark = SparkSession.builder.appName("MLPipeline").getOrCreate()
 

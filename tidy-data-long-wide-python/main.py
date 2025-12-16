@@ -3,14 +3,12 @@
 Tidy Data: Long and Wide Format Transformations
 
 Main entry point for demonstrating data reshaping operations.
-
-Usage:
-    python main.py
-    python main.py --config custom_config.yaml
 """
 
 import argparse
 import yaml
+import logging
+import pandas as pd
 from pathlib import Path
 from src.core import (
     generate_wide_data,
@@ -24,6 +22,7 @@ from src.core import (
     plot_store_comparison
 )
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
@@ -32,7 +31,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Tidy Data Transformations')
@@ -45,28 +43,20 @@ def main():
     output_dir.mkdir(exist_ok=True)
     
     if config['transformations']['wide_to_long']:
-        print("Demonstrating wide to long transformation...")
         wide_df = generate_wide_data(config['data']['stores'], config['data']['months'])
         long_df = wide_to_long(wide_df, 'Store', 'Month', 'Sales', '_Sales')
-        print("Wide format:")
-        print(wide_df)
-        print("\nLong format:")
-        print(long_df)
+        logging.info(f"Wide format:\n{wide_df}")
+        logging.info(f"Long format:\n{long_df}")
     
     if config['transformations']['long_to_wide']:
-        print("\nDemonstrating long to wide transformation...")
         wide_df = long_to_wide(long_df, 'Store', 'Month', 'Sales')
-        print("Back to wide format:")
-        print(wide_df)
+        logging.info(f"Wide format:\n{wide_df}")
     
     if config['transformations']['pivot_table']:
-        print("\nDemonstrating pivot table aggregation...")
         pivot_df = pivot_table_aggregation(long_df, 'Store', 'Month', 'Sales', 'sum')
-        print("Pivot table:")
-        print(pivot_df)
+        logging.info(f"Pivot table:\n{pivot_df}")
     
     if config['transformations']['groupby']:
-        print("\nDemonstrating groupby aggregation...")
         data = pd.DataFrame({
             'Store': ['A', 'A', 'A', 'B', 'B', 'B'],
             'Month': ['Jan', 'Feb', 'Mar', 'Jan', 'Feb', 'Mar'],
@@ -74,21 +64,16 @@ def main():
         })
         store_agg = groupby_aggregation(data, ['Store'], 'Sales', 
                                        {'avg': 'mean', 'total': 'sum', 'volatility': 'std'})
-        print("Groupby aggregation:")
-        print(store_agg)
+        logging.info(f"Store aggregation:\n{store_agg}")
     
     if config['transformations']['weekly_analysis']:
-        print("\nDemonstrating weekly sales analysis...")
         raw = generate_weekly_sales_data(config['data']['weekly_stores'], config['data']['weeks'])
         long = reshape_weekly_data(raw)
         
         plot_weekly_trend(long, output_dir / 'weekly_sales.png')
         plot_store_comparison(long, output_dir / 'store_weekly_sales.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"Analysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
-    import pandas as pd
     main()
-

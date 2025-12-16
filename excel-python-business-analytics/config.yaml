@@ -1,0 +1,13 @@
+data:
+  source: null
+  sheet_name: null
+  generate_synthetic: true
+  n_rows: 100
+  seed: 42
+
+output:
+  excel_output: "output.xlsx"
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

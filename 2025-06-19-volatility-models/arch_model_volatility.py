@@ -3,8 +3,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from arch import arch_model
+import logging
 
 # Set random seed for reproducibility
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+
 np.random.seed(42)
 
 # Simulate returns with volatility clustering
@@ -28,7 +33,7 @@ plt.show()
 
 # Fit an ARCH(1) model
 arch_model_fit = arch_model(data["returns"], vol="ARCH", p=1).fit()
-print(arch_model_fit.summary())
+logging.info(arch_model_fit.summary())
 
 # Forecast volatility
 forecast = arch_model_fit.forecast(horizon=10)

@@ -18,31 +18,6 @@ This project demonstrates data reshaping operations including wide-to-long, long
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run with default settings:
-```bash
-python main.py
-```
-
-Run with custom configuration:
-```bash
-python main.py --config custom_config.yaml
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
@@ -71,14 +46,6 @@ Edit `config.yaml` to customize:
 - Groups data by specified columns
 - Applies aggregation functions
 - Returns summary statistics
-
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles
-- Muted, professional color palette
 
 ## Caveats
 

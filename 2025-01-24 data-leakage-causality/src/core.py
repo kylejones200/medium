@@ -7,8 +7,10 @@ from typing import Dict, Tuple
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def create_features(df: pd.DataFrame, leakage: bool = False) -> pd.DataFrame:
     """Create features with or without data leakage."""
@@ -23,14 +25,12 @@ def create_features(df: pd.DataFrame, leakage: bool = False) -> pd.DataFrame:
     df['monthly_return'] = df['value'].pct_change(periods=30)
     return df
 
-
 def create_features_with_lookahead(df: pd.DataFrame) -> pd.DataFrame:
     """Create features improperly with lookahead bias."""
     df = df.copy()
     df['next_day_price'] = df['value'].shift(-1)
     df['future_rolling_mean'] = df['value'].rolling(window=7, center=True).mean()
     return df
-
 
 def train_model(X: np.ndarray, y: np.ndarray) -> Tuple[LinearRegression, Dict]:
     """Train model and return metrics."""
@@ -46,11 +46,9 @@ def train_model(X: np.ndarray, y: np.ndarray) -> Tuple[LinearRegression, Dict]:
     
     return model, metrics
 
-
 def plot_leakage_comparison(metrics_no_leakage: Dict, metrics_with_leakage: Dict,
                            title: str, output_path: Path):
-    """Plot comparison of models with and without leakage with Tufte style."""
-    setup_tufte_style()
+ """Plot comparison of models with and without leakage """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     categories = ['R²', 'RMSE', 'MAE']
@@ -63,11 +61,11 @@ def plot_leakage_comparison(metrics_no_leakage: Dict, metrics_with_leakage: Dict
     ax.bar(x - width/2, no_leakage, width, label='No Leakage', color="#4A90A4", alpha=0.7)
     ax.bar(x + width/2, with_leakage, width, label='With Leakage', color="#D4A574", alpha=0.7)
     
-    apply_tufte_style(ax, title=title)
     ax.set_xticks(x)
     ax.set_xticklabels(categories)
     ax.set_ylabel("Value")
     ax.legend(loc='best')
     
-    save_tufte_figure(output_path)
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 

@@ -4,8 +4,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
+import logging
 
 # --- Data Loading and Preparation ---
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def load_and_prepare_data(file_path):
     df = pd.read_excel(file_path, sheet_name='Sheet1')

@@ -9,30 +9,29 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.vector_ar.vecm import coint_johansen, VECM
 import pyinform.transferentropy as te
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def download_etf_data(tickers: list, start: str, end: str) -> pd.DataFrame:
     """Download ETF price data from Yahoo Finance."""
     data = yf.download(tickers, start=start, end=end)['Close'].dropna()
     return data
 
-
 def perform_adf_test(series: pd.Series, name: str) -> float:
     """Perform Augmented Dickey-Fuller test for stationarity."""
     result = adfuller(series)
-    print(f"{name} ADF Statistic: {result[0]:.4f}")
-    print(f"{name} p-value: {result[1]:.4f}")
+    logging.info(f"{name} ADF Statistic: {result[0]:.4f}")
+    logging.info(f"{name} p-value: {result[1]:.4f}")
     return result[1]
-
 
 def perform_johansen_test(data: pd.DataFrame, det_order: int = 0, k_ar_diff: int = 1):
     """Perform Johansen cointegration test."""
     johan_test = coint_johansen(data, det_order=det_order, k_ar_diff=k_ar_diff)
-    print("Trace statistics:", johan_test.lr1)
-    print("Critical values:", johan_test.cvt)
+    logging.info("Trace statistics:", johan_test.lr1)
+    logging.info("Critical values:", johan_test.cvt)
     return johan_test
-
 
 def fit_vecm_model(data: pd.DataFrame, k_ar_diff: int = 1, coint_rank: int = 1,
                    deterministic: str = "co"):
@@ -41,43 +40,36 @@ def fit_vecm_model(data: pd.DataFrame, k_ar_diff: int = 1, coint_rank: int = 1,
     vec_res = vec_model.fit()
     return vec_res
 
-
 def plot_etf_prices(data: pd.DataFrame, output_path: Path):
-    """Plot ETF prices with Tufte style."""
-    setup_tufte_style()
+ """Plot ETF prices """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for col in data.columns:
         ax.plot(data.index, data[col], label=col, linewidth=1.2)
     
-    apply_tufte_style(ax, title="Tech ETF Prices")
     ax.set_xlabel("Date")
     ax.set_ylabel("Adjusted Close Price")
     ax.legend(loc='best')
     
-    save_tufte_figure(output_path)
-
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 
 def plot_irf(irf, output_path: Path):
-    """Plot Impulse Response Functions with Tufte style."""
-    setup_tufte_style()
+ """Plot Impulse Response Functions """
     irf.plot(orth=False)
     plt.tight_layout()
     plt.savefig(output_path, dpi=100, bbox_inches='tight', facecolor='white')
     plt.close()
 
-
 def discretize_series(series: pd.Series, bins: int = 3) -> np.ndarray:
     """Discretize series into bins."""
     return pd.qcut(series.rank(method="first"), bins, labels=False).astype(int).values
-
 
 def compute_transfer_entropy(x: np.ndarray, y: np.ndarray, k: int = 1) -> float:
     """Compute transfer entropy from x to y."""
     x_series = x.reshape(1, -1)
     y_series = y.reshape(1, -1)
     return te.transfer_entropy(x_series, y_series, k=k)
-
 
 def compute_rolling_transfer_entropy(df: pd.DataFrame, var1: str, var2: str,
                                     window: int = 100, bins: int = 3, k: int = 1) -> Tuple[list, list]:

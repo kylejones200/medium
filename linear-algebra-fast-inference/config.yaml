@@ -1,0 +1,16 @@
+system:
+  n_variables: 100
+  m_equations: 50
+  seed: 42
+
+inference:
+  method: "lstsq"
+  methods:
+    - "lstsq"
+    - "pinv"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

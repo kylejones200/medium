@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.vector_ar.vecm import coint_johansen, VECM
 from statsmodels.tsa.api import VAR
 from statsmodels.tsa.stattools import adfuller
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def fetch_data(symbols, start="2015-01-01", end="2024-12-31"):
     """
@@ -23,7 +26,6 @@ def fetch_data(symbols, start="2015-01-01", end="2024-12-31"):
     df.columns = ['HeatingOil', 'CrudeOil']
     return df
 
-
 def plot_series(df, filename="cointegration_series.png"):
     """
     Plots the input time series and saves the figure to a file.
@@ -39,7 +41,6 @@ def plot_series(df, filename="cointegration_series.png"):
     plt.savefig(filename)
     plt.show()
 
-
 def adf_summary(df):
     """
     Performs Augmented Dickey-Fuller (ADF) tests on both levels and first differences
@@ -50,10 +51,9 @@ def adf_summary(df):
     """
     for col in df.columns:
         result = adfuller(df[col])
-        print(f"{col} ADF: {result[0]:.4f}, p={result[1]:.4f}")
+        logging.info(f"{col} ADF: {result[0]:.4f}, p={result[1]:.4f}")
         result_diff = adfuller(df[col].diff().dropna())
-        print(f"{col} ΔADF: {result_diff[0]:.4f}, p={result_diff[1]:.4f}")
-
+        logging.info(f"{col} ΔADF: {result_diff[0]:.4f}, p={result_diff[1]:.4f}")
 
 def johansen_test(df):
     """
@@ -66,10 +66,9 @@ def johansen_test(df):
         coint_johansen: The result object containing test statistics and eigenvectors.
     """
     result = coint_johansen(df, det_order=0, k_ar_diff=1)
-    print("Trace Statistic:", result.lr1)
-    print("Critical Values (90%, 95%, 99%):\n", result.cvt)
+    logging.info("Trace Statistic:", result.lr1)
+    logging.info("Critical Values (90%, 95%, 99%):\n", result.cvt)
     return result
-
 
 def fit_vecm(df, lags=1, rank=1):
     """
@@ -85,9 +84,8 @@ def fit_vecm(df, lags=1, rank=1):
     """
     model = VECM(df, k_ar_diff=lags, coint_rank=rank)
     res = model.fit()
-    print(res.summary())
+    logging.info(res.summary())
     return res
-
 
 def forecast_vecm(res, df, steps=12):
     """
@@ -108,7 +106,6 @@ def forecast_vecm(res, df, steps=12):
     plt.savefig("vecm_forecast.png")
     plt.show()
 
-
 def run_var_irf_fevd(df_diff, lags=1, horizon=12):
     """
     Fits a VAR model on differenced data, plots impulse response functions (IRFs)
@@ -121,7 +118,7 @@ def run_var_irf_fevd(df_diff, lags=1, horizon=12):
     """
     model = VAR(df_diff)
     res = model.fit(maxlags=lags)
-    print(res.summary())
+    logging.info(res.summary())
 
     irf = res.irf(horizon)
     irf.plot(orth=False)
@@ -139,7 +136,6 @@ def run_var_irf_fevd(df_diff, lags=1, horizon=12):
     plt.suptitle("Forecast Error Variance Decomposition (FEVD)")
     plt.savefig("var_fevd.png")
     plt.show()
-
 
 def main():
     """
@@ -160,7 +156,6 @@ def main():
 
     df_diff = df.diff().dropna()
     run_var_irf_fevd(df_diff, lags=1, horizon=12)
-
 
 if __name__ == "__main__":
     main()

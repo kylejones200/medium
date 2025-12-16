@@ -1,0 +1,20 @@
+data:
+  symbols:
+    - "HO=F"
+    - "CL=F"
+  start_date: "2015-01-01"
+  end_date: "2024-12-31"
+  generate_synthetic: false
+
+model:
+  lags: 1
+  coint_rank: 1
+
+forecast:
+  steps: 12
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

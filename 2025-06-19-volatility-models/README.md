@@ -18,31 +18,6 @@ This project demonstrates volatility modeling using ARCH (Autoregressive Conditi
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run with default settings:
-```bash
-python main.py
-```
-
-Run with custom configuration:
-```bash
-python main.py --config custom_config.yaml
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
@@ -58,17 +33,8 @@ ARCH models capture volatility clustering:
 - **Conditional Heteroskedasticity**: Variance depends on past squared errors
 - **Forecasting**: Predict future volatility based on current conditions
 
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles
-- Muted, professional color palette
-
 ## Caveats
 
 - By default, generates synthetic returns with volatility clustering.
 - ARCH models assume volatility depends only on past squared errors.
 - For more complex dynamics, consider GARCH or other extensions.
-

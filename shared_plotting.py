@@ -1,5 +1,9 @@
 """
-Shared Tufte-style plotting utilities for all projects.
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+
+Shared signalplot-style plotting utilities for all projects.
 
 Copy this to your project's src/plotting.py or import from a shared location.
 """
@@ -7,10 +11,10 @@ Copy this to your project's src/plotting.py or import from a shared location.
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from typing import Optional
+import logging
 
-
-def setup_tufte_style():
-    """Configure matplotlib to use Tufte-style minimalism.
+def setup_signalplot_style():
+    """Configure matplotlib to use signalplot-style minimalism.
     
     Features:
     - No gridlines
@@ -19,14 +23,6 @@ def setup_tufte_style():
     - Descriptive titles
     - Clean, minimal design
     """
-    try:
-        plt.style.use('seaborn-v0_8-white')
-    except OSError:
-        try:
-            plt.style.use('seaborn-white')
-        except OSError:
-            plt.style.use('default')
-    
     mpl.rcParams.update({
         'axes.spines.top': False,
         'axes.spines.right': False,
@@ -50,9 +46,8 @@ def setup_tufte_style():
         'font.sans-serif': ['Arial', 'DejaVu Sans', 'Liberation Sans', 'Helvetica', 'sans-serif'],
     })
 
-
-def apply_tufte_style(ax=None, title: Optional[str] = None):
-    """Apply Tufte style to current or specified axes.
+def apply_signalplot_style(ax=None, title: Optional[str] = None):
+    """Apply signalplot style to current or specified axes.
     
     Args:
         ax: Matplotlib axes object (uses current if None)
@@ -70,9 +65,8 @@ def apply_tufte_style(ax=None, title: Optional[str] = None):
     
     return ax
 
-
-def save_tufte_figure(output_path, dpi: int = 100, bbox_inches: str = 'tight'):
-    """Save figure with Tufte style settings.
+def save_signalplot_figure(output_path, dpi: int = 100, bbox_inches: str = 'tight'):
+    """Save figure with signalplot style settings.
     
     Args:
         output_path: Path to save the figure

@@ -6,8 +6,10 @@ from pathlib import Path
 from typing import Dict
 from scipy.stats import norm
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def calculate_var_parametric(returns: pd.Series, confidence_level: float = 0.95,
                             time_horizon_days: int = 1) -> Dict:
@@ -18,12 +20,10 @@ def calculate_var_parametric(returns: pd.Series, confidence_level: float = 0.95,
     var_pct = mean_return - z_score * std_return * np.sqrt(time_horizon_days)
     return {'var_pct': var_pct, 'confidence_level': confidence_level, 'method': 'parametric'}
 
-
 def calculate_var_historical(returns: pd.Series, confidence_level: float = 0.95) -> Dict:
     """Calculate Value at Risk using historical simulation."""
     var_pct = np.percentile(returns, (1 - confidence_level) * 100)
     return {'var_pct': var_pct, 'confidence_level': confidence_level, 'method': 'historical'}
-
 
 def calculate_var_monte_carlo(returns: pd.Series, confidence_level: float = 0.95,
                              n_simulations: int = 10000, seed: int = 42) -> Dict:
@@ -35,7 +35,6 @@ def calculate_var_monte_carlo(returns: pd.Series, confidence_level: float = 0.95
     var_pct = np.percentile(simulated_returns, (1 - confidence_level) * 100)
     return {'var_pct': var_pct, 'confidence_level': confidence_level, 'method': 'monte_carlo'}
 
-
 def calculate_expected_shortfall(returns: pd.Series, confidence_level: float = 0.95) -> float:
     """Calculate Expected Shortfall (Conditional Value at Risk)."""
     var_threshold = np.percentile(returns, (1 - confidence_level) * 100)
@@ -43,19 +42,17 @@ def calculate_expected_shortfall(returns: pd.Series, confidence_level: float = 0
     es = tail_losses.mean() if len(tail_losses) > 0 else 0
     return es
 
-
 def plot_var_comparison(var_results: Dict, output_path: Path):
-    """Plot comparison of different VaR methods with Tufte style."""
-    setup_tufte_style()
+ """Plot comparison of different VaR methods """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     methods = list(var_results.keys())
     var_values = [var_results[m]['var_pct'] for m in methods]
     
     ax.bar(methods, var_values, color="#4A90A4", alpha=0.7, edgecolor='none')
-    apply_tufte_style(ax, title="Value at Risk Comparison by Method")
     ax.set_ylabel("VaR (%)")
     ax.set_xlabel("Method")
     
-    save_tufte_figure(output_path)
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 

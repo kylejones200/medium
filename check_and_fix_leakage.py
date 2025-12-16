@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+
 Comprehensive data leakage detection and fixing for time series scripts.
 """
 
 import re
 from pathlib import Path
 from typing import List, Dict, Tuple
+import logging
 
 class LeakageFixer:
     def __init__(self, content: str, filepath: Path):
@@ -179,7 +184,6 @@ class LeakageFixer:
         
         return '\n'.join(self.lines), self.modified
 
-
 def scan_and_fix_all_scripts():
     """Scan all Python scripts for leakage and fix them."""
     base_dir = Path('/Users/kylejonespatricia/medium')
@@ -232,9 +236,8 @@ def scan_and_fix_all_scripts():
     
     return fixed_files, checked_files
 
-
 if __name__ == "__main__":
     fixed, checked = scan_and_fix_all_scripts()
-    print(f"Checked {len(checked)} files")
-    print(f"Fixed {len(fixed)} files")
+    logging.info(f"Checked {len(checked)} files")
+    logging.info(f"Fixed {len(fixed)} files")
 

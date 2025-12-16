@@ -3,19 +3,15 @@
 Conceptual Architecture for Supply Chain Management with AWS
 
 Main entry point for running supply chain management analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/supply_chain_data.csv
 """
 
 import argparse
 import yaml
+import logging
 import pandas as pd
 from pathlib import Path
-from src.core import simulate_supply_chain_data, analyze_supply_chain, plot_supply_chain
 
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
@@ -23,7 +19,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Conceptual Supply Chain Architecture with AWS')
@@ -41,28 +36,25 @@ def main():
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         inventory_cols = [col for col in df.columns if 'inventory' in col.lower()]
     elif config['data']['generate_synthetic']:
-        print("Simulating supply chain data...")
-        df = simulate_supply_chain_data(config['data']['n_points'], config['data']['n_nodes'],
+                df = simulate_supply_chain_data(config['data']['n_points'], config['data']['n_nodes'],
                                        config['data']['seed'])
         inventory_cols = [col for col in df.columns if 'inventory' in col.lower()]
     else:
         raise ValueError("No data source specified")
     
-    print("Analyzing supply chain...")
-    analysis = analyze_supply_chain(df, inventory_cols)
+        analysis = analyze_supply_chain(df, inventory_cols)
     
-    print(f"\nSupply Chain Analysis:")
-    print(f"Number of samples: {analysis['n_samples']}")
-    print(f"Number of nodes: {analysis['n_nodes']}")
-    print(f"Total average inventory: {analysis['total_inventory']:.2f}")
+    logging.info(f"\nSupply Chain Analysis:")
+    logging.info(f"Number of samples: {analysis['n_samples']}")
+    logging.info(f"Number of nodes: {analysis['n_nodes']}")
+    logging.info(f"Total average inventory: {analysis['total_inventory']:.2f}")
     
-    print(f"\nAWS Services: {', '.join(config['aws']['services'])}")
+    logging.info(f"\nAWS Services: {', '.join(config['aws']['services'])}")
     
     plot_supply_chain(df, inventory_cols, "Supply Chain Management Architecture",
                      output_dir / 'supply_chain.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

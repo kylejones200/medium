@@ -1,6 +1,0 @@
-numpy
-pandas
-statsmodels
-matplotlib
-pyyaml
-pytest

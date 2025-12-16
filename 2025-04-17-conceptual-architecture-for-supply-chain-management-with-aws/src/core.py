@@ -5,8 +5,10 @@ import pandas as pd
 from pathlib import Path
 from typing import Dict
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def simulate_supply_chain_data(n_points: int, n_nodes: int = 4, seed: int = 42) -> pd.DataFrame:
     """Simulate supply chain data."""
@@ -23,7 +25,6 @@ def simulate_supply_chain_data(n_points: int, n_nodes: int = 4, seed: int = 42) 
     
     return pd.DataFrame(data)
 
-
 def analyze_supply_chain(df: pd.DataFrame, inventory_cols: list) -> Dict:
     """Analyze supply chain data."""
     return {
@@ -33,20 +34,18 @@ def analyze_supply_chain(df: pd.DataFrame, inventory_cols: list) -> Dict:
         'total_inventory': df[inventory_cols].sum(axis=1).mean()
     }
 
-
 def plot_supply_chain(df: pd.DataFrame, inventory_cols: list, title: str, output_path: Path):
-    """Plot supply chain data with Tufte style."""
-    setup_tufte_style()
+ """Plot supply chain data """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for col in inventory_cols:
         ax.plot(df['timestamp'], df[col], label=col.replace('_', ' ').title(), 
                linewidth=1.2, alpha=0.7)
     
-    apply_tufte_style(ax, title=title)
     ax.set_xlabel("Time")
     ax.set_ylabel("Inventory")
     ax.legend(loc='best')
     
-    save_tufte_figure(output_path)
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 

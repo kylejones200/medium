@@ -1,7 +1,0 @@
-pandas
-numpy
-matplotlib
-pandas_datareader
-statsmodels
-pyyaml
-pytest

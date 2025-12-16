@@ -22,31 +22,6 @@ Medium article: [Finding the Change Point in Competitive Hot Dog Eating with Bay
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run with default settings (generates synthetic data):
-```bash
-python main.py
-```
-
-Run with your own data:
-```bash
-python main.py --data-path data/hotdog_eating.csv
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
@@ -61,14 +36,6 @@ Methods demonstrated:
 - **Sliding Window**: Compare means before/after potential change points
 - **Bayesian Approach**: Prior on change point location, posterior inference
 - **Uncertainty**: Quantify uncertainty in change point location
-
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles
-- Muted, professional color palette
 
 ## Caveats
 

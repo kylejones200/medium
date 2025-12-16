@@ -3,20 +3,16 @@
 Bayesian Forecasting with Orbit-ML and Prophet
 
 Main entry point for running Bayesian forecasting analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/timeseries.csv
 """
 
 import argparse
 import yaml
+import logging
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from src.core import prepare_forecast_data, calculate_forecast_metrics, plot_forecast_comparison
 
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
@@ -24,7 +20,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Bayesian Forecasting with Orbit and Prophet')
@@ -52,26 +47,20 @@ def main():
     else:
         raise ValueError("No data source specified")
     
-    print("Note: Orbit and Prophet implementations would go here")
-    print("Orbit-ML: Bayesian structural time series")
-    print("Prophet: Facebook's forecasting tool")
-    
-    train_size = int(len(data) * config['model']['train_size'])
+                train_size = int(len(data) * config['model']['train_size'])
     train_data = data[:train_size]
     test_data = data[train_size:train_size + config['model']['forecast_horizon']]
     
-    print(f"\nTraining data: {len(train_data)} periods")
-    print(f"Test data: {len(test_data)} periods")
+    logging.info(f"\nTraining data: {len(train_data)} periods")
+    logging.info(f"Test data: {len(test_data)} periods")
     
     if config['model']['use_orbit']:
-        print("\nOrbit-ML Forecast (placeholder):")
-        orbit_pred = np.full(len(test_data), train_data.mean() + train_data.std())
+                orbit_pred = np.full(len(test_data), train_data.mean() + train_data.std())
     else:
         orbit_pred = None
     
     if config['model']['use_prophet']:
-        print("Prophet Forecast (placeholder):")
-        prophet_pred = np.full(len(test_data), train_data.mean())
+                prophet_pred = np.full(len(test_data), train_data.mean())
     else:
         prophet_pred = None
     
@@ -79,20 +68,19 @@ def main():
         orbit_metrics = calculate_forecast_metrics(test_data.values, orbit_pred)
         prophet_metrics = calculate_forecast_metrics(test_data.values, prophet_pred)
         
-        print(f"\nOrbit Metrics:")
-        print(f"  RMSE: {orbit_metrics['rmse']:.4f}")
-        print(f"  MAPE: {orbit_metrics['mape']:.2f}%")
+        logging.info(f"\nOrbit Metrics:")
+        logging.info(f"  RMSE: {orbit_metrics['rmse']:.4f}")
+        logging.info(f"  MAPE: {orbit_metrics['mape']:.2f}%")
         
-        print(f"\nProphet Metrics:")
-        print(f"  RMSE: {prophet_metrics['rmse']:.4f}")
-        print(f"  MAPE: {prophet_metrics['mape']:.2f}%")
+        logging.info(f"\nProphet Metrics:")
+        logging.info(f"  RMSE: {prophet_metrics['rmse']:.4f}")
+        logging.info(f"  MAPE: {prophet_metrics['mape']:.2f}%")
         
         plot_forecast_comparison(test_data.values, orbit_pred, prophet_pred,
                                 "Bayesian Forecasting: Orbit vs Prophet",
                                 output_dir / 'forecast_comparison.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

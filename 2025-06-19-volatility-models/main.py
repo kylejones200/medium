@@ -3,24 +3,20 @@
 ARCH Framework for Volatility Models
 
 Main entry point for running ARCH volatility modeling.
-
-Usage:
-    python main.py
-    python main.py --config custom_config.yaml
 """
 
 import argparse
 import yaml
+import logging
 import pandas as pd
 from pathlib import Path
-from src.core import (
+from src.core import ((level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     simulate_returns_with_volatility_clustering,
     fit_arch_model,
     forecast_volatility,
-    plot_returns_volatility,
-    plot_volatility_forecast
 )
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
@@ -29,7 +25,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='ARCH Volatility Models')
@@ -41,8 +36,7 @@ def main():
     output_dir = Path(args.output_dir) if args.output_dir else Path(config['output']['figures_dir'])
     output_dir.mkdir(exist_ok=True)
     
-    print("Simulating returns with volatility clustering...")
-    returns, volatility = simulate_returns_with_volatility_clustering(
+        returns, volatility = simulate_returns_with_volatility_clustering(
         config['simulation']['n'],
         config['simulation']['omega'],
         config['simulation']['alpha'],
@@ -52,16 +46,13 @@ def main():
     data = pd.DataFrame({"returns": returns, "volatility": volatility})
     plot_returns_volatility(returns, volatility, output_dir / 'simulated_returns_volatility.png')
     
-    print("Fitting ARCH model...")
-    arch_model_fit = fit_arch_model(data["returns"], config['model']['vol_type'], config['model']['p'])
-    print(arch_model_fit.summary())
+        arch_model_fit = fit_arch_model(data["returns"], config['model']['vol_type'], config['model']['p'])
+    logging.info(f"\n{arch_model_fit.summary()}")
     
-    print("Forecasting volatility...")
-    forecast_variance = forecast_volatility(arch_model_fit, config['forecast']['horizon'])
+        forecast_variance = forecast_volatility(arch_model_fit, config['forecast']['horizon'])
     plot_volatility_forecast(forecast_variance, output_dir / 'forecasted_volatility.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"Analysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

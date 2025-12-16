@@ -3,19 +3,16 @@
 Gas Prices vs Unemployment Driving Analysis
 
 Main entry point for running economic relationship analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/economic_data.csv
 """
 
 import argparse
 import yaml
+import logging
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from src.core import prepare_economic_data, analyze_correlation, plot_economic_relationship
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
@@ -24,7 +21,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Gas Prices vs Unemployment Driving Analysis')
@@ -51,27 +47,26 @@ def main():
     else:
         raise ValueError("No data source specified")
     
-    print("Preparing economic data...")
+    logging.info("Preparing economic data...")
     gas, unemployment = prepare_economic_data(df, config['data']['gas_column'],
                                             config['data']['unemployment_column'])
     
-    print("Analyzing correlation...")
+    logging.info("Analyzing correlation...")
     results = analyze_correlation(gas, unemployment)
     
-    print(f"\nEconomic Analysis Results:")
-    print(f"Correlation: {results['correlation']:.4f}")
-    print(f"R² Score: {results['r2']:.4f}")
-    print(f"Slope: {results['slope']:.4f}")
+    logging.info("Economic Analysis Results:")
+    logging.info(f"Correlation: {results['correlation']:.4f}")
+    logging.info(f"R² Score: {results['r2']:.4f}")
+    logging.info(f"Slope: {results['slope']:.4f}")
     
     if abs(results['correlation']) > config['analysis']['correlation_threshold']:
         direction = "positive" if results['correlation'] > 0 else "negative"
-        print(f"\n✓ Significant {direction} correlation detected")
+        logging.info(f"✓ Significant {direction} correlation detected")
     
     plot_economic_relationship(gas, unemployment, "Gas Prices vs Unemployment Rate",
                               output_dir / 'economic_relationship.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"Analysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

@@ -22,31 +22,6 @@ Medium article: [Bollinger Bands for Time Series Analysis](https://medium.com/da
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run with synthetic data (default):
-```bash
-python main.py
-```
-
-Run with your own data:
-```bash
-python main.py --data-path data/prices.csv
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
@@ -62,14 +37,6 @@ Bollinger Bands consist of:
 - **Lower Band**: Middle band - (N-period standard deviation × multiplier)
 
 Prices touching the upper or lower bands may indicate overbought or oversold conditions.
-
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles
-- Muted, professional color palette
 
 ## Caveats
 

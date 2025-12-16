@@ -1,9 +1,13 @@
+import logging
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.regime_switching.markov_regression import MarkovRegression
 import seaborn as sns
 from scipy import stats
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 # Generate and prepare data
 np.random.seed(42)
@@ -21,10 +25,10 @@ df = pd.DataFrame({
 # Fit a Markov switching model
 model = MarkovRegression(data, k_regimes=2, trend='c', switching_variance=True)
 result = model.fit()
-print(result.summary())
+logging.info(f"\n{result.summary()}")
 
-print("\nTransition Matrix:")
-print(result.regime_transition)
+logging.info("\nTransition Matrix:")
+logging.info(f"\n{result.regime_transition}")
 
 # Add predicted probabilities and regimes to DataFrame
 df['Predicted_Prob_High'] = result.smoothed_marginal_probabilities[:, 1]
@@ -78,31 +82,31 @@ plt.ylabel("True Regime")
 plt.savefig('confusion_matrix.png')
 plt.close()
 
-# Print Statistics
-print("\nModel Performance Metrics:")
+# Log Statistics
+logging.info("\nModel Performance Metrics:")
 accuracy = (df['True_Regime'] == df['Predicted_Regime']).mean()
-print(f"Prediction Accuracy: {accuracy:.2%}")
+logging.info(f"Prediction Accuracy: {accuracy:.2%}")
 
-print("\nRegime Statistics:")
+logging.info("\nRegime Statistics:")
 for regime in [0, 1]:
     regime_data = df[df['True_Regime'] == regime]['Data']
-    print(f"\nRegime {regime}:")
-    print(f"Mean: {regime_data.mean():.2f}")
-    print(f"Std: {regime_data.std():.2f}")
-    print(f"Skewness: {stats.skew(regime_data):.2f}")
-    print(f"Kurtosis: {stats.kurtosis(regime_data):.2f}")
+    logging.info(f"\nRegime {regime}:")
+    logging.info(f"Mean: {regime_data.mean():.2f}")
+    logging.info(f"Std: {regime_data.std():.2f}")
+    logging.info(f"Skewness: {stats.skew(regime_data):.2f}")
+    logging.info(f"Kurtosis: {stats.kurtosis(regime_data):.2f}")
 
-print("\nAverage Duration in Each Regime:")
+logging.info("\nAverage Duration in Each Regime:")
 for regime in [0, 1]:
     regime_runs = (df['Predicted_Regime'] == regime).astype(int).groupby(
         (df['Predicted_Regime'] != df['Predicted_Regime'].shift()).cumsum()
     ).sum()
-    print(f"Regime {regime}: {regime_runs.mean():.2f} periods")
+    logging.info(f"Regime {regime}: {regime_runs.mean():.2f} periods")
 
-# Calculate and print transition statistics
+# Calculate and log transition statistics
 transitions = pd.DataFrame({
     'From': df['Predicted_Regime'][:-1],
     'To': df['Predicted_Regime'][1:]
 })
-print("\nTransition Counts:")
-print(pd.crosstab(transitions['From'], transitions['To']))
+logging.info("\nTransition Counts:")
+logging.info(f"\n{pd.crosstab(transitions['From'], transitions['To'])}")
