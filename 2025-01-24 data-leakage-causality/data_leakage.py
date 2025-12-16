@@ -6,6 +6,10 @@ from sklearn.linear_model import LinearRegression
 from statsmodels.tsa.stattools import grangercausalitytests
 import seaborn as sns
 import warnings
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 warnings.filterwarnings('ignore')
 
@@ -93,4 +97,4 @@ if __name__ == "__main__":
 
     # Granger causality test (example: create dummy data or use actual multivariate series)
     # dummy_df = pd.DataFrame({'a': np.random.randn(100), 'b': np.random.randn(100)})
-    # print(granger_causality(dummy_df))
+    # logging.info(granger_causality(dummy_df))

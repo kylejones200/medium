@@ -1,0 +1,18 @@
+data:
+  source: null
+  url: "https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv"
+  generate_synthetic: true
+  seed: 42
+
+imputation:
+  strategy: "mean"
+  strategies:
+    - "mean"
+    - "median"
+    - "iterative"
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

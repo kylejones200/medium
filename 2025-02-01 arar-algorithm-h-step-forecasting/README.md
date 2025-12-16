@@ -18,31 +18,6 @@ This project demonstrates the ARAR (AutoRegressive AutoRegressive) algorithm for
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run with ERCOT data:
-```bash
-python main.py --data-path ercot_load_data.csv
-```
-
-Run with custom configuration:
-```bash
-python main.py --data-path ercot_load_data.csv --config custom_config.yaml
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
@@ -60,14 +35,6 @@ The ARAR algorithm:
 3. Fits autoregressive model on differenced data
 4. Generates h-step forecasts
 5. Reverses differencing to reconstruct original scale
-
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles with key metrics
-- Muted, professional color palette
 
 ## Caveats
 

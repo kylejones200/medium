@@ -3,19 +3,15 @@
 Building a Field Operations System with AWS Architecture Design
 
 Main entry point for running field operations system analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/operations_data.csv
 """
 
 import argparse
 import yaml
+import logging
 import pandas as pd
 from pathlib import Path
-from src.core import simulate_field_operations_data, analyze_field_operations, plot_field_operations
 
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
@@ -23,7 +19,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Building Field Operations System with AWS')
@@ -41,27 +36,24 @@ def main():
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         asset_cols = [col for col in df.columns if 'asset' in col.lower()]
     elif config['data']['generate_synthetic']:
-        print("Simulating field operations data...")
-        df = simulate_field_operations_data(config['data']['n_points'], config['data']['n_assets'],
+                df = simulate_field_operations_data(config['data']['n_points'], config['data']['n_assets'],
                                           config['data']['seed'])
         asset_cols = [col for col in df.columns if col != 'timestamp']
     else:
         raise ValueError("No data source specified")
     
-    print("Analyzing field operations...")
-    analysis = analyze_field_operations(df, asset_cols)
+        analysis = analyze_field_operations(df, asset_cols)
     
-    print(f"\nField Operations Analysis:")
-    print(f"Number of samples: {analysis['n_samples']}")
-    print(f"Number of assets: {analysis['n_assets']}")
+    logging.info(f"\nField Operations Analysis:")
+    logging.info(f"Number of samples: {analysis['n_samples']}")
+    logging.info(f"Number of assets: {analysis['n_assets']}")
     
-    print(f"\nAWS Services: {', '.join(config['aws']['services'])}")
+    logging.info(f"\nAWS Services: {', '.join(config['aws']['services'])}")
     
     plot_field_operations(df, asset_cols, "Field Operations System",
                          output_dir / 'field_operations.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

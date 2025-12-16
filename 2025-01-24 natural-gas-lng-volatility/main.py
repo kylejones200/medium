@@ -3,20 +3,16 @@
 Natural Gas and LNG Volatility Analysis
 
 Main entry point for running natural gas and LNG volatility analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/energy_prices.csv
 """
 
 import argparse
 import yaml
+import logging
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from src.core import analyze_price_relationships, plot_volatility_analysis
 
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
@@ -24,7 +20,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Natural Gas and LNG Volatility Analysis')
@@ -54,26 +49,24 @@ def main():
     else:
         raise ValueError("No data source specified")
     
-    print("Analyzing price relationships...")
-    results = analyze_price_relationships(df, config['data']['price_columns'])
+        results = analyze_price_relationships(df, config['data']['price_columns'])
     
-    print(f"\nVolatilities:")
+    logging.info(f"\nVolatilities:")
     for col, vol in results['volatilities'].items():
-        print(f"  {col}: {vol:.4f}")
+        logging.info(f"  {col}: {vol:.4f}")
     
-    print(f"\nCorrelations:")
-    print(results['correlations'])
+    logging.info(f"\nCorrelations:")
+    logging.info(results['correlations'])
     
     corr_value = results['correlations'].iloc[0, 1]
     if abs(corr_value) > config['analysis']['correlation_threshold']:
-        print(f"\n✓ Strong correlation detected: {corr_value:.4f}")
+        logging.info(f"\n✓ Strong correlation detected: {corr_value:.4f}")
     
     plot_volatility_analysis(df, config['data']['price_columns'],
                            "Natural Gas and LNG Volatility Analysis",
                            output_dir / 'volatility_analysis.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

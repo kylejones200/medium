@@ -3,20 +3,16 @@
 Data Leakage, Lookahead Bias, and Causality Analysis
 
 Main entry point for running data leakage and causality analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/timeseries.csv
 """
 
 import argparse
 import yaml
+import logging
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from src.core import create_features, create_features_with_lookahead, train_model, plot_leakage_comparison
 
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
@@ -24,7 +20,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Data Leakage and Causality Analysis')
@@ -50,35 +45,30 @@ def main():
     else:
         raise ValueError("No data source specified")
     
-    print("Creating features without leakage...")
-    df_no_leakage = create_features(df, leakage=False).dropna()
+        df_no_leakage = create_features(df, leakage=False).dropna()
     X_no_leak = df_no_leakage[['rolling_mean', 'volatility', 'price_lag', 'monthly_return']].values
     y_no_leak = df_no_leakage[config['data']['value_column']].values
     
     model_no_leak, metrics_no_leak = train_model(X_no_leak, y_no_leak)
-    print(f"\nModel WITHOUT Leakage:")
-    print(f"  R²: {metrics_no_leak['r2']:.4f}")
-    print(f"  RMSE: {metrics_no_leak['rmse']:.4f}")
+    logging.info(f"\nModel WITHOUT Leakage:")
+    logging.info(f"  R²: {metrics_no_leak['r2']:.4f}")
+    logging.info(f"  RMSE: {metrics_no_leak['rmse']:.4f}")
     
     if config['analysis']['compare_leakage']:
-        print("\nCreating features with lookahead bias...")
-        df_with_leakage = create_features_with_lookahead(df).dropna()
+                df_with_leakage = create_features_with_lookahead(df).dropna()
         if 'future_rolling_mean' in df_with_leakage.columns:
             X_with_leak = df_with_leakage[['future_rolling_mean']].values
             y_with_leak = df_with_leakage[config['data']['value_column']].values
             
             model_with_leak, metrics_with_leak = train_model(X_with_leak, y_with_leak)
-            print(f"\nModel WITH Leakage:")
-            print(f"  R²: {metrics_with_leak['r2']:.4f}")
-            print(f"  RMSE: {metrics_with_leak['rmse']:.4f}")
+            logging.info(f"\nModel WITH Leakage:")
+            logging.info(f"  R²: {metrics_with_leak['r2']:.4f}")
+            logging.info(f"  RMSE: {metrics_with_leak['rmse']:.4f}")
             
-            print("\n⚠️  Warning: Leakage model shows artificially high performance!")
-            
-            plot_leakage_comparison(metrics_no_leak, metrics_with_leak,
+                        plot_leakage_comparison(metrics_no_leak, metrics_with_leak,
                                   "Data Leakage Comparison", output_dir / 'leakage_comparison.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

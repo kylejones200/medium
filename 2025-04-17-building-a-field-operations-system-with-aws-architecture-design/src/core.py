@@ -5,8 +5,10 @@ import pandas as pd
 from pathlib import Path
 from typing import Dict
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def simulate_field_operations_data(n_points: int, n_assets: int = 5, seed: int = 42) -> pd.DataFrame:
     """Simulate field operations data."""
@@ -21,7 +23,6 @@ def simulate_field_operations_data(n_points: int, n_assets: int = 5, seed: int =
     
     return pd.DataFrame(data)
 
-
 def analyze_field_operations(df: pd.DataFrame, asset_cols: list) -> Dict:
     """Analyze field operations data."""
     return {
@@ -31,19 +32,17 @@ def analyze_field_operations(df: pd.DataFrame, asset_cols: list) -> Dict:
         'std_values': df[asset_cols].std().to_dict()
     }
 
-
 def plot_field_operations(df: pd.DataFrame, asset_cols: list, title: str, output_path: Path):
-    """Plot field operations data with Tufte style."""
-    setup_tufte_style()
+ """Plot field operations data """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     for i, col in enumerate(asset_cols[:5]):
         ax.plot(df['timestamp'], df[col], label=col, linewidth=1.2, alpha=0.7)
     
-    apply_tufte_style(ax, title=title)
     ax.set_xlabel("Time")
     ax.set_ylabel("Value")
     ax.legend(loc='best', ncol=2)
     
-    save_tufte_figure(output_path)
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 

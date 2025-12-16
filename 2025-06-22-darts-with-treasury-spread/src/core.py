@@ -10,8 +10,10 @@ from darts.models import AutoARIMA
 from darts.metrics import mape, mse
 import pandas_datareader.data as web
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def fetch_fred_data(series_id: str, start_date: str = '2000-01-01', 
                    end_date: Optional[str] = None) -> TimeSeries:
@@ -25,7 +27,6 @@ def fetch_fred_data(series_id: str, start_date: str = '2000-01-01',
     df = df.sort_index()
     return TimeSeries.from_dataframe(df, value_cols='value')
 
-
 def fit_auto_arima(series: TimeSeries, forecast_horizon: int = 30,
                   num_samples: int = 1000) -> Tuple[AutoARIMA, TimeSeries]:
     """Fit AutoARIMA model and return forecast."""
@@ -37,7 +38,6 @@ def fit_auto_arima(series: TimeSeries, forecast_horizon: int = 30,
     forecast = model.predict(n=forecast_horizon, num_samples=num_samples)
     return model, forecast
 
-
 def evaluate_forecast(actual: TimeSeries, forecast: TimeSeries) -> Dict[str, float]:
     """Compute and return evaluation metrics."""
     mape_score = mape(actual, forecast)
@@ -47,7 +47,6 @@ def evaluate_forecast(actual: TimeSeries, forecast: TimeSeries) -> Dict[str, flo
         'mse': mse_score
     }
 
-
 def forecast_to_dataframe(forecast: TimeSeries) -> pd.DataFrame:
     """Convert forecast to DataFrame."""
     return pd.DataFrame({
@@ -55,11 +54,9 @@ def forecast_to_dataframe(forecast: TimeSeries) -> pd.DataFrame:
         'forecast': forecast.values().flatten()
     })
 
-
 def plot_forecast(series: TimeSeries, forecast: TimeSeries, output_path: Path,
                  title: str, metrics: Dict[str, float] = None, window: int = 365):
-    """Plot forecast with Tufte style."""
-    setup_tufte_style()
+ """Plot forecast """
     fig, ax = plt.subplots(figsize=(12, 6))
     
     display_window = min(window, len(series))
@@ -72,10 +69,10 @@ def plot_forecast(series: TimeSeries, forecast: TimeSeries, output_path: Path,
     if metrics:
         title_text += f": MAPE = {metrics['mape']:.2f}%, MSE = {metrics['mse']:.4f}"
     
-    apply_tufte_style(ax, title=title_text)
     ax.set_xlabel("Date")
     ax.set_ylabel("Spread")
     ax.legend(loc='best')
     
-    save_tufte_figure(output_path)
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 

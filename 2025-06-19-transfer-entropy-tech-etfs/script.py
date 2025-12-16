@@ -4,16 +4,19 @@ import pyinform.transferentropy as te
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import yfinance as yf
-
+import logging
 
 # Define tickers and time range
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+
 tickers = ['XLK', 'SMH']
 data = yf.download(tickers, start="2015-01-01", end="2024-12-31")['Close'].dropna()
 data.columns = ['Tech_ETF', 'Semiconductor_ETF']
 
 # Save for analysis
 data.to_csv("xlk_smh_prices.csv")
-
 
 # Load and differenced data
 df = pd.read_csv("xlk_smh_prices.csv", parse_dates=["Date"], index_col="Date")

@@ -3,11 +3,6 @@
 Treasury Spread Forecasting with Darts
 
 Main entry point for running AutoARIMA forecasting on treasury spread data.
-
-Usage:
-    python main.py
-    python main.py --config custom_config.yaml
-    python main.py --series-id T10Y2Y --forecast-horizon 30
 """
 
 import argparse
@@ -19,11 +14,9 @@ from src.core import (
     fit_auto_arima,
     evaluate_forecast,
     forecast_to_dataframe,
-    plot_forecast
 )
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
 
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
@@ -32,7 +25,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Treasury Spread Forecasting with Darts')
@@ -67,15 +59,15 @@ def main():
         if config['analysis']['print_summary']:
             logging.info("Forecast summary:")
             forecast_df = forecast_to_dataframe(forecast)
-            print(forecast_df.head())
+            logging.info(forecast_df.head())
         
         metrics = None
         if config['analysis']['evaluate_forecast']:
             actual = series[-forecast_horizon:]
             metrics = evaluate_forecast(actual, forecast)
             logging.info("Evaluation Metrics:")
-            print(f"MAPE: {metrics['mape']:.2f}%")
-            print(f"MSE:  {metrics['mse']:.4f}")
+            logging.info(f"MAPE: {metrics['mape']:.2f}%")
+            logging.info(f"MSE:  {metrics['mse']:.4f}")
         
         logging.info("Visualizing forecast...")
         title = f"{series_id} Treasury Spread Forecast (AutoARIMA)"
@@ -93,7 +85,6 @@ def main():
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise
-
 
 if __name__ == "__main__":
     main()

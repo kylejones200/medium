@@ -3,23 +3,19 @@
 Bollinger Bands for Time Series Analysis
 
 Main entry point for running Bollinger Bands analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/prices.csv
-    python main.py --config custom_config.yaml
 """
 
 import argparse
 import yaml
+import logging
 import pandas as pd
 from pathlib import Path
-from src.core import (
+from src.core import ((level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     generate_synthetic_prices,
     calculate_bollinger_bands,
-    plot_bollinger_bands
 )
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
@@ -28,7 +24,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Bollinger Bands Analysis')
@@ -45,8 +40,7 @@ def main():
         df = pd.read_csv(args.data_path, parse_dates=True, index_col=0)
         target_col = config['data']['target_column']
     else:
-        print("No data file provided, generating synthetic data...")
-        df = generate_synthetic_prices(
+                df = generate_synthetic_prices(
             config['data']['start_date'],
             config['data']['end_date'],
             config['data']['frequency'],
@@ -66,8 +60,7 @@ def main():
     plot_bollinger_bands(df, target_col, config['bollinger_bands']['window'],
                         output_dir / 'bollinger_bands.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

@@ -5,8 +5,10 @@ import pandas as pd
 from pathlib import Path
 from typing import Tuple, Dict
 import matplotlib.pyplot as plt
-from .plotting import setup_tufte_style, apply_tufte_style, save_tufte_figure
+import logging
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
 
 def prepare_forecast_data(df: pd.DataFrame, date_col: str, value_col: str) -> pd.Series:
     """Prepare data for forecasting."""
@@ -14,7 +16,6 @@ def prepare_forecast_data(df: pd.DataFrame, date_col: str, value_col: str) -> pd
     df[date_col] = pd.to_datetime(df[date_col])
     df = df.set_index(date_col)
     return df[value_col]
-
 
 def calculate_forecast_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict:
     """Calculate forecast error metrics."""
@@ -29,11 +30,9 @@ def calculate_forecast_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict:
         'mape': mape
     }
 
-
 def plot_forecast_comparison(actual: np.ndarray, orbit_pred: np.ndarray,
                             prophet_pred: np.ndarray, title: str, output_path: Path):
-    """Plot forecast comparison with Tufte style."""
-    setup_tufte_style()
+ """Plot forecast comparison """
     fig, ax = plt.subplots(figsize=(10, 6))
     
     time = np.arange(len(actual))
@@ -41,10 +40,10 @@ def plot_forecast_comparison(actual: np.ndarray, orbit_pred: np.ndarray,
     ax.plot(time, orbit_pred, label="Orbit", color="#D4A574", linewidth=1.2, linestyle='--')
     ax.plot(time, prophet_pred, label="Prophet", color="#8B6F9E", linewidth=1.2, linestyle='--')
     
-    apply_tufte_style(ax, title=title)
     ax.set_xlabel("Time")
     ax.set_ylabel("Value")
     ax.legend(loc='best')
     
-    save_tufte_figure(output_path)
+    plt.savefig(output_path, dpi=100, bbox_inches="tight")
+    plt.close()
 

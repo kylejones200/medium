@@ -1,0 +1,87 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+secrets.yaml
+config.local.yaml
+*.secret
+
+# API Keys and credentials
+**/api_keys.txt
+**/credentials.json
+**/secrets.json
+**/*_key.txt
+**/*_secret.txt
+
+# Data files (large)
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.h5
+*.hdf5
+data/
+*.db
+*.sqlite
+
+# Generated images (optional - uncomment if you don't want to track images)
+# images/
+# *.png
+# *.jpg
+# *.jpeg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+

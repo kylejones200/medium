@@ -3,14 +3,11 @@
 ARAR Algorithm for H-Step Forecasting
 
 Main entry point for running ARAR forecasting analysis.
-
-Usage:
-    python main.py --data-path data/ercot_load_data.csv
-    python main.py --config custom_config.yaml
 """
 
 import argparse
 import yaml
+import logging
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -23,13 +20,10 @@ from src.core import (
     fit_arima_model,
     generate_arima_forecast,
     calculate_mape,
-    plot_series_comparison,
-    plot_forecast_comparison,
-    plot_arar_vs_arima
 )
 from statsmodels.tsa.stattools import acf
 
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
@@ -37,7 +31,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='ARAR Algorithm for H-Step Forecasting')
@@ -54,8 +47,7 @@ def main():
     if not data_path.exists():
         raise FileNotFoundError(f"Data file not found: {data_path}")
     
-    print("Loading data...")
-    y = load_data(data_path, config['data']['date_column'], config['data']['value_column'])
+        y = load_data(data_path, config['data']['date_column'], config['data']['value_column'])
     
     if config['data']['resample_freq']:
         y = y.resample(config['data']['resample_freq']).mean()
@@ -67,14 +59,11 @@ def main():
     train = y.iloc[:-test_size]
     test = y.iloc[-test_size:] if test_size > 0 else None
     
-    if config['analysis']['plot_series_comparison']:
-        print("Plotting series comparison...")
-        z = apply_differencing(y)
+                z = apply_differencing(y)
         plot_series_comparison(y, z, output_dir / 'arar_series_visualization.png')
     
     if config['analysis']['run_arar']:
-        print("Fitting ARAR model...")
-        z_train = apply_differencing(train)
+                z_train = apply_differencing(train)
         
         acf_vals = acf(z_train, nlags=config['model']['arar']['max_lag'])
         
@@ -85,7 +74,7 @@ def main():
                                      config['model']['arar']['lag_selection_strategy'])
         
         arar_model = fit_arar_model(z_train, lags)
-        print(arar_model.summary())
+        logging.info(arar_model.summary())
         
         y_forecast_arar = generate_arar_forecast(arar_model, h, train.iloc[-1])
         forecast_index = pd.date_range(start=train.index[-1], periods=h+1, 
@@ -97,25 +86,23 @@ def main():
         
         if test is not None and len(test) == h:
             mape_arar = calculate_mape(test, y_forecast_arar_series)
-            print(f"ARAR MAPE: {mape_arar:.4f}")
+            logging.info(f"ARAR MAPE: {mape_arar:.4f}")
         
         if config['analysis']['run_arima_comparison']:
-            print("Fitting ARIMA model for comparison...")
-            arima_model = fit_arima_model(train, tuple(config['model']['arima']['order']))
+                        arima_model = fit_arima_model(train, tuple(config['model']['arima']['order']))
             y_forecast_arima = generate_arima_forecast(arima_model, h)
             y_forecast_arima.index = forecast_index
             
             if test is not None and len(test) == h:
                 mape_arima = calculate_mape(test, y_forecast_arima)
-                print(f"ARIMA MAPE: {mape_arima:.4f}")
+                logging.info(f"ARIMA MAPE: {mape_arima:.4f}")
                 
-                plot_arar_vs_arima(y, train, test, y_forecast_arar_series, 
+                plot_arar_vs_arima(y, train, test, y_forecast_arar_series,
                                  y_forecast_arima, forecast_index,
                                  mape_arar, mape_arima,
                                  output_dir / 'arar_vs_arima_forecast.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()

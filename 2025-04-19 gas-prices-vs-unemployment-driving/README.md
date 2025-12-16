@@ -18,31 +18,6 @@ This project analyzes the relationship between gas prices and unemployment rates
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run with default settings (generates synthetic data):
-```bash
-python main.py
-```
-
-Run with your own data:
-```bash
-python main.py --data-path data/economic_data.csv
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
@@ -58,14 +33,6 @@ This analysis examines:
 - Linear relationship modeling
 - Economic trend identification
 - Policy implications
-
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles
-- Muted, professional color palette
 
 ## Caveats
 

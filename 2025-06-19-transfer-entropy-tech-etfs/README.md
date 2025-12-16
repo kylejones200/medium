@@ -22,31 +22,6 @@ Medium article: [What Drives the Value of Tech Stocks?](https://medium.com/@kyle
 └── images/            # Generated plots and figures
 ```
 
-## Setup
-
-1. Create a virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Usage
-
-Run with default settings (downloads data):
-```bash
-python main.py
-```
-
-Run with existing data:
-```bash
-python main.py --data-path data/xlk_smh_prices.csv
-```
-
 ## Configuration
 
 Edit `config.yaml` to customize:
@@ -67,14 +42,6 @@ Edit `config.yaml` to customize:
 - Measures information flow between time series
 - Directional causality measure
 - Non-parametric approach
-
-## Plotting Style
-
-All plots use a minimalist Tufte-style design:
-- No gridlines
-- No top or right spines
-- Descriptive titles
-- Muted, professional color palette
 
 ## Caveats
 

@@ -1,0 +1,22 @@
+data:
+  source: null
+  url: "https://github.com/kylejones200/time_series/raw/refs/heads/main/Uk%20marriage%20data-unique.xlsx"
+  generate_synthetic: true
+  seed: 42
+
+model:
+  seasonal_periods: 4
+  alpha: 0.2
+
+analysis:
+  c1: 1.0
+  c_tau_3: 2.5
+  c_tau_6: 4.5
+  c_tau_12: 8.0
+  qL: 15.0
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

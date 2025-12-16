@@ -4,3 +4,5 @@ scikit-learn
 matplotlib
 pyyaml
 pytest
+pandas-datareader
+statsmodels

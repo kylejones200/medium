@@ -1,7 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import logging
 
 # Example 1: Melt wide to long
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+
 df = pd.DataFrame({
     'Store': ['A', 'B'],
     'Jan_Sales': [100, 90],

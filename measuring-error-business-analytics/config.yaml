@@ -1,0 +1,14 @@
+data:
+  source: null
+  generate_synthetic: true
+  n_samples: 200
+  seed: 42
+
+model:
+  noise_level: 0.1
+
+output:
+  figures_dir: "images"
+  figure_format: "png"
+  figure_dpi: 100
+

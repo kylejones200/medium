@@ -3,20 +3,16 @@
 Time Series Manipulation with Pandas
 
 Main entry point for running time series manipulation analysis.
-
-Usage:
-    python main.py
-    python main.py --data-path data/timeseries.csv
 """
 
 import argparse
 import yaml
+import logging
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from src.core import manipulate_time_series, resample_time_series, plot_time_series_manipulation
 
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 def load_config(config_path: Path = None) -> dict:
     """Load configuration from YAML file."""
     if config_path is None:
@@ -24,7 +20,6 @@ def load_config(config_path: Path = None) -> dict:
     
     with open(config_path, 'r') as f:
         return yaml.safe_load(f)
-
 
 def main():
     parser = argparse.ArgumentParser(description='Time Series Manipulation with Pandas')
@@ -50,24 +45,22 @@ def main():
     else:
         raise ValueError("No data source specified")
     
-    print("Manipulating time series...")
-    df_manipulated = manipulate_time_series(df, config['data']['date_column'], 
+        df_manipulated = manipulate_time_series(df, config['data']['date_column'], 
                                            config['data']['value_column'])
     
-    print(f"\nTime Series Statistics:")
-    print(f"Mean: {df_manipulated[config['data']['value_column']].mean():.2f}")
-    print(f"Std: {df_manipulated[config['data']['value_column']].std():.2f}")
+    logging.info(f"\nTime Series Statistics:")
+    logging.info(f"Mean: {df_manipulated[config['data']['value_column']].mean():.2f}")
+    logging.info(f"Std: {df_manipulated[config['data']['value_column']].std():.2f}")
     
-    print(f"\nResampling to {config['manipulation']['resample_freq']}...")
+    logging.info(f"\nResampling to {config['manipulation']['resample_freq']}...")
     resampled = resample_time_series(df_manipulated[config['data']['value_column']],
                                     config['manipulation']['resample_freq'])
-    print(f"Resampled length: {len(resampled)}")
+    logging.info(f"Resampled length: {len(resampled)}")
     
     plot_time_series_manipulation(df_manipulated, config['data']['value_column'],
                                  "Time Series Manipulation", output_dir / 'manipulation.png')
     
-    print(f"\nAnalysis complete. Figures saved to {output_dir}")
-
+    logging.info(f"\nAnalysis complete. Figures saved to {output_dir}")
 
 if __name__ == "__main__":
     main()
