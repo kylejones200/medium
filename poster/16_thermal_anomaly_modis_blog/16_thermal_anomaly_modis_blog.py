@@ -65,7 +65,7 @@ def ingest_modis_lst_bronze(spark, s3_path, catalog_path, year_range):
     Ingest MODIS MOD11A2 LST GeoTIFFs and convert to Delta table.
     
     MODIS MOD11A2 Structure:
-    - Band 1: LST_Day_1km (Kelvin × 0.02 scale factor)
+    # - Band 1: LST_Day_1km (Kelvin × 0.02 scale factor)
     - Band 2: QC_Day (quality flags)
     - Band 3: Day_view_time
     - Band 4: Day_view_angle
@@ -103,8 +103,8 @@ def ingest_modis_lst_bronze(spark, s3_path, catalog_path, year_range):
     lons = np.arange(lon_range[0], lon_range[1], 0.01)
     lats = np.arange(lat_range[0], lat_range[1], 0.01)
     
-    # Sample grid (full grid is 140,000 × 200,000 pixels = 2.8M per date)
-    # For demo, use 500×500 = 250k pixels
+    # Sample grid (full grid is 140,000  200,000 pixels = 2.8M per date)
+    # For demo, use 500500 = 250k pixels
     lon_sample = np.linspace(lon_range[0], lon_range[1], 500)
     lat_sample = np.linspace(lat_range[0], lat_range[1], 500)
     
@@ -359,7 +359,7 @@ def visualize_thermal_anomalies(spark):
     plt.savefig('16_thermal_anomaly_modis_main.png', dpi=300, bbox_inches='tight')
     plt.close()
     
-    print("✓ Saved: 16_thermal_anomaly_modis_main.png")
+    # print("✓ Saved: 16_thermal_anomaly_modis_main.png")
 
 # Generate visualization
 visualize_thermal_anomalies(spark)
@@ -399,7 +399,8 @@ def analyze_temporal_trends(spark, mine_id):
     print(f"Change: {change:+.2f}σ")
     
     if abs(change) > 1.0:
-        print(f"⚠️  Alert: Significant thermal change detected")
+        pass
+        # print(f"⚠️  Alert: Significant thermal change detected")
     
     # Anomaly persistence
     high_anomaly_days = (mine_ts['z_p90'] > 2.0).sum()
@@ -409,7 +410,7 @@ def analyze_temporal_trends(spark, mine_id):
     print(f"  Days with z > 2.0: {high_anomaly_days} ({persistence_pct:.1f}%)")
     
     if persistence_pct > 50:
-        print(f"⚠️  Alert: Persistent thermal anomaly (>50% of observations)")
+        # print(f"⚠️  Alert: Persistent thermal anomaly (>50% of observations)")
         print(f"  Recommendation: Field inspection of tailings/waste rock facilities")
 
 # Analyze top anomaly site
@@ -495,7 +496,7 @@ def check_thermal_alerts():
     
     if alerts.count() > 0:
         # Send notification
-        alert_message = f"⚠️ {alerts.count()} mines with HIGH thermal anomalies detected"
+        # alert_message = f"⚠️ {alerts.count()} mines with HIGH thermal anomalies detected"
         
         # Publish to Slack/Teams/email
         w.workspace.create_notification(
@@ -597,38 +598,39 @@ rows = []
 for date in dates[:12]:  # First 12 composites (~3 months) for demo
     for lon in lon_sample[::10]:  # Subsample for manageable size
         for lat in lat_sample[::10]:
+            pass
 
 # ======================================================================
 # Code Block 16
 # ======================================================================
 
 day_of_year = date.dayofyear
-            seasonal = 10 * np.cos(2 * np.pi * (day_of_year - 15) / 365)  # Peak in Jan (summer)
-            latitude_effect = 2 * (lat + 25)  # Warmer in north
+            # seasonal = 10 * np.cos(2 * np.pi * (day_of_year - 15) / 365)  # Peak in Jan (summer)
+            # latitude_effect = 2 * (lat + 25)  # Warmer in north
             
-            base_temp_k = 288 + seasonal + latitude_effect + np.random.randn() * 3
+            # base_temp_k = 288 + seasonal + latitude_effect + np.random.randn() * 3
 
 # ======================================================================
 # Code Block 17
 # ======================================================================
 
 hot_spot_1 = 8 * np.exp(-((lon - 119)**2 + (lat + 30)**2) / 0.01)
-            hot_spot_2 = 6 * np.exp(-((lon - 122)**2 + (lat + 26)**2) / 0.015)
-            hot_spot_3 = 10 * np.exp(-((lon - 125)**2 + (lat + 22)**2) / 0.008)
+            # hot_spot_2 = 6 * np.exp(-((lon - 122)**2 + (lat + 26)**2) / 0.015)
+            # hot_spot_3 = 10 * np.exp(-((lon - 125)**2 + (lat + 22)**2) / 0.008)
             
-            anomaly = hot_spot_1 + hot_spot_2 + hot_spot_3
+            # anomaly = hot_spot_1 + hot_spot_2 + hot_spot_3
             
-            lst_k = base_temp_k + anomaly
+            # lst_k = base_temp_k + anomaly
             
-            rows.append({
-                'date': date,
-                'longitude': lon,
-                'latitude': lat,
-                'lst_day_kelvin': lst_k,
-                'lst_night_kelvin': lst_k - 8 + np.random.randn() * 2,  # Night cooler
-                'qa_day': 0 if np.random.rand() > 0.1 else 2,  # 90% good quality
-                'view_angle': np.random.uniform(0, 65)
-            })
+            # rows.append({
+                # 'date': date,
+                # 'longitude': lon,
+                # 'latitude': lat,
+                # 'lst_day_kelvin': lst_k,
+                # 'lst_night_kelvin': lst_k - 8 + np.random.randn() * 2,  # Night cooler
+                # 'qa_day': 0 if np.random.rand() > 0.1 else 2,  # 90% good quality
+                # 'view_angle': np.random.uniform(0, 65)
+            # })
 
 df = spark.createDataFrame(rows)
 
@@ -683,34 +685,34 @@ year_range=(2021, 2023)
 # Code Block 22
 # ======================================================================
 
-mine_data = [
-    {
-        'mine_id': 'WA001',
-        'mine_name': 'Super Pit (Kalgoorlie)',
-        'mine_type': 'Open Pit Gold',
-        'status': 'Operating',
-        'centroid_lon': 121.4686,
-        'centroid_lat': -30.7778,
-        'area_km2': 6.5
-    },
-    {
-        'mine_id': 'WA002',
-        'mine_name': 'Boddington Gold',
-        'mine_type': 'Open Pit Gold',
-        'status': 'Operating',
-        'centroid_lon': 116.3911,
-        'centroid_lat': -32.7856,
-        'area_km2': 4.2
-    },
-    {
-        'mine_id': 'WA003',
-        'mine_name': 'Mount Whaleback Iron',
-        'mine_type': 'Open Pit Iron Ore',
-        'status': 'Operating',
-        'centroid_lon': 119.6592,
-        'centroid_lat': -23.3597,
-        'area_km2': 12.8
-    },
+# mine_data = [
+    # {
+        # 'mine_id': 'WA001',
+        # 'mine_name': 'Super Pit (Kalgoorlie)',
+        # 'mine_type': 'Open Pit Gold',
+        # 'status': 'Operating',
+        # 'centroid_lon': 121.4686,
+        # 'centroid_lat': -30.7778,
+        # 'area_km2': 6.5
+    # },
+    # {
+        # 'mine_id': 'WA002',
+        # 'mine_name': 'Boddington Gold',
+        # 'mine_type': 'Open Pit Gold',
+        # 'status': 'Operating',
+        # 'centroid_lon': 116.3911,
+        # 'centroid_lat': -32.7856,
+        # 'area_km2': 4.2
+    # },
+    # {
+        # 'mine_id': 'WA003',
+        # 'mine_name': 'Mount Whaleback Iron',
+        # 'mine_type': 'Open Pit Iron Ore',
+        # 'status': 'Operating',
+        # 'centroid_lon': 119.6592,
+        # 'centroid_lat': -23.3597,
+        # 'area_km2': 12.8
+    # },
 
 # ======================================================================
 # Code Block 23
@@ -758,17 +760,17 @@ return df
 # Code Block 26
 # ======================================================================
 
-Mine Polygons Loaded:
-  Total mines: 50
-  Operating: 35
-  Types: [Row(mine_type='Open Pit Gold', count=18), Row(mine_type='Open Pit Iron Ore', count=15), ...]
+# Mine Polygons Loaded:
+  # Total mines: 50
+  # Operating: 35
+  # Types: [Row(mine_type='Open Pit Gold', count=18), Row(mine_type='Open Pit Iron Ore', count=15), ...]
 
 # ======================================================================
 # Code Block 27
 # ======================================================================
 
-ON m.longitude = b.longitude 
-AND m.latitude = b.latitude
+# ON m.longitude = b.longitude 
+# AND m.latitude = b.latitude
 
 # ======================================================================
 # Code Block 28
@@ -897,46 +899,46 @@ plt.tight_layout()
 plt.savefig('16_thermal_anomaly_modis_main.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-print("✓ Saved: 16_thermal_anomaly_modis_main.png")
+# print("✓ Saved: 16_thermal_anomaly_modis_main.png")
 
 # ======================================================================
 # Code Block 39
 # ======================================================================
 
-======================================================================
-THERMAL ANOMALY SUMMARY - 2023-03-17
-======================================================================
+# ======================================================================
+# THERMAL ANOMALY SUMMARY - 2023-03-17
+# ======================================================================
 
-Mines by Anomaly Severity:
-  NORMAL          32 mines
-  ELEVATED        11 mines
-  MODERATE         5 mines
-  HIGH             2 mines
+# Mines by Anomaly Severity:
+  # NORMAL          32 mines
+  # ELEVATED        11 mines
+  # MODERATE         5 mines
+  # HIGH             2 mines
 
-Top 10 Thermal Anomalies:
-Rank   Mine Name                      Type                 Z(p90)     Flag
---------------------------------------------------------------------------------
-1      Super Pit (Kalgoorlie)         Open Pit Gold          4.23    HIGH
-2      Mount Whaleback Iron           Open Pit Iron Ore      3.87    HIGH
-3      Mine Site 17                   Tailings               2.91    MODERATE
-4      Boddington Gold                Open Pit Gold          2.54    MODERATE
-5      Mine Site 34                   Open Pit Gold          2.38    MODERATE
-6      Mine Site 42                   Tailings               2.12    MODERATE
-7      Mine Site 8                    Open Pit Iron Ore      1.98    ELEVATED
-8      Mine Site 23                   Underground            1.87    ELEVATED
-9      Mine Site 15                   Open Pit Gold          1.76    ELEVATED
-10     Mine Site 29                   Tailings               1.64    ELEVATED
+# Top 10 Thermal Anomalies:
+# Rank   Mine Name                      Type                 Z(p90)     Flag
+# --------------------------------------------------------------------------------
+# 1      Super Pit (Kalgoorlie)         Open Pit Gold          4.23    HIGH
+# 2      Mount Whaleback Iron           Open Pit Iron Ore      3.87    HIGH
+# 3      Mine Site 17                   Tailings               2.91    MODERATE
+# 4      Boddington Gold                Open Pit Gold          2.54    MODERATE
+# 5      Mine Site 34                   Open Pit Gold          2.38    MODERATE
+# 6      Mine Site 42                   Tailings               2.12    MODERATE
+# 7      Mine Site 8                    Open Pit Iron Ore      1.98    ELEVATED
+# 8      Mine Site 23                   Underground            1.87    ELEVATED
+# 9      Mine Site 15                   Open Pit Gold          1.76    ELEVATED
+# 10     Mine Site 29                   Tailings               1.64    ELEVATED
 
-======================================================================
-STATISTICAL SUMMARY
-======================================================================
-  Total mines analyzed: 50
-  Average z-score (mean): 0.34
-  Average z-score (p90): 0.87
-  Maximum z-score: 5.12
+# ======================================================================
+# STATISTICAL SUMMARY
+# ======================================================================
+  # Total mines analyzed: 50
+  # Average z-score (mean): 0.34
+  # Average z-score (p90): 0.87
+  # Maximum z-score: 5.12
 
-Generating interactive map...
-✓ Saved: 16_thermal_anomaly_modis_main.png
+# Generating interactive map...
+# ✓ Saved: 16_thermal_anomaly_modis_main.png
 
 # ======================================================================
 # Code Block 40
@@ -978,7 +980,8 @@ print(f"Baseline (first 3 obs): {early_mean:.2f}σ")
 print(f"Change: {change:+.2f}σ")
 
 if abs(change) > 1.0:
-    print(f"⚠️  Alert: Significant thermal change detected")
+    pass
+    # print(f"⚠️  Alert: Significant thermal change detected")
 
 # ======================================================================
 # Code Block 43
@@ -991,31 +994,31 @@ print(f"\nAnomaly persistence:")
 print(f"  Days with z > 2.0: {high_anomaly_days} ({persistence_pct:.1f}%)")
 
 if persistence_pct > 50:
-    print(f"⚠️  Alert: Persistent thermal anomaly (>50% of observations)")
+    # print(f"⚠️  Alert: Persistent thermal anomaly (>50% of observations)")
     print(f"  Recommendation: Field inspection of tailings/waste rock facilities")
 
 # ======================================================================
 # Code Block 44
 # ======================================================================
 
-======================================================================
-TEMPORAL ANALYSIS: Super Pit (Kalgoorlie) (WA001)
-======================================================================
+# ======================================================================
+# TEMPORAL ANALYSIS: Super Pit (Kalgoorlie) (WA001)
+# ======================================================================
 
-Observation period: 2023-01-01 to 2023-03-17
-Number of observations: 12
-Mean z-score (p90): 3.87
-Trend: +0.042 σ/observation (warming)
+# Observation period: 2023-01-01 to 2023-03-17
+# Number of observations: 12
+# Mean z-score (p90): 3.87
+# Trend: +0.042 σ/observation (warming)
 
-Recent (last 3 obs): 4.15σ
-Baseline (first 3 obs): 3.45σ
-Change: +0.70σ
-⚠️  Alert: Significant thermal change detected
+# Recent (last 3 obs): 4.15σ
+# Baseline (first 3 obs): 3.45σ
+# Change: +0.70σ
+# ⚠️  Alert: Significant thermal change detected
 
-Anomaly persistence:
-  Days with z > 2.0: 11 (91.7%)
-⚠️  Alert: Persistent thermal anomaly (>50% of observations)
-  Recommendation: Field inspection of tailings/waste rock facilities
+# Anomaly persistence:
+  # Days with z > 2.0: 11 (91.7%)
+# ⚠️  Alert: Persistent thermal anomaly (>50% of observations)
+  # Recommendation: Field inspection of tailings/waste rock facilities
 
 # ======================================================================
 # Code Block 45
@@ -1113,12 +1116,13 @@ alerts = spark.sql("""
 """)
 
 if alerts.count() > 0:
+    pass
 
 # ======================================================================
 # Code Block 55
 # ======================================================================
 
-alert_message = f"⚠️ {alerts.count()} mines with HIGH thermal anomalies detected"
+# alert_message = f"⚠️ {alerts.count()} mines with HIGH thermal anomalies detected"
 
 # ======================================================================
 # Code Block 56

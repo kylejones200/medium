@@ -393,7 +393,7 @@ print(f"SO2 MAE: {results_weighted[4]:.4f} (slightly worse)")
 
 # Compare MTL to single-task
 if mtl_mae > single_task_mae:
-    print("⚠️ Negative transfer detected!")
+    # print("⚠️ Negative transfer detected!")
     print("Tasks may be unrelated or need different architectures")
 
 # ======================================================================
@@ -451,7 +451,7 @@ print(f"Predicted SO2: {np.expm1(so2_pred[0][0]):,.0f} tons")
 # Code Block 11
 # ======================================================================
 
-square=True, linewidths=2, cbar_kws={"shrink": 0.8})
+# square=True, linewidths=2, cbar_kws={"shrink": 0.8})
 
 # ======================================================================
 # Code Block 12
@@ -513,66 +513,66 @@ return model
 
 Model: "mtl_emissions_predictor"
 __________________________________________________________________________________________________
- Layer (type)                   Output Shape         Param #     Connected to                     
-==================================================================================================
- input_features (InputLayer)    [(None, 10)]         0           []                               
+ # Layer (type)                   Output Shape         Param #     Connected to                     
+# ==================================================================================================
+ # input_features (InputLayer)    [(None, 10)]         0           []                               
                                                                                                   
- shared_1 (Dense)               (None, 128)          1408        ['input_features[0][0]']         
+ # shared_1 (Dense)               (None, 128)          1408        ['input_features[0][0]']         
                                                                                                   
- batch_normalization (BatchNorm (None, 128)          512         ['shared_1[0][0]']               
+ # batch_normalization (BatchNorm (None, 128)          512         ['shared_1[0][0]']               
                                                                                                   
- dropout (Dropout)              (None, 128)          0           ['batch_normalization[0][0]']    
+ # dropout (Dropout)              (None, 128)          0           ['batch_normalization[0][0]']    
                                                                                                   
- shared_2 (Dense)               (None, 64)           8256        ['dropout[0][0]']                
+ # shared_2 (Dense)               (None, 64)           8256        ['dropout[0][0]']                
                                                                                                   
- batch_normalization_1 (BatchNo (None, 64)           256         ['shared_2[0][0]']               
+ # batch_normalization_1 (BatchNo (None, 64)           256         ['shared_2[0][0]']               
                                                                                                   
- dropout_1 (Dropout)            (None, 64)           0           ['batch_normalization_1[0][0]']  
+ # dropout_1 (Dropout)            (None, 64)           0           ['batch_normalization_1[0][0]']  
                                                                                                   
- shared_3 (Dense)               (None, 32)           2080        ['dropout_1[0][0]']              
+ # shared_3 (Dense)               (None, 32)           2080        ['dropout_1[0][0]']              
                                                                                                   
- batch_normalization_2 (BatchNo (None, 32)           128         ['shared_3[0][0]']               
+ # batch_normalization_2 (BatchNo (None, 32)           128         ['shared_3[0][0]']               
                                                                                                   
- co2_head (Dense)               (None, 16)           528         ['batch_normalization_2[0][0]']  
+ # co2_head (Dense)               (None, 16)           528         ['batch_normalization_2[0][0]']  
                                                                                                   
- nox_head (Dense)               (None, 16)           528         ['batch_normalization_2[0][0]']  
+ # nox_head (Dense)               (None, 16)           528         ['batch_normalization_2[0][0]']  
                                                                                                   
- so2_head (Dense)               (None, 16)           528         ['batch_normalization_2[0][0]']  
+ # so2_head (Dense)               (None, 16)           528         ['batch_normalization_2[0][0]']  
                                                                                                   
- co2_output (Dense)             (None, 1)            17          ['co2_head[0][0]']               
+ # co2_output (Dense)             (None, 1)            17          ['co2_head[0][0]']               
                                                                                                   
- nox_output (Dense)             (None, 1)            17          ['nox_head[0][0]']               
+ # nox_output (Dense)             (None, 1)            17          ['nox_head[0][0]']               
                                                                                                   
- so2_output (Dense)             (None, 1)            17          ['so2_head[0][0]']               
-==================================================================================================
-Total params: 14,275
-Trainable params: 13,827
-Non-trainable params: 448
+ # so2_output (Dense)             (None, 1)            17          ['so2_head[0][0]']               
+# ==================================================================================================
+# Total params: 14,275
+# Trainable params: 13,827
+# Non-trainable params: 448
 __________________________________________________________________________________________________
 
 # ======================================================================
 # Code Block 19
 # ======================================================================
 
-drop_first=True)
+# drop_first=True)
 
 # ======================================================================
 # Code Block 20
 # ======================================================================
 
-X_features, y_co2, test_size=0.2, random_state=42
+# X_features, y_co2, test_size=0.2, random_state=42
 
 # ======================================================================
 # Code Block 21
 # ======================================================================
 
-X_features, y_nox, test_size=0.2, random_state=42
+# X_features, y_nox, test_size=0.2, random_state=42
 
 # ======================================================================
 # Code Block 22
 # ======================================================================
 
-X_features, y_so2, test_size=0.2, random_state=42
+# X_features, y_so2, test_size=0.2, random_state=42
 
 # ======================================================================
 # Code Block 23
@@ -640,37 +640,37 @@ return model
 # Code Block 26
 # ======================================================================
 
-validation_split=0.2, epochs=50, batch_size=64,
-         callbacks=[keras.callbacks.EarlyStopping(patience=10)],
-         verbose=0)
+# validation_split=0.2, epochs=50, batch_size=64,
+         # callbacks=[keras.callbacks.EarlyStopping(patience=10)],
+         # verbose=0)
 
 # ======================================================================
 # Code Block 27
 # ======================================================================
 
-validation_split=0.2, epochs=50, batch_size=64,
-         callbacks=[keras.callbacks.EarlyStopping(patience=10)],
-         verbose=0)
+# validation_split=0.2, epochs=50, batch_size=64,
+         # callbacks=[keras.callbacks.EarlyStopping(patience=10)],
+         # verbose=0)
 
 # ======================================================================
 # Code Block 28
 # ======================================================================
 
-validation_split=0.2, epochs=50, batch_size=64,
-         callbacks=[keras.callbacks.EarlyStopping(patience=10)],
-         verbose=0)
+# validation_split=0.2, epochs=50, batch_size=64,
+         # callbacks=[keras.callbacks.EarlyStopping(patience=10)],
+         # verbose=0)
 
 # ======================================================================
 # Code Block 29
 # ======================================================================
 
-label='Single-Task', color='#e74c3c', alpha=0.8)
+# label='Single-Task', color='#e74c3c', alpha=0.8)
 
 # ======================================================================
 # Code Block 30
 # ======================================================================
 
-label='Multi-Task', color='#2ecc71', alpha=0.8)
+# label='Multi-Task', color='#2ecc71', alpha=0.8)
 
 # ======================================================================
 # Code Block 31
@@ -733,7 +733,7 @@ verbose=0
 # Code Block 35
 # ======================================================================
 
-print("⚠️ Negative transfer detected!")
+# print("⚠️ Negative transfer detected!")
 print("Tasks may be unrelated or need different architectures")
 
 # ======================================================================

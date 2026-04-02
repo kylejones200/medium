@@ -68,25 +68,25 @@ for epoch in range(num_epochs):
 # Code Block 4
 # ======================================================================
 
-DATASET STATISTICS
-=====================================
-Total Images: 137
-Total Solar Modules: 5,469
-🔴 Defective Modules: 90 (1.6%)
-🟢 Healthy Modules: 5,379 (98.4%)
-Images with Defects: 40/137 (29.2%)
-Average Modules per Image: 39.9
+# DATASET STATISTICS
+# =====================================
+# Total Images: 137
+# Total Solar Modules: 5,469
+#  Defective Modules: 90 (1.6%)
+#  Healthy Modules: 5,379 (98.4%)
+# Images with Defects: 40/137 (29.2%)
+# Average Modules per Image: 39.9
 
 # ======================================================================
 # Code Block 5
 # ======================================================================
 
-FINAL RESULTS
-=====================================
-Best Validation Accuracy: 97.4%
-Precision (Defective): 95.2%
-Recall (Defective): 93.8%
-F1-Score: 94.5%
+# FINAL RESULTS
+# =====================================
+# Best Validation Accuracy: 97.4%
+# Precision (Defective): 95.2%
+# Recall (Defective): 93.8%
+# F1-Score: 94.5%
 
 # ======================================================================
 # Code Block 6

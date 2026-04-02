@@ -192,7 +192,7 @@ def prepare_recovery_features(df):
     features['Au_S_ratio'] = features['Au_gt'] / np.maximum(features['S_pct'], 0.01)
     features['Fe_S_ratio'] = features['Fe_pct'] / np.maximum(features['S_pct'], 0.01)
     
-    # Liberation proxy (hardness × grind size interaction)
+    # Liberation proxy (hardness  grind size interaction)
     features['liberation_proxy'] = features['BWI'] * features['grind_P80'] / 1000
     
     # pH deviation from optimal
@@ -270,7 +270,7 @@ def train_recovery_models(features, y, numeric_features, categorical_features):
     ridge_rmse = np.sqrt(mean_squared_error(y_test, ridge_pred))
     
     print(f"\nRidge Regression Performance:")
-    print(f"  R²: {ridge_r2:.3f}")
+    # print(f"  R²: {ridge_r2:.3f}")
     print(f"  MAE: {ridge_mae:.2f}%")
     print(f"  RMSE: {ridge_rmse:.2f}%")
     
@@ -278,7 +278,7 @@ def train_recovery_models(features, y, numeric_features, categorical_features):
     ridge_cv_scores = cross_val_score(
         ridge_pipeline, X_train, y_train, cv=5, scoring='r2'
     )
-    print(f"  CV R² (mean ± std): {ridge_cv_scores.mean():.3f} ± {ridge_cv_scores.std():.3f}")
+    # print(f"  CV R² (mean ± std): {ridge_cv_scores.mean():.3f} ± {ridge_cv_scores.std():.3f}")
     
     # Model 2: XGBoost (Nonlinear)
     print(f"\n{'='*70}")
@@ -305,7 +305,7 @@ def train_recovery_models(features, y, numeric_features, categorical_features):
     xgb_rmse = np.sqrt(mean_squared_error(y_test, xgb_pred))
     
     print(f"\nXGBoost Performance:")
-    print(f"  R²: {xgb_r2:.3f}")
+    # print(f"  R²: {xgb_r2:.3f}")
     print(f"  MAE: {xgb_mae:.2f}%")
     print(f"  RMSE: {xgb_rmse:.2f}%")
     
@@ -313,7 +313,7 @@ def train_recovery_models(features, y, numeric_features, categorical_features):
     xgb_cv_scores = cross_val_score(
         xgb_pipeline, X_train, y_train, cv=5, scoring='r2'
     )
-    print(f"  CV R² (mean ± std): {xgb_cv_scores.mean():.3f} ± {xgb_cv_scores.std():.3f}")
+    # print(f"  CV R² (mean ± std): {xgb_cv_scores.mean():.3f} ± {xgb_cv_scores.std():.3f}")
     
     # Improvement
     r2_improvement = ((xgb_r2 - ridge_r2) / ridge_r2) * 100
@@ -322,7 +322,7 @@ def train_recovery_models(features, y, numeric_features, categorical_features):
     print(f"\n{'='*70}")
     print("MODEL COMPARISON")
     print('='*70)
-    print(f"  XGBoost R² improvement: +{r2_improvement:.1f}%")
+    # print(f"  XGBoost R² improvement: +{r2_improvement:.1f}%")
     print(f"  XGBoost MAE improvement: +{mae_improvement:.1f}%")
     
     return {
@@ -872,7 +872,7 @@ ridge_mae = mean_absolute_error(y_test, ridge_pred)
 ridge_rmse = np.sqrt(mean_squared_error(y_test, ridge_pred))
 
 print(f"\nRidge Regression Performance:")
-print(f"  R²: {ridge_r2:.3f}")
+# print(f"  R²: {ridge_r2:.3f}")
 print(f"  MAE: {ridge_mae:.2f}%")
 print(f"  RMSE: {ridge_rmse:.2f}%")
 
@@ -883,7 +883,7 @@ print(f"  RMSE: {ridge_rmse:.2f}%")
 ridge_cv_scores = cross_val_score(
     ridge_pipeline, X_train, y_train, cv=5, scoring='r2'
 )
-print(f"  CV R² (mean ± std): {ridge_cv_scores.mean():.3f} ± {ridge_cv_scores.std():.3f}")
+# print(f"  CV R² (mean ± std): {ridge_cv_scores.mean():.3f} ± {ridge_cv_scores.std():.3f}")
 
 # ======================================================================
 # Code Block 40
@@ -913,7 +913,7 @@ xgb_mae = mean_absolute_error(y_test, xgb_pred)
 xgb_rmse = np.sqrt(mean_squared_error(y_test, xgb_pred))
 
 print(f"\nXGBoost Performance:")
-print(f"  R²: {xgb_r2:.3f}")
+# print(f"  R²: {xgb_r2:.3f}")
 print(f"  MAE: {xgb_mae:.2f}%")
 print(f"  RMSE: {xgb_rmse:.2f}%")
 
@@ -924,7 +924,7 @@ print(f"  RMSE: {xgb_rmse:.2f}%")
 xgb_cv_scores = cross_val_score(
     xgb_pipeline, X_train, y_train, cv=5, scoring='r2'
 )
-print(f"  CV R² (mean ± std): {xgb_cv_scores.mean():.3f} ± {xgb_cv_scores.std():.3f}")
+# print(f"  CV R² (mean ± std): {xgb_cv_scores.mean():.3f} ± {xgb_cv_scores.std():.3f}")
 
 # ======================================================================
 # Code Block 42
@@ -936,7 +936,7 @@ mae_improvement = ((ridge_mae - xgb_mae) / ridge_mae) * 100
 print(f"\n{'='*70}")
 print("MODEL COMPARISON")
 print('='*70)
-print(f"  XGBoost R² improvement: +{r2_improvement:.1f}%")
+# print(f"  XGBoost R² improvement: +{r2_improvement:.1f}%")
 print(f"  XGBoost MAE improvement: +{mae_improvement:.1f}%")
 
 return {
@@ -950,35 +950,35 @@ return {
 # Code Block 43
 # ======================================================================
 
-Train/Test Split:
-  Training: 800 samples
-  Test: 200 samples
+# Train/Test Split:
+  # Training: 800 samples
+  # Test: 200 samples
 
-======================================================================
-MODEL 1: RIDGE REGRESSION
-======================================================================
+# ======================================================================
+# MODEL 1: RIDGE REGRESSION
+# ======================================================================
 
-Ridge Regression Performance:
-  R²: 0.823
-  MAE: 3.12%
-  RMSE: 4.18%
-  CV R² (mean ± std): 0.819 ± 0.024
+# Ridge Regression Performance:
+  # R²: 0.823
+  # MAE: 3.12%
+  # RMSE: 4.18%
+  # CV R² (mean ± std): 0.819 ± 0.024
 
-======================================================================
-MODEL 2: XGBOOST
-======================================================================
+# ======================================================================
+# MODEL 2: XGBOOST
+# ======================================================================
 
-XGBoost Performance:
-  R²: 0.912
-  MAE: 2.18%
-  RMSE: 2.95%
-  CV R² (mean ± std): 0.908 ± 0.016
+# XGBoost Performance:
+  # R²: 0.912
+  # MAE: 2.18%
+  # RMSE: 2.95%
+  # CV R² (mean ± std): 0.908 ± 0.016
 
-======================================================================
-MODEL COMPARISON
-======================================================================
-  XGBoost R² improvement: +10.8%
-  XGBoost MAE improvement: +30.1%
+# ======================================================================
+# MODEL COMPARISON
+# ======================================================================
+  # XGBoost R² improvement: +10.8%
+  # XGBoost MAE improvement: +30.1%
 
 # ======================================================================
 # Code Block 44
@@ -1034,27 +1034,27 @@ return importance_df
 # Code Block 47
 # ======================================================================
 
-======================================================================
-FEATURE IMPORTANCE ANALYSIS
-======================================================================
+# ======================================================================
+# FEATURE IMPORTANCE ANALYSIS
+# ======================================================================
 
-Top 10 Features:
-  mineral_type_refractory_sulfide 0.185
-  S_pct                            0.147
-  liberation_proxy                 0.112
-  Au_S_ratio                       0.089
-  grind_P80                        0.076
-  As_ppm                           0.067
-  pH_deviation                     0.054
-  BWI                              0.048
-  log_Au                           0.042
-  Fe_S_ratio                       0.038
+# Top 10 Features:
+  # mineral_type_refractory_sulfide 0.185
+  # S_pct                            0.147
+  # liberation_proxy                 0.112
+  # Au_S_ratio                       0.089
+  # grind_P80                        0.076
+  # As_ppm                           0.067
+  # pH_deviation                     0.054
+  # BWI                              0.048
+  # log_Au                           0.042
+  # Fe_S_ratio                       0.038
 
-Importance by Category:
-  Grade-related:        0.131
-  Mineralogy (type):    0.237
-  Sulfur/Refractoriness: 0.252
-  Processing params:    0.231
+# Importance by Category:
+  # Grade-related:        0.131
+  # Mineralogy (type):    0.237
+  # Sulfur/Refractoriness: 0.252
+  # Processing params:    0.231
 
 # ======================================================================
 # Code Block 48
@@ -1209,39 +1209,39 @@ return scenario_df
 # Code Block 56
 # ======================================================================
 
-======================================================================
-SCENARIO ANALYSIS: PROCESSING OPTIMIZATION
-======================================================================
+# ======================================================================
+# SCENARIO ANALYSIS: PROCESSING OPTIMIZATION
+# ======================================================================
 
-Ore Characteristics:
-  Au grade: 3.45 g/t
-  Sulfur: 4.23%
-  Mineral type: refractory_sulfide
-  BWI: 16.8 kWh/t
+# Ore Characteristics:
+  # Au grade: 3.45 g/t
+  # Sulfur: 4.23%
+  # Mineral type: refractory_sulfide
+  # BWI: 16.8 kWh/t
 
-Scenario                       Recovery     Δ from Baseline
-----------------------------------------------------------------------
-Baseline                         76.34%      +0.00%
-Finer Grinding (70µm)            78.91%      +2.57%
-Higher Reagent (+30%)            77.12%      +0.78%
-Optimized pH (10.5)              76.89%      +0.55%
-Combined Optimization            80.23%      +3.89%
+# Scenario                       Recovery     Δ from Baseline
+# ----------------------------------------------------------------------
+# Baseline                         76.34%      +0.00%
+# Finer Grinding (70µm)            78.91%      +2.57%
+# Higher Reagent (+30%)            77.12%      +0.78%
+# Optimized pH (10.5)              76.89%      +0.55%
+# Combined Optimization            80.23%      +3.89%
 
-Economic Impact (Annual):
-  Throughput: 18,250,000 tonnes/year
-  Grade: 3.45 g/t
-  Gold price: $60/g
-  Baseline recovery: 76.34%
-  Optimized recovery: 80.23%
-  Recovery improvement: +3.89%
-  Additional revenue: $147.8M/year
+# Economic Impact (Annual):
+  # Throughput: 18,250,000 tonnes/year
+  # Grade: 3.45 g/t
+  # Gold price: $60/g
+  # Baseline recovery: 76.34%
+  # Optimized recovery: 80.23%
+  # Recovery improvement: +3.89%
+  # Additional revenue: $147.8M/year
 
 # ======================================================================
 # Code Block 57
 # ======================================================================
 
-(R²=0.912, MAE=2.18%) beats Ridge regression (R²=0.823, MAE=3.12%)
-by capturing mineralogy-processing interactions
+# (R²=0.912, MAE=2.18%) beats Ridge regression (R²=0.823, MAE=3.12%)
+# by capturing mineralogy-processing interactions
 
 # ======================================================================
 # Code Block 58
@@ -1309,106 +1309,106 @@ output = main()
 # Code Block 65
 # ======================================================================
 
-======================================================================
-METALLURGICAL RECOVERY PREDICTION WITH MACHINE LEARNING
-======================================================================
+# ======================================================================
+# METALLURGICAL RECOVERY PREDICTION WITH MACHINE LEARNING
+# ======================================================================
 
-Generated 1000 ore samples:
-  Au grade: 0.50 - 14.87 g/t (mean: 2.34)
-  Recovery: 45.3% - 97.8% (mean: 84.7%)
-  Sulfur: 0.01% - 7.98% (mean: 2.12%)
-  BWI: 8.0 - 21.9 kWh/t (mean: 14.0)
+# Generated 1000 ore samples:
+  # Au grade: 0.50 - 14.87 g/t (mean: 2.34)
+  # Recovery: 45.3% - 97.8% (mean: 84.7%)
+  # Sulfur: 0.01% - 7.98% (mean: 2.12%)
+  # BWI: 8.0 - 21.9 kWh/t (mean: 14.0)
 
-Mineral Type Distribution:
-  sulfide_flotation: 352 samples (35.2%)
-  free_milling: 301 samples (30.1%)
-  refractory_sulfide: 249 samples (24.9%)
-  oxide: 98 samples (9.8%)
+# Mineral Type Distribution:
+  # sulfide_flotation: 352 samples (35.2%)
+  # free_milling: 301 samples (30.1%)
+  # refractory_sulfide: 249 samples (24.9%)
+  # oxide: 98 samples (9.8%)
 
-Feature Engineering:
-  Numeric features: 17
-  Categorical features: 1
-  Total samples: 1000
+# Feature Engineering:
+  # Numeric features: 17
+  # Categorical features: 1
+  # Total samples: 1000
 
-Train/Test Split:
-  Training: 800 samples
-  Test: 200 samples
+# Train/Test Split:
+  # Training: 800 samples
+  # Test: 200 samples
 
-======================================================================
-MODEL 1: RIDGE REGRESSION
-======================================================================
+# ======================================================================
+# MODEL 1: RIDGE REGRESSION
+# ======================================================================
 
-Ridge Regression Performance:
-  R²: 0.823
-  MAE: 3.12%
-  RMSE: 4.18%
-  CV R² (mean ± std): 0.819 ± 0.024
+# Ridge Regression Performance:
+  # R²: 0.823
+  # MAE: 3.12%
+  # RMSE: 4.18%
+  # CV R² (mean ± std): 0.819 ± 0.024
 
-======================================================================
-MODEL 2: XGBOOST
-======================================================================
+# ======================================================================
+# MODEL 2: XGBOOST
+# ======================================================================
 
-XGBoost Performance:
-  R²: 0.912
-  MAE: 2.18%
-  RMSE: 2.95%
-  CV R² (mean ± std): 0.908 ± 0.016
+# XGBoost Performance:
+  # R²: 0.912
+  # MAE: 2.18%
+  # RMSE: 2.95%
+  # CV R² (mean ± std): 0.908 ± 0.016
 
-======================================================================
-MODEL COMPARISON
-======================================================================
-  XGBoost R² improvement: +10.8%
-  XGBoost MAE improvement: +30.1%
+# ======================================================================
+# MODEL COMPARISON
+# ======================================================================
+  # XGBoost R² improvement: +10.8%
+  # XGBoost MAE improvement: +30.1%
 
-======================================================================
-FEATURE IMPORTANCE ANALYSIS
-======================================================================
+# ======================================================================
+# FEATURE IMPORTANCE ANALYSIS
+# ======================================================================
 
-Top 10 Features:
-  mineral_type_refractory_sulfide 0.185
-  S_pct                            0.147
-  liberation_proxy                 0.112
-  Au_S_ratio                       0.089
-  grind_P80                        0.076
-  As_ppm                           0.067
-  pH_deviation                     0.054
-  BWI                              0.048
-  log_Au                           0.042
-  Fe_S_ratio                       0.038
+# Top 10 Features:
+  # mineral_type_refractory_sulfide 0.185
+  # S_pct                            0.147
+  # liberation_proxy                 0.112
+  # Au_S_ratio                       0.089
+  # grind_P80                        0.076
+  # As_ppm                           0.067
+  # pH_deviation                     0.054
+  # BWI                              0.048
+  # log_Au                           0.042
+  # Fe_S_ratio                       0.038
 
-Importance by Category:
-  Grade-related:        0.131
-  Mineralogy (type):    0.237
-  Sulfur/Refractoriness: 0.252
-  Processing params:    0.231
+# Importance by Category:
+  # Grade-related:        0.131
+  # Mineralogy (type):    0.237
+  # Sulfur/Refractoriness: 0.252
+  # Processing params:    0.231
 
-======================================================================
-SCENARIO ANALYSIS: PROCESSING OPTIMIZATION
-======================================================================
+# ======================================================================
+# SCENARIO ANALYSIS: PROCESSING OPTIMIZATION
+# ======================================================================
 
-Ore Characteristics:
-  Au grade: 3.45 g/t
-  Sulfur: 4.23%
-  Mineral type: refractory_sulfide
-  BWI: 16.8 kWh/t
+# Ore Characteristics:
+  # Au grade: 3.45 g/t
+  # Sulfur: 4.23%
+  # Mineral type: refractory_sulfide
+  # BWI: 16.8 kWh/t
 
-Scenario                       Recovery     Δ from Baseline
-----------------------------------------------------------------------
-Baseline                         76.34%      +0.00%
-Finer Grinding (70µm)            78.91%      +2.57%
-Higher Reagent (+30%)            77.12%      +0.78%
-Optimized pH (10.5)              76.89%      +0.55%
-Combined Optimization            80.23%      +3.89%
+# Scenario                       Recovery     Δ from Baseline
+# ----------------------------------------------------------------------
+# Baseline                         76.34%      +0.00%
+# Finer Grinding (70µm)            78.91%      +2.57%
+# Higher Reagent (+30%)            77.12%      +0.78%
+# Optimized pH (10.5)              76.89%      +0.55%
+# Combined Optimization            80.23%      +3.89%
 
-Economic Impact (Annual):
-  Throughput: 18,250,000 tonnes/year
-  Grade: 3.45 g/t
-  Gold price: $60/g
-  Baseline recovery: 76.34%
-  Optimized recovery: 80.23%
-  Recovery improvement: +3.89%
-  Additional revenue: $147.8M/year
+# Economic Impact (Annual):
+  # Throughput: 18,250,000 tonnes/year
+  # Grade: 3.45 g/t
+  # Gold price: $60/g
+  # Baseline recovery: 76.34%
+  # Optimized recovery: 80.23%
+  # Recovery improvement: +3.89%
+  # Additional revenue: $147.8M/year
 
-======================================================================
-Pipeline complete!
-======================================================================
+# ======================================================================
+# Pipeline complete!
+# ======================================================================

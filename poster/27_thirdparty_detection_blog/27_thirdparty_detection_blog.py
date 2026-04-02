@@ -302,7 +302,7 @@ df['alert_timestamp'] = None
 
 # Save to Gold
 spark.createDataFrame(df).write.mode('overwrite').saveAsTable('gold.row_risk_scores')
-print(f'✓ Scored {len(df):,} events')
+# print(f' Scored {len(df):,} events')
 
 # COMMAND ----------
 # Generate daily review list
@@ -323,7 +323,7 @@ FROM gold.row_risk_scores
 QUALIFY rank <= 40
 """)
 
-print('✓ Daily review list generated')
+# print(' Daily review list generated')
 
 # COMMAND ----------
 # Check for high-risk alerts
@@ -334,15 +334,16 @@ ORDER BY risk_score DESC
 """)
 
 if high_risk.count() > 0:
-    print(f'⚠️  {high_risk.count()} HIGH-RISK EVENTS require immediate action!')
+    # print(f'⚠️  {high_risk.count()} HIGH-RISK EVENTS require immediate action!')
     high_risk.show(10, truncate=False)
 else:
-    print('✓ No high-risk events detected')
+    # print(' No high-risk events detected')
 
 # ======================================================================
 # Code Block 9
 # ======================================================================
 
+    pass
 """
 Compute great-circle distance between two points in kilometers.
 """
@@ -363,10 +364,10 @@ return R * c
 # Code Block 10
 # ======================================================================
 
-'distance_km': df['dist_to_row_km'],
-'days_old': df['days_since_event'],
-'no_watch': (~df['has_active_watch']).astype(float),
-'is_machinery': (df['event_type'] == 'gps_equipment').astype(float)
+# 'distance_km': df['dist_to_row_km'],
+# 'days_old': df['days_since_event'],
+# 'no_watch': (~df['has_active_watch']).astype(float),
+# 'is_machinery': (df['event_type'] == 'gps_equipment').astype(float)
 
 # ======================================================================
 # Code Block 11
@@ -380,26 +381,26 @@ index=components.index
 # Code Block 12
 # ======================================================================
 
-1.0 * (1 - normalized['distance_km']) +    # Closer = higher risk (40%)
-1.0 * (1 - normalized['days_old']) +       # More recent = higher risk (30%)
-0.8 * normalized['no_watch'] +             # No watch = higher risk (20%)
+# 1.0 * (1 - normalized['distance_km']) +    # Closer = higher risk (40%)
+# 1.0 * (1 - normalized['days_old']) +       # More recent = higher risk (30%)
+# 0.8 * normalized['no_watch'] +             # No watch = higher risk (20%)
 0.7 * normalized['is_machinery']           # Active machinery = higher risk (10%)
 
 # ======================================================================
 # Code Block 13
 # ======================================================================
 
-AND alert_sent = FALSE
+# AND alert_sent = FALSE
 
 # ======================================================================
 # Code Block 14
 # ======================================================================
 
 for row in high_risk_events.collect():
-    send_alert(
+    # send_alert(
         recipient='patrol_team@pipeline.com',
         subject=f'CRITICAL: Third-party work detected at {row.lat:.5f}, {row.lon:.5f}',
-        body=f'''
+        # body=f'''
 
 # ======================================================================
 # Code Block 15
@@ -416,25 +417,25 @@ WHERE risk_score >= 0.8 AND alert_sent = FALSE
 # ======================================================================
 
 CASE
-    WHEN risk_score >= 0.8 THEN 'Critical (≥0.8)'
-    WHEN risk_score >= 0.6 THEN 'High (0.6-0.8)'
-    WHEN risk_score >= 0.4 THEN 'Moderate (0.4-0.6)'
-    ELSE 'Low (<0.4)'
-END AS risk_category,
-COUNT(*) AS event_count
+# WHEN risk_score >= 0.8 THEN 'Critical (0.8)'
+# WHEN risk_score >= 0.6 THEN 'High (0.6-0.8)'
+# WHEN risk_score >= 0.4 THEN 'Moderate (0.4-0.6)'
+# ELSE 'Low (<0.4)'
+# END AS risk_category,
+# COUNT(*) AS event_count
 
 # ======================================================================
 # Code Block 17
 # ======================================================================
 
-- Third-party damages: 6/year → **1/year** (83% reduction)
-- Prevented incidents: 5 × \$2.8M = **\$14M/year savings**
+# - Third-party damages: 6/year → **1/year** (83% reduction)
+# - Prevented incidents: 5  \$2.8M = **\$14M/year savings**
 
 # ======================================================================
 # Code Block 18
 # ======================================================================
 
-(cluster_summary['event_type'] >= 2) &  # Multiple event types
+# (cluster_summary['event_type'] >= 2) &  # Multiple event types
 (cluster_summary['event_id'] >= 5)      # At least 5 events
 
 # ======================================================================
@@ -452,20 +453,20 @@ return 2 * R * np.arcsin(np.sqrt(a))
 # Code Block 20
 # ======================================================================
 
-'distance_km': df['dist_to_row_km'],
-'days_old': df['days_since_event'],
-'no_watch': (~df['has_active_watch']).astype(float),
-'is_machinery': (df['event_type'] == 'gps_equipment').astype(float)
+# 'distance_km': df['dist_to_row_km'],
+# 'days_old': df['days_since_event'],
+# 'no_watch': (~df['has_active_watch']).astype(float),
+# 'is_machinery': (df['event_type'] == 'gps_equipment').astype(float)
 
 # ======================================================================
 # Code Block 21
 # ======================================================================
 
-print(f'⚠️  {high_risk.count()} HIGH-RISK EVENTS require immediate action!')
+# print(f'⚠️  {high_risk.count()} HIGH-RISK EVENTS require immediate action!')
 high_risk.show(10, truncate=False)
 
 # ======================================================================
 # Code Block 22
 # ======================================================================
 
-print('✓ No high-risk events detected')
+# print(' No high-risk events detected')

@@ -156,7 +156,7 @@ features_operational = [
 
 # COMMAND ----------
 # Install dependencies
-%pip install -q scipy scikit-learn matplotlib pandas
+# %pip install -q scipy scikit-learn matplotlib pandas
 dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -201,7 +201,7 @@ LEFT JOIN {CATALOG}.silver.segment_soil_features soil ON s.segment_id = soil.seg
 WHERE ili.avg_wall_loss_pct IS NOT NULL
 """)
 
-print(f'✓ Feature table created: {TABLE_FEATURES}')
+# print(f' Feature table created: {TABLE_FEATURES}')
 
 # COMMAND ----------
 # Load features
@@ -226,12 +226,12 @@ X = df[features].fillna(df[features].median())
 # Normalize
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
-print('✓ Features normalized')
+# print(' Features normalized')
 
 # COMMAND ----------
 # Hierarchical clustering
 Z = linkage(X_scaled, method='ward')
-print('✓ Linkage computed')
+# print(' Linkage computed')
 
 # Cut dendrogram to form 5 clusters
 n_clusters = 5
@@ -241,7 +241,7 @@ df['cluster_id'] = cluster_labels
 # Save to Delta
 result_df = spark.createDataFrame(df[['segment_id', 'cluster_id']])
 result_df.write.mode('overwrite').saveAsTable(TABLE_CLUSTERS)
-print(f'✓ Clusters saved to {TABLE_CLUSTERS}')
+# print(f' Clusters saved to {TABLE_CLUSTERS}')
 
 # COMMAND ----------
 # Dendrogram visualization
@@ -261,7 +261,7 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('/dbfs/FileStore/pipeline_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.show()
-print('✓ Dendrogram saved')
+# print(' Dendrogram saved')
 
 # COMMAND ----------
 # Cluster profiling
@@ -296,7 +296,7 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('/dbfs/FileStore/pipeline_clusters_spatial.png', dpi=300, bbox_inches='tight')
 plt.show()
-print('✓ Spatial map saved')
+# print(' Spatial map saved')
 
 # ======================================================================
 # Code Block 8
@@ -312,27 +312,27 @@ ax.scatter(cluster_data['start_chainage_km'],
 # Code Block 9
 # ======================================================================
 
-- **Cluster 3:** Installed 15 new CP rectifiers at \$45K each =
-  \$675K.
-- **Cluster 5:** Replaced 70 worst segments at \$120K each = \$8.4M
-  (one-time).
+# - **Cluster 3:** Installed 15 new CP rectifiers at \$45K each =
+  # \$675K.
+# - **Cluster 5:** Replaced 70 worst segments at \$120K each = \$8.4M
+# (one-time).
 
 # ======================================================================
 # Code Block 10
 # ======================================================================
 
-- **Leak events:** 12 → 2 (83% reduction).
-- **Annual inspection budget:** \$4.2M → \$3.1M (26% reduction).
-- **Avoided leak costs:** 10 leaks × \$850K = \$8.5M saved.
-- **Net savings over 3 years:** \$8.5M + 3 × \$1.1M - \$9.1M =
-  **\$2.7M positive ROI**.
+# - **Leak events:** 12 → 2 (83% reduction).
+# - **Annual inspection budget:** \$4.2M → \$3.1M (26% reduction).
+# - **Avoided leak costs:** 10 leaks  \$850K = \$8.5M saved.
+# - **Net savings over 3 years:** \$8.5M + 3  \$1.1M - \$9.1M =
+# **\$2.7M positive ROI**.
 
 # ======================================================================
 # Code Block 11
 # ======================================================================
 
-ON curr.segment_id = prev.segment_id
-AND prev.clustering_date = DATE_SUB(curr.clustering_date, 365)
+# ON curr.segment_id = prev.segment_id
+# AND prev.clustering_date = DATE_SUB(curr.clustering_date, 365)
 
 # ======================================================================
 # Code Block 12

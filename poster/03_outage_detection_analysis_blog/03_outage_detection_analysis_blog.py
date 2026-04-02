@@ -645,12 +645,13 @@ def _discover_available_years(self) -> List[int]:
         if os.path.exists(self.data_directory):
             files = [f for f in os.listdir(self.data_directory) if f.endswith('.parquet')]
             for file in files:
+                pass
 
 # ======================================================================
 # Code Block 5
-# ======================================================================
+# # ======================================================================
 
-year_str = file.split('_')[-1].replace('.parquet', '')
+# year_str = file.split('_')[-1].replace('.parquet', '')
                 try:
                     year = int(year_str)
                     years.append(year)
@@ -680,6 +681,9 @@ def get_outage_data(self, year: int, state: Optional[str] = None,
         List of outage records
     """
     try:
+        pass
+    except Exception:
+        pass
         if year not in self.available_years:
             logger.warning(f"Year {year} not available")
             return []
@@ -689,14 +693,14 @@ def get_outage_data(self, year: int, state: Optional[str] = None,
 # ======================================================================
 
 cache_key = f"{year}_{state or states or 'all'}"
-        if cache_key not in self._cached_data:
-            df = self._load_year_data(year, state, states)
-            self._cached_data[cache_key] = df
-        else:
-            df = self._cached_data[cache_key]
+        # if cache_key not in self._cached_data:
+            # df = self._load_year_data(year, state, states)
+            # self._cached_data[cache_key] = df
+        # else:
+            # df = self._cached_data[cache_key]
         
-        if df.empty:
-            return []
+        # if df.empty:
+            # return []
 
 # ======================================================================
 # Code Block 7
@@ -717,24 +721,24 @@ if len(df) > limit:
 # ======================================================================
 
 records = []
-        for _, row in df.iterrows():
-            records.append({
-                'fips_code': int(row['fips_code']),
-                'county': row['county'],
-                'state': row['state'],
-                'customers_out': int(row['customers_out']),
-                'total_customers': float(row['total_customers']) if pd.notna(row['total_customers']) else None,
-                'outage_percentage': (row['customers_out'] / row['total_customers'] * 100) 
-                                   if pd.notna(row['total_customers']) and row['total_customers'] > 0 else None,
-                'run_start_time': row['run_start_time'],
-                'year': year
-            })
+        # for _, row in df.iterrows():
+            # records.append({
+                # 'fips_code': int(row['fips_code']),
+                # 'county': row['county'],
+                # 'state': row['state'],
+                # 'customers_out': int(row['customers_out']),
+                # 'total_customers': float(row['total_customers']) if pd.notna(row['total_customers']) else None,
+                # 'outage_percentage': (row['customers_out'] / row['total_customers'] * 100) 
+                                   # if pd.notna(row['total_customers']) and row['total_customers'] > 0 else None,
+                # 'run_start_time': row['run_start_time'],
+                # 'year': year
+            # })
         
-        return records
+        # return records
         
-    except Exception as e:
-        logger.error(f"Error getting outage data for {year}: {e}")
-        return []
+    # except Exception as e:
+        # logger.error(f"Error getting outage data for {year}: {e}")
+        # return []
 
 def _load_year_data(self, year: int, state_filter: Optional[str] = None,
                    states_filter: Optional[List[str]] = None) -> pd.DataFrame:
@@ -742,6 +746,9 @@ def _load_year_data(self, year: int, state_filter: Optional[str] = None,
     file_path = os.path.join(self.data_directory, f"eaglei_outages_{year}.parquet")
     
     try:
+        pass
+    except Exception:
+        pass
         df = pd.read_parquet(file_path)
 
 # ======================================================================
@@ -756,14 +763,14 @@ df['run_start_time'] = pd.to_datetime(df['run_start_time'])
 
 if state_filter:
             df = df[df['state'].str.contains(state_filter, case=False, na=False)]
-        elif states_filter:
+        # elif states_filter:
             df = df[df['state'].isin(states_filter)]
         
-        return df
+        # return df
         
-    except Exception as e:
-        logger.error(f"Error loading data for year {year}: {e}")
-        return pd.DataFrame()
+    # except Exception as e:
+        # logger.error(f"Error loading data for year {year}: {e}")
+        # return pd.DataFrame()
 
 def _apply_date_filter(self, df: pd.DataFrame, start_date: Optional[str], 
                       end_date: Optional[str]) -> pd.DataFrame:
@@ -795,6 +802,9 @@ def get_major_outage_events(self, year: int, threshold_customers: int = 50000,
         List of major outage events
     """
     try:
+        pass
+    except Exception:
+        pass
         df = self._load_year_data(year)
         if df.empty:
             return []
@@ -805,8 +815,8 @@ def get_major_outage_events(self, year: int, threshold_customers: int = 50000,
 
 major_outages = df[df['customers_out'] >= threshold_customers].copy()
         
-        if major_outages.empty:
-            return []
+        # if major_outages.empty:
+            # return []
 
 # ======================================================================
 # Code Block 13
@@ -819,25 +829,25 @@ major_outages = major_outages.sort_values('customers_out', ascending=False).head
 # ======================================================================
 
 events = []
-        for _, row in major_outages.iterrows():
-            events.append({
-                'timestamp': row['run_start_time'],
-                'state': row['state'],
-                'county': row['county'],
-                'fips_code': int(row['fips_code']),
-                'customers_out': int(row['customers_out']),
-                'total_customers': float(row['total_customers']) if pd.notna(row['total_customers']) else None,
-                'outage_percentage': (row['customers_out'] / row['total_customers'] * 100) 
-                                   if pd.notna(row['total_customers']) and row['total_customers'] > 0 else None,
-                'severity': self._get_outage_severity(row['customers_out']),
-                'year': year
-            })
+        # for _, row in major_outages.iterrows():
+            # events.append({
+                # 'timestamp': row['run_start_time'],
+                # 'state': row['state'],
+                # 'county': row['county'],
+                # 'fips_code': int(row['fips_code']),
+                # 'customers_out': int(row['customers_out']),
+                # 'total_customers': float(row['total_customers']) if pd.notna(row['total_customers']) else None,
+                # 'outage_percentage': (row['customers_out'] / row['total_customers'] * 100) 
+                                   # if pd.notna(row['total_customers']) and row['total_customers'] > 0 else None,
+                # 'severity': self._get_outage_severity(row['customers_out']),
+                # 'year': year
+            # })
         
-        return events
+        # return events
         
-    except Exception as e:
-        logger.error(f"Error getting major outage events for {year}: {e}")
-        return []
+    # except Exception as e:
+        # logger.error(f"Error getting major outage events for {year}: {e}")
+        # return []
 
 def get_state_outage_summary(self, year: int, limit_states: int = 20) -> List[Dict[str, Any]]:
     """Get outage summary by state for a specific year.
@@ -850,6 +860,9 @@ def get_state_outage_summary(self, year: int, limit_states: int = 20) -> List[Di
         List of state outage summaries
     """
     try:
+        pass
+    except Exception:
+        pass
         df = self._load_year_data(year)
         if df.empty:
             return []
@@ -891,24 +904,24 @@ state_summary = state_summary.sort_values('total_customers_out', ascending=False
 # ======================================================================
 
 results = []
-        for state, row in state_summary.iterrows():
-            results.append({
-                'state': state,
-                'total_customers_out': int(row['total_customers_out']),
-                'avg_customers_out': float(row['avg_customers_out']),
-                'max_customers_out': int(row['max_customers_out']),
-                'avg_total_customers': int(row['avg_total_customers']),
-                'counties_count': int(row['counties_count']),
-                'records_count': int(row['records_count']),
-                'avg_outage_rate': float(row['avg_outage_rate']),
-                'year': year
-            })
+        # for state, row in state_summary.iterrows():
+            # results.append({
+                # 'state': state,
+                # 'total_customers_out': int(row['total_customers_out']),
+                # 'avg_customers_out': float(row['avg_customers_out']),
+                # 'max_customers_out': int(row['max_customers_out']),
+                # 'avg_total_customers': int(row['avg_total_customers']),
+                # 'counties_count': int(row['counties_count']),
+                # 'records_count': int(row['records_count']),
+                # 'avg_outage_rate': float(row['avg_outage_rate']),
+                # 'year': year
+            # })
         
-        return results
+        # return results
         
-    except Exception as e:
-        logger.error(f"Error getting state outage summary for {year}: {e}")
-        return []
+    # except Exception as e:
+        # logger.error(f"Error getting state outage summary for {year}: {e}")
+        # return []
 
 def get_outage_time_series(self, year: int, state: Optional[str] = None,
                           aggregation: str = 'daily') -> List[Dict[str, Any]]:
@@ -923,6 +936,9 @@ def get_outage_time_series(self, year: int, state: Optional[str] = None,
         List of time series data points
     """
     try:
+        pass
+    except Exception:
+        pass
         df = self._load_year_data(year, state)
         if df.empty:
             return []
@@ -938,7 +954,7 @@ freq_map = {
             'monthly': 'ME'
         }
         
-        freq = freq_map.get(aggregation, 'D')
+        # freq = freq_map.get(aggregation, 'D')
 
 # ======================================================================
 # Code Block 21
@@ -960,25 +976,25 @@ df_agg.columns = ['total_customers_out', 'avg_customers_out', 'max_customers_out
 # ======================================================================
 
 time_series = []
-        for timestamp, row in df_agg.iterrows():
-            if pd.notna(timestamp):
-                time_series.append({
-                    'timestamp': timestamp.isoformat(),
-                    'total_customers_out': int(row['total_customers_out']),
-                    'avg_customers_out': float(row['avg_customers_out']),
-                    'max_customers_out': int(row['max_customers_out']),
-                    'avg_total_customers': int(row['avg_total_customers']),
-                    'avg_outage_rate': (row['avg_customers_out'] / row['avg_total_customers'] * 100) 
-                                      if row['avg_total_customers'] > 0 else 0,
-                    'aggregation': aggregation,
-                    'year': year
-                })
+        # for timestamp, row in df_agg.iterrows():
+            # if pd.notna(timestamp):
+                # time_series.append({
+                    # 'timestamp': timestamp.isoformat(),
+                    # 'total_customers_out': int(row['total_customers_out']),
+                    # 'avg_customers_out': float(row['avg_customers_out']),
+                    # 'max_customers_out': int(row['max_customers_out']),
+                    # 'avg_total_customers': int(row['avg_total_customers']),
+                    # 'avg_outage_rate': (row['avg_customers_out'] / row['avg_total_customers'] * 100) 
+                                      # if row['avg_total_customers'] > 0 else 0,
+                    # 'aggregation': aggregation,
+                    # 'year': year
+                # })
         
-        return time_series
+        # return time_series
         
-    except Exception as e:
-        logger.error(f"Error getting outage time series for {year}: {e}")
-        return []
+    # except Exception as e:
+        # logger.error(f"Error getting outage time series for {year}: {e}")
+        # return []
 
 def _get_outage_severity(self, customers_out: int) -> str:
     """Determine outage severity based on customers affected."""
@@ -1037,12 +1053,12 @@ def detect_outage_driven_load_drop(self, ba: str, timestamp: datetime,
 
 load_drop_pct = ((forecast_load_mw - observed_load_mw) / forecast_load_mw) * 100
     
-    if load_drop_pct < threshold_pct:
-        return {
-            'significant_drop': False,
-            'drop_pct': round(load_drop_pct, 2),
-            'outage_driven': False
-        }
+    # if load_drop_pct < threshold_pct:
+        # return {
+            # 'significant_drop': False,
+            # 'drop_pct': round(load_drop_pct, 2),
+            # 'outage_driven': False
+        # }
 
 # ======================================================================
 # Code Block 28
@@ -1056,52 +1072,52 @@ ba_state_mapping = {
         'NYIS-ALL': ['New York']
     }
     
-    states = ba_state_mapping.get(ba, [])
+    # states = ba_state_mapping.get(ba, [])
     
-    if not states:
-        return {
-            'significant_drop': True,
-            'drop_pct': round(load_drop_pct, 2),
-            'outage_driven': False,
-            'reason': 'Unknown BA mapping'
-        }
+    # if not states:
+        # return {
+            # 'significant_drop': True,
+            # 'drop_pct': round(load_drop_pct, 2),
+            # 'outage_driven': False,
+            # 'reason': 'Unknown BA mapping'
+        # }
 
 # ======================================================================
 # Code Block 29
 # ======================================================================
 
 year = timestamp.year
-    outage_data = []
+    # outage_data = []
     
-    for state in states:
-        state_outages = self.outage_service.get_outage_data(
-            year=year,
-            state=state,
-            start_date=timestamp.strftime("%Y-%m-%d"),
-            end_date=timestamp.strftime("%Y-%m-%d"),
-            limit=1000
-        )
-        outage_data.extend(state_outages)
+    # for state in states:
+        # state_outages = self.outage_service.get_outage_data(
+            # year=year,
+            # state=state,
+            # start_date=timestamp.strftime("%Y-%m-%d"),
+            # end_date=timestamp.strftime("%Y-%m-%d"),
+            # limit=1000
+        # )
+        # outage_data.extend(state_outages)
     
-    if not outage_data:
-        return {
-            'significant_drop': True,
-            'drop_pct': round(load_drop_pct, 2),
-            'outage_driven': False,
-            'reason': 'No outage data available'
-        }
+    # if not outage_data:
+        # return {
+            # 'significant_drop': True,
+            # 'drop_pct': round(load_drop_pct, 2),
+            # 'outage_driven': False,
+            # 'reason': 'No outage data available'
+        # }
 
 # ======================================================================
 # Code Block 30
 # ======================================================================
 
 total_customers_out = sum(o['customers_out'] for o in outage_data)
-    total_customers = sum(o.get('total_customers', 0) for o in outage_data if o.get('total_customers'))
+    # total_customers = sum(o.get('total_customers', 0) for o in outage_data if o.get('total_customers'))
     
-    if total_customers == 0:
-        outage_rate = 0
-    else:
-        outage_rate = (total_customers_out / total_customers) * 100
+    # if total_customers == 0:
+        # outage_rate = 0
+    # else:
+        # outage_rate = (total_customers_out / total_customers) * 100
 
 # ======================================================================
 # Code Block 31
@@ -1115,16 +1131,16 @@ estimated_outage_load_impact_pct = outage_rate * 0.8
 
 outage_driven = estimated_outage_load_impact_pct >= (load_drop_pct * 0.5)
     
-    return {
-        'significant_drop': True,
-        'drop_pct': round(load_drop_pct, 2),
-        'outage_driven': outage_driven,
-        'outage_rate_pct': round(outage_rate, 2),
-        'customers_affected': total_customers_out,
-        'estimated_outage_impact_pct': round(estimated_outage_load_impact_pct, 2),
-        'explained_by_outage': outage_driven,
-        'unexplained_drop_pct': round(max(0, load_drop_pct - estimated_outage_load_impact_pct), 2)
-    }
+    # return {
+        # 'significant_drop': True,
+        # 'drop_pct': round(load_drop_pct, 2),
+        # 'outage_driven': outage_driven,
+        # 'outage_rate_pct': round(outage_rate, 2),
+        # 'customers_affected': total_customers_out,
+        # 'estimated_outage_impact_pct': round(estimated_outage_load_impact_pct, 2),
+        # 'explained_by_outage': outage_driven,
+        # 'unexplained_drop_pct': round(max(0, load_drop_pct - estimated_outage_load_impact_pct), 2)
+    # }
 
 def adjust_forecast_for_ongoing_outages(self, ba: str, forecast_values: List[float],
                                        base_timestamp: datetime) -> List[float]:
@@ -1159,42 +1175,42 @@ def adjust_forecast_for_ongoing_outages(self, ba: str, forecast_values: List[flo
 # ======================================================================
 
 year = forecast_time.year
-        outage_data = []
+        # outage_data = []
         
-        for state in states:
-            state_outages = self.outage_service.get_outage_data(
-                year=year,
-                state=state,
-                start_date=forecast_time.strftime("%Y-%m-%d"),
-                end_date=forecast_time.strftime("%Y-%m-%d"),
-                limit=500
-            )
-            outage_data.extend(state_outages)
+        # for state in states:
+            # state_outages = self.outage_service.get_outage_data(
+                # year=year,
+                # state=state,
+                # start_date=forecast_time.strftime("%Y-%m-%d"),
+                # end_date=forecast_time.strftime("%Y-%m-%d"),
+                # limit=500
+            # )
+            # outage_data.extend(state_outages)
         
-        if not outage_data:
-            adjusted_forecast.append(forecast_value)
-            continue
+        # if not outage_data:
+            # adjusted_forecast.append(forecast_value)
+            # continue
 
 # ======================================================================
 # Code Block 34
 # ======================================================================
 
 total_out = sum(o['customers_out'] for o in outage_data)
-        total_customers = sum(o.get('total_customers', 0) for o in outage_data if o.get('total_customers'))
+        # total_customers = sum(o.get('total_customers', 0) for o in outage_data if o.get('total_customers'))
         
-        if total_customers > 0:
-            outage_rate = total_out / total_customers
+        # if total_customers > 0:
+            # outage_rate = total_out / total_customers
 
 # ======================================================================
 # Code Block 35
 # ======================================================================
 
 adjustment_factor = 1.0 - (outage_rate * 0.8)
-            adjusted_forecast.append(forecast_value * max(0.5, adjustment_factor))
-        else:
-            adjusted_forecast.append(forecast_value)
+            # adjusted_forecast.append(forecast_value * max(0.5, adjustment_factor))
+        # else:
+            # adjusted_forecast.append(forecast_value)
     
-    return adjusted_forecast
+    # return adjusted_forecast
 
 # ======================================================================
 # Code Block 36
@@ -1219,7 +1235,7 @@ print(f"Unexplained Drop: {analysis['unexplained_drop_pct']}%")
 # Code Block 38
 # ======================================================================
 
-year: int, state: Optional[str] = None) -> Dict[str, Any]:
+# year: int, state: Optional[str] = None) -> Dict[str, Any]:
 """Analyze temporal patterns in outage data to identify vulnerability windows.
 
 Args:

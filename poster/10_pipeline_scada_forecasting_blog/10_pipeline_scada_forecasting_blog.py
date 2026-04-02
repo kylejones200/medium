@@ -70,7 +70,7 @@ def generate_synthetic_scada_data(hours=672, seed=3363):
     flow_mmscfd = np.clip(flow_mmscfd, 120, 350)    # Physical capacity limits
     
     # Pressure drop calculation (simplified Darcy-Weisbach)
-    # ΔP ∝ (Q/D²)^1.8 for turbulent gas flow
+    # ΔP ∝ (Q/D)^1.8 for turbulent gas flow
     k_drop = 0.05  # Pressure drop coefficient (psig per normalized flow)
     pressure_drop = (
         k_drop * (flow_mmscfd / 100) ** 1.8 +        # Hydraulic head loss

@@ -592,8 +592,9 @@ for date in dates:
 # Code Block 9
 # ======================================================================
 
+    pass
 day_of_year = date.timetuple().tm_yday
-    seasonal = 8 * np.sin(2 * np.pi * (day_of_year - 80) / 365)
+seasonal = 8 * np.sin(2 * np.pi * (day_of_year - 80) / 365)
 
 # ======================================================================
 # Code Block 10
@@ -607,7 +608,7 @@ weather_noise = np.random.normal(0, 3)
 
 temp_k = base_temp_k + seasonal + weather_noise
     
-    temperatures.append({
+temperatures.append({
         'date': date,
         'lst_day_kelvin': temp_k,
         'lst_night_kelvin': temp_k - 12,  # Night is cooler
@@ -777,47 +778,48 @@ for feature in features_list:
 # Code Block 24
 # ======================================================================
 
+    pass
 thermal = fetch_modis_lst_data(
         feature['lat'], 
         feature['lon'],
         '2022-01-01', 
         '2024-01-01'
     )
-    thermal['lst_day_celsius'] = kelvin_to_celsius(thermal['lst_day_kelvin'])
-    thermal['lst_night_celsius'] = kelvin_to_celsius(thermal['lst_night_kelvin'])
+thermal['lst_day_celsius'] = kelvin_to_celsius(thermal['lst_day_kelvin'])
+thermal['lst_night_celsius'] = kelvin_to_celsius(thermal['lst_night_kelvin'])
 
 # ======================================================================
 # Code Block 25
 # ======================================================================
 
 feature_type = feature['type']
-    recent = thermal['date'] > '2023-10-01'
-    adjustment_func = thermal_adjustments.get(feature_type, lambda n: np.zeros(n))
-    thermal.loc[recent, 'lst_day_celsius'] += adjustment_func(recent.sum())
+recent = thermal['date'] > '2023-10-01'
+adjustment_func = thermal_adjustments.get(feature_type, lambda n: np.zeros(n))
+thermal.loc[recent, 'lst_day_celsius'] += adjustment_func(recent.sum())
 
 # ======================================================================
 # Code Block 26
 # ======================================================================
 
 baseline = calculate_thermal_baseline(thermal)
-    anomalies = detect_thermal_anomalies(thermal, baseline)
+anomalies = detect_thermal_anomalies(thermal, baseline)
 
 # ======================================================================
 # Code Block 27
 # ======================================================================
 
 recent_period = anomalies['date'] > (anomalies['date'].max() - timedelta(days=90))
-    recent_anomalies = anomalies[recent_period]
+recent_anomalies = anomalies[recent_period]
 
 # ======================================================================
 # Code Block 28
 # ======================================================================
 
 max_score = recent_anomalies['anomaly_score'].max()
-    risk_level = pd.cut([max_score], bins=[-np.inf, 40, 60, np.inf], 
+risk_level = pd.cut([max_score], bins=[-np.inf, 40, 60, np.inf], 
                        labels=['LOW', 'MEDIUM', 'HIGH'])[0]
     
-    feature_summary = {
+feature_summary = {
         'site': site_name,
         'feature_name': feature['name'],
         'feature_type': feature['type'],
@@ -831,7 +833,7 @@ max_score = recent_anomalies['anomaly_score'].max()
         'risk_level': risk_level
     }
     
-    all_results.append(feature_summary)
+all_results.append(feature_summary)
 
 return pd.DataFrame(all_results)
 

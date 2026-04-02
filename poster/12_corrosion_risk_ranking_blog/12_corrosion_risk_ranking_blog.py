@@ -402,7 +402,7 @@ def create_risk_visualizations(risk_df, work_list, metrics):
     plt.savefig('12_corrosion_risk_main.png', dpi=300, bbox_inches='tight')
     plt.close()
     
-    print("\n✓ Created: 12_corrosion_risk_main.png")
+    # print("\n✓ Created: 12_corrosion_risk_main.png")
 
 # ======================================================================
 # Code Block 6
@@ -723,18 +723,18 @@ return model, X_test, y_test, y_pred_proba, {
 # Code Block 21
 # ======================================================================
 
-Training corrosion risk classifier:
-  Training set: 3750 joints
-  Test set: 1250 joints
-  Positive class (failures) in test: 154 (12.3%)
+# Training corrosion risk classifier:
+  # Training set: 3750 joints
+  # Test set: 1250 joints
+  # Positive class (failures) in test: 154 (12.3%)
 
-Model Performance:
-  ROC AUC: 0.947
-  Average Precision: 0.782
-  Optimal Threshold: 0.118
-  Precision @ Optimal: 0.712
-  Recall @ Optimal: 0.753
-  F1 Score @ Optimal: 0.732
+# Model Performance:
+  # ROC AUC: 0.947
+  # Average Precision: 0.782
+  # Optimal Threshold: 0.118
+  # Precision @ Optimal: 0.712
+  # Recall @ Optimal: 0.753
+  # F1 Score @ Optimal: 0.732
 
 # ======================================================================
 # Code Block 22
@@ -964,7 +964,7 @@ plt.tight_layout()
 plt.savefig('12_corrosion_risk_main.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-print("\n✓ Created: 12_corrosion_risk_main.png")
+# print("\n✓ Created: 12_corrosion_risk_main.png")
 
 # ======================================================================
 # Code Block 39
@@ -1062,29 +1062,29 @@ print(f"  ROI: {value_gain / ml_cost:.1f}x inspection cost")
 # Code Block 46
 # ======================================================================
 
-======================================================================
-BUSINESS VALUE ANALYSIS
-======================================================================
+# ======================================================================
+# BUSINESS VALUE ANALYSIS
+# ======================================================================
 
-Total Network: 1250 joints, 154 failures (12.3%)
-Inspection Budget: 50 joints (4.0% of network)
+# Total Network: 1250 joints, 154 failures (12.3%)
+# Inspection Budget: 50 joints (4.0% of network)
 
-Strategy                  Failures Captured    Capture Rate    Cost            Cost/Failure
-----------------------------------------------------------------------------------------------------
-ML Model (Value/Cost)           78/154                50.6%     $798,450         $10,237
-ILI Metal Loss Sort             54/154                35.1%     $814,230         $15,079
-Age-Based Sort                  41/154                26.6%     $789,650         $19,260
-Random Sampling                  6/154                 3.9%     $801,120        $133,520
+# Strategy                  Failures Captured    Capture Rate    Cost            Cost/Failure
+# ----------------------------------------------------------------------------------------------------
+# ML Model (Value/Cost)           78/154                50.6%     $798,450         $10,237
+# ILI Metal Loss Sort             54/154                35.1%     $814,230         $15,079
+# Age-Based Sort                  41/154                26.6%     $789,650         $19,260
+# Random Sampling                  6/154                 3.9%     $801,120        $133,520
 
-ML Model Lift:
-  vs ILI Sort:      +44.4% failures captured
-  vs Age Sort:      +90.2% failures captured
-  vs Random:        +1200.0% failures captured
+# ML Model Lift:
+  # vs ILI Sort:      +44.4% failures captured
+  # vs Age Sort:      +90.2% failures captured
+  # vs Random:        +1200.0% failures captured
 
-Estimated Value (vs ILI Sort):
-  Additional failures prevented: 24
-  Value of prevented failures: $2,400,000
-  ROI: 3.0x inspection cost
+# Estimated Value (vs ILI Sort):
+  # Additional failures prevented: 24
+  # Value of prevented failures: $2,400,000
+  # ROI: 3.0x inspection cost
 
 # ======================================================================
 # Code Block 47
@@ -1163,96 +1163,96 @@ results = main()
 # Code Block 56
 # ======================================================================
 
-======================================================================
-PIPELINE CORROSION RISK RANKING WITH MACHINE LEARNING
-======================================================================
+# ======================================================================
+# PIPELINE CORROSION RISK RANKING WITH MACHINE LEARNING
+# ======================================================================
 
-Generated 5000 pipeline joints:
-  Age range: 1 - 59 years
-  Soil resistivity: 200 - 7999 ohm-cm
-  CP potential: -1.233 - -0.667 V
-  ILI metal loss: 0.0% - 85.4%
-  Failure rate: 12.3%
-  Coating distribution:
-    FBE: 2015 joints (40.3%)
-    PE: 1483 joints (29.7%)
-    CoalTar: 994 joints (19.9%)
-    Tape: 508 joints (10.2%)
+# Generated 5000 pipeline joints:
+  # Age range: 1 - 59 years
+  # Soil resistivity: 200 - 7999 ohm-cm
+  # CP potential: -1.233 - -0.667 V
+  # ILI metal loss: 0.0% - 85.4%
+  # Failure rate: 12.3%
+  # Coating distribution:
+    # FBE: 2015 joints (40.3%)
+    # PE: 1483 joints (29.7%)
+    # CoalTar: 994 joints (19.9%)
+    # Tape: 508 joints (10.2%)
 
-Feature preparation:
-  Numeric features (8): age_years, soil_resistivity, cp_potential, near_water, hca_distance_m, pressure_psig, temp_c, ili_metal_loss
-  Categorical features (1): coating
+# Feature preparation:
+  # Numeric features (8): age_years, soil_resistivity, cp_potential, near_water, hca_distance_m, pressure_psig, temp_c, ili_metal_loss
+  # Categorical features (1): coating
 
-Training corrosion risk classifier:
-  Training set: 3750 joints
-  Test set: 1250 joints
-  Positive class (failures) in test: 154 (12.3%)
+# Training corrosion risk classifier:
+  # Training set: 3750 joints
+  # Test set: 1250 joints
+  # Positive class (failures) in test: 154 (12.3%)
 
-Model Performance:
-  ROC AUC: 0.947
-  Average Precision: 0.782
-  Optimal Threshold: 0.118
-  Precision @ Optimal: 0.712
-  Recall @ Optimal: 0.753
-  F1 Score @ Optimal: 0.732
+# Model Performance:
+  # ROC AUC: 0.947
+  # Average Precision: 0.782
+  # Optimal Threshold: 0.118
+  # Precision @ Optimal: 0.712
+  # Recall @ Optimal: 0.753
+  # F1 Score @ Optimal: 0.732
 
-Feature Importance (Top 10):
-  ili_metal_loss            0.287
-  cp_potential              0.245
-  age_years                 0.189
-  soil_resistivity          0.134
-  coating_PE                0.067
-  coating_CoalTar           0.045
-  near_water                0.018
-  temp_c                    0.009
-  hca_distance_m            0.004
-  pressure_psig             0.002
+# Feature Importance (Top 10):
+  # ili_metal_loss            0.287
+  # cp_potential              0.245
+  # age_years                 0.189
+  # soil_resistivity          0.134
+  # coating_PE                0.067
+  # coating_CoalTar           0.045
+  # near_water                0.018
+  # temp_c                    0.009
+  # hca_distance_m            0.004
+  # pressure_psig             0.002
 
-Importance by Category:
-  ILI Data (metal_loss):        0.287
-  CP Data (cp_potential):       0.245
-  Soil (soil_resistivity):      0.189
-  Age:                          0.134
-  Coating Type:                 0.112
+# Importance by Category:
+  # ILI Data (metal_loss):        0.287
+  # CP Data (cp_potential):       0.245
+  # Soil (soil_resistivity):      0.189
+  # Age:                          0.134
+  # Coating Type:                 0.112
 
-Work List Summary:
-  Budget: 50 joints
-  Total joints: 1250
-  Budget utilization: 4.0%
-  Total failures in test set: 154
-  Failures captured in work list: 78
-  Capture rate: 50.6%
-  Average risk score (top 50): 0.542
-  Average risk score (full set): 0.123
-  Total work cost: $798,450
-  Average cost per joint: $15,969
+# Work List Summary:
+  # Budget: 50 joints
+  # Total joints: 1250
+  # Budget utilization: 4.0%
+  # Total failures in test set: 154
+  # Failures captured in work list: 78
+  # Capture rate: 50.6%
+  # Average risk score (top 50): 0.542
+  # Average risk score (full set): 0.123
+  # Total work cost: $798,450
+  # Average cost per joint: $15,969
 
-✓ Created: 12_corrosion_risk_main.png
+# ✓ Created: 12_corrosion_risk_main.png
 
-======================================================================
-BUSINESS VALUE ANALYSIS
-======================================================================
+# ======================================================================
+# BUSINESS VALUE ANALYSIS
+# ======================================================================
 
-Total Network: 1250 joints, 154 failures (12.3%)
-Inspection Budget: 50 joints (4.0% of network)
+# Total Network: 1250 joints, 154 failures (12.3%)
+# Inspection Budget: 50 joints (4.0% of network)
 
-Strategy                  Failures Captured    Capture Rate    Cost            Cost/Failure
-----------------------------------------------------------------------------------------------------
-ML Model (Value/Cost)           78/154                50.6%     $798,450         $10,237
-ILI Metal Loss Sort             54/154                35.1%     $814,230         $15,079
-Age-Based Sort                  41/154                26.6%     $789,650         $19,260
-Random Sampling                  6/154                 3.9%     $801,120        $133,520
+# Strategy                  Failures Captured    Capture Rate    Cost            Cost/Failure
+# ----------------------------------------------------------------------------------------------------
+# ML Model (Value/Cost)           78/154                50.6%     $798,450         $10,237
+# ILI Metal Loss Sort             54/154                35.1%     $814,230         $15,079
+# Age-Based Sort                  41/154                26.6%     $789,650         $19,260
+# Random Sampling                  6/154                 3.9%     $801,120        $133,520
 
-ML Model Lift:
-  vs ILI Sort:      +44.4% failures captured
-  vs Age Sort:      +90.2% failures captured
-  vs Random:        +1200.0% failures captured
+# ML Model Lift:
+  # vs ILI Sort:      +44.4% failures captured
+  # vs Age Sort:      +90.2% failures captured
+  # vs Random:        +1200.0% failures captured
 
-Estimated Value (vs ILI Sort):
-  Additional failures prevented: 24
-  Value of prevented failures: $2,400,000
-  ROI: 3.0x inspection cost
+# Estimated Value (vs ILI Sort):
+  # Additional failures prevented: 24
+  # Value of prevented failures: $2,400,000
+  # ROI: 3.0x inspection cost
 
-======================================================================
-Pipeline complete!
-======================================================================
+# ======================================================================
+# Pipeline complete!
+# ======================================================================

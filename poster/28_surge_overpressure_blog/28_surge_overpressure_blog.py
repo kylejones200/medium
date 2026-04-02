@@ -76,9 +76,9 @@ print(f'Peak overpressure range: {df_train["peak_overpress_psig"].min():.1f} - {
 # ======================================================================
 
 # Test: Joukowsky equation for instant closure
-# Expected: ΔP ≈ ρ × a × Δv / 145 (convert Pa to psi)
+# Expected: ΔP  ρ  a  Δv / 145 (convert Pa to psi)
 # For oil: ρ=850 kg/m³, a=1200 m/s, v=2.5 m/s
-# ΔP = 850 * 1200 * 2.5 / 6895 ≈ 370 psi
+# ΔP = 850 * 1200 * 2.5 / 6895  370 psi
 
 test_instant = df_train[
     (df_train['closure_time_s'] < 0.5) &
@@ -130,7 +130,7 @@ mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
 print(f'Test MAE: {mae:.2f} psi')
-print(f'Test R²: {r2:.4f}')
+# print(f'Test R²: {r2:.4f}')
 
 # ======================================================================
 # Code Block 4
@@ -405,7 +405,7 @@ def generate_surge_scenarios(n=5000, seed=2025):
     })
 
 df = generate_surge_scenarios(5000)
-print(f'✓ Generated {len(df):,} scenarios')
+# print(f'✓ Generated {len(df):,} scenarios')
 
 # ============================================================================
 # 2. Train Model
@@ -427,7 +427,7 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
-print(f'✓ Model trained: MAE={mae:.2f} psi, R²={r2:.4f}')
+# print(f'✓ Model trained: MAE={mae:.2f} psi, R²={r2:.4f}')
 
 # ============================================================================
 # 3. Safe Closure Time Calculator
@@ -446,7 +446,7 @@ def predict_safe_closure(velocity, linepack=1.0, pump_trip=0, elev=0, temp=15, m
 # Example
 v = 2.2
 safe_time, _ = predict_safe_closure(v)
-print(f'✓ Velocity={v} m/s → Safe closure time: {safe_time:.1f}s')
+# print(f'✓ Velocity={v} m/s → Safe closure time: {safe_time:.1f}s')
 
 # ============================================================================
 # 4. Visualization
@@ -478,13 +478,13 @@ ax.spines['right'].set_visible(False)
 
 plt.tight_layout()
 plt.savefig('surge_curves.png', dpi=300, bbox_inches='tight')
-print('✓ Visualization saved')
+# print('✓ Visualization saved')
 
 # ======================================================================
 # Code Block 12
 # ======================================================================
 
-ΔP = ρ × a × Δv
+# ΔP = ρ × a × Δv
 
 # ======================================================================
 # Code Block 13
@@ -572,16 +572,16 @@ return df
 # Code Block 22
 # ======================================================================
 
-(df_train['closure_time_s'] < 0.5) &
-(df_train['velocity_ms'] > 2.4) &
-(df_train['pump_trip'] == 0) &
+# (df_train['closure_time_s'] < 0.5) &
+# (df_train['velocity_ms'] > 2.4) &
+# (df_train['pump_trip'] == 0) &
 (df_train['linepack'].between(0.95, 1.05))
 
 # ======================================================================
 # Code Block 23
 # ======================================================================
 
-X, y, test_size=0.25, random_state=42
+# X, y, test_size=0.25, random_state=42
 
 # ======================================================================
 # Code Block 24
@@ -801,7 +801,7 @@ return times[safe[0]] if len(safe) > 0 else None, peaks
 # ======================================================================
 
 (1.5, '#f39c12', 'Medium (1.5 m/s)'),
-                     (2.5, '#e74c3c', 'High (2.5 m/s)')]:
+                     # (2.5, '#e74c3c', 'High (2.5 m/s)')]:
 probe = pd.DataFrame({
     'linepack': 1.0, 'closure_time_s': closure_grid, 'pump_trip': 0,
     'velocity_ms': v, 'elevation_drop_m': 0, 'temperature_c': 15

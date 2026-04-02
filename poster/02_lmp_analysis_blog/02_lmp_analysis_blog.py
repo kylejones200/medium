@@ -434,27 +434,27 @@ hub_price = 82.44 + np.random.randn() * 8
 # ======================================================================
 
 constraint_premium = 15 + np.random.randn() * 12
-    if 16 <= hour <= 21:  # Peak hours see more congestion
+if 16 <= hour <= 21:  # Peak hours see more congestion
         constraint_premium *= 1.5
-    constrained_price = hub_price + constraint_premium
+constrained_price = hub_price + constraint_premium
 
 # ======================================================================
 # Code Block 10
 # ======================================================================
 
 renewable_discount = -8 + np.random.randn() * 6
-    renewable_price = hub_price + renewable_discount
+renewable_price = hub_price + renewable_discount
 
 # ======================================================================
 # Code Block 11
 # ======================================================================
 
 urban_premium = 8 + np.random.randn() * 10
-    if 17 <= hour <= 20:  # Evening peak in cities
+if 17 <= hour <= 20:  # Evening peak in cities
         urban_premium *= 1.3
-    urban_price = hub_price + urban_premium
+urban_price = hub_price + urban_premium
     
-    node_data.append({
+node_data.append({
         'timestamp': timestamp,
         'hour': hour,
         'hub_price': hub_price,
@@ -508,7 +508,7 @@ renewable_to_urban_spread = urban - renewable
 
 position_size_mw = 100
     
-    if hub_to_constrained_spread > 10:  # Meaningful spread
+if hub_to_constrained_spread > 10:  # Meaningful spread
         opportunities.append({
             'hour': hour,
             'strategy': 'Hub to Constrained',
@@ -517,7 +517,7 @@ position_size_mw = 100
             'confidence': 'HIGH' if hub_to_constrained_spread > 20 else 'MEDIUM'
         })
     
-    if renewable_to_hub_spread > 5:
+if renewable_to_hub_spread > 5:
         opportunities.append({
             'hour': hour,
             'strategy': 'Renewable to Hub',
@@ -526,7 +526,7 @@ position_size_mw = 100
             'confidence': 'MEDIUM'
         })
     
-    if renewable_to_urban_spread > 15:
+if renewable_to_urban_spread > 15:
         opportunities.append({
             'hour': hour,
             'strategy': 'Renewable to Urban',
@@ -575,7 +575,7 @@ for node_name, current_price in current_prices.items():
 
 z_score = (current_price - hist_avg) / hist_std
     
-    if abs(z_score) > threshold_std:
+if abs(z_score) > threshold_std:
         severity = 'CRITICAL' if abs(z_score) > 3 else 'WARNING'
         
         if z_score > 0:
@@ -752,16 +752,16 @@ for strategy_name, spread in spreads.items():
 if net_spread > 20:
                 position_mw = 150
                 confidence = 'HIGH'
-            elif net_spread > 12:
+elif net_spread > 12:
                 position_mw = 100
                 confidence = 'MEDIUM'
-            else:
+else:
                 position_mw = 50
                 confidence = 'LOW'
             
-            expected_pnl = net_spread * position_mw
+expected_pnl = net_spread * position_mw
             
-            trades.append({
+trades.append({
                 'hour': hour,
                 'strategy': strategy_name,
                 'buy_node': buy_node,

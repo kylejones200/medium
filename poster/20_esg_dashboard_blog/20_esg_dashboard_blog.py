@@ -92,7 +92,8 @@ def describe_esg_architecture():
     for layer, components in architecture.items():
         print(f"\n{layer}:")
         for component in components:
-            print(f"  • {component}")
+            pass
+            # print(f"  • {component}")
     
     return architecture
 
@@ -204,7 +205,7 @@ def generate_esg_monitoring_data(n_sites=8, n_months=12):
     escalating_site = df[df['site_id'] == 'Site_A']
     escalation_change = escalating_site.iloc[-1]['esg_risk_score'] - escalating_site.iloc[0]['esg_risk_score']
     
-    print(f"\n✓ ESG Data Generated")
+    # print(f"\n✓ ESG Data Generated")
     print(f"  Sites: {n_sites}")
     print(f"  Months: {n_months}")
     print(f"  Total observations: {len(df)}")
@@ -329,16 +330,16 @@ def esg_alerts():
     print("\nPipeline Structure:")
     print("  Bronze → Silver → Gold → Alerts")
     print("\nTables Created:")
-    print("  • thermal_anomalies_bronze")
-    print("  • drillcore_features_bronze")
-    print("  • aerial_anomalies_bronze")
-    print("  • thermal_anomalies_silver (with rolling stats)")
-    print("  • esg_metrics_gold (unified)")
-    print("  • esg_alerts (high-risk sites)")
+    # print("  • thermal_anomalies_bronze")
+    # print("  • drillcore_features_bronze")
+    # print("  • aerial_anomalies_bronze")
+    # print("  • thermal_anomalies_silver (with rolling stats)")
+    # print("  • esg_metrics_gold (unified)")
+    # print("  • esg_alerts (high-risk sites)")
     print("\nData Quality:")
-    print("  • Expect risk scores in [0, 1] range")
-    print("  • Drop invalid records")
-    print("  • Track data lineage in Unity Catalog")
+    # print("  • Expect risk scores in [0, 1] range")
+    # print("  • Drop invalid records")
+    # print("  • Track data lineage in Unity Catalog")
     
     return dlt_code
 
@@ -383,11 +384,11 @@ def configure_esg_alerts(esg_data):
     trends_df = pd.DataFrame(trends)
     escalating = trends_df[trends_df['trend_status'] == 'ESCALATING']
     
-    print(f"\n✓ Alert Configuration Complete")
+    # print(f"\n✓ Alert Configuration Complete")
     print(f"\nCritical Sites (Risk > 0.7):")
     if len(critical_sites) > 0:
         for _, site in critical_sites.iterrows():
-            print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
+            # print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
             print(f"    → Thermal: {site['thermal_anomaly']:.3f}, Surface: {site['surface_change']:.3f}")
     else:
         print(f"  None")
@@ -395,14 +396,16 @@ def configure_esg_alerts(esg_data):
     print(f"\nWarning Sites (Risk > 0.5):")
     if len(warning_sites) > 0:
         for _, site in warning_sites.iterrows():
-            print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
+            pass
+            # print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
     else:
         print(f"  None")
     
     print(f"\nEscalating Trends (MoM increase > 0.15):")
     if len(escalating) > 0:
         for _, trend in escalating.iterrows():
-            print(f"  • {trend['site_id']}: +{trend['monthly_change']:.3f}/month")
+            pass
+            # print(f"  • {trend['site_id']}: +{trend['monthly_change']:.3f}/month")
     else:
         print(f"  None")
     
@@ -493,7 +496,8 @@ architecture = {
 for layer, components in architecture.items():
     print(f"\n{layer}:")
     for component in components:
-        print(f"  • {component}")
+        pass
+        # print(f"  • {component}")
 
 return architecture
 
@@ -501,38 +505,38 @@ return architecture
 # Code Block 6
 # ======================================================================
 
-======================================================================
-ESG MONITORING DASHBOARD ARCHITECTURE
-======================================================================
+# ======================================================================
+# ESG MONITORING DASHBOARD ARCHITECTURE
+# ======================================================================
 
-Bronze Layer:
-  • Satellite imagery (Sentinel-1/2, MODIS)
-  • Drone surveys (RGB, thermal, LiDAR)
-  • Ground sensors (1M+ readings/day)
-  • Lab assays (water, air, soil)
-  • Operational metrics (production, energy)
-  • Compliance documents (PDFs, reports)
+# Bronze Layer:
+  # • Satellite imagery (Sentinel-1/2, MODIS)
+  # • Drone surveys (RGB, thermal, LiDAR)
+  # • Ground sensors (1M+ readings/day)
+  # • Lab assays (water, air, soil)
+  # • Operational metrics (production, energy)
+  # • Compliance documents (PDFs, reports)
 
-Silver Layer:
-  • ML inference (thermal, drill core, aerial)
-  • Feature engineering (rolling stats, lags)
-  • Data quality checks (outlier detection)
-  • Geospatial processing (Sedona)
-  • Document NLP (compliance extraction)
+# Silver Layer:
+  # • ML inference (thermal, drill core, aerial)
+  # • Feature engineering (rolling stats, lags)
+  # • Data quality checks (outlier detection)
+  # • Geospatial processing (Sedona)
+  # • Document NLP (compliance extraction)
 
-Gold Layer:
-  • Unified ESG metrics table
-  • Composite risk scores (0-1 scale)
-  • Trend analysis (MoM, QoQ)
-  • Alert triggers (threshold violations)
-  • Correlation matrices
+# Gold Layer:
+  # • Unified ESG metrics table
+  # • Composite risk scores (0-1 scale)
+  # • Trend analysis (MoM, QoQ)
+  # • Alert triggers (threshold violations)
+  # • Correlation matrices
 
-Consumption:
-  • Databricks SQL dashboards
-  • Model Serving APIs
-  • Delta Sharing (regulators)
-  • Email/SMS alerts
-  • Executive reports
+# Consumption:
+  # • Databricks SQL dashboards
+  # • Model Serving APIs
+  # • Delta Sharing (regulators)
+  # • Email/SMS alerts
+  # • Executive reports
 
 # ======================================================================
 # Code Block 7
@@ -566,15 +570,16 @@ dates = pd.date_range(start='2023-01-01', periods=n_months, freq='M')
 data = []
 
 for site_idx, site in enumerate(sites):
+    pass
 
 # ======================================================================
 # Code Block 9
 # ======================================================================
 
 is_escalating = (site_idx == 0)
-    is_moderate = (site_idx == 1)
+    # is_moderate = (site_idx == 1)
     
-    for month_idx, date in enumerate(dates):
+    # for month_idx, date in enumerate(dates):
 
 # ======================================================================
 # Code Block 10
@@ -582,9 +587,9 @@ is_escalating = (site_idx == 0)
 
 if is_escalating:
             thermal = 0.3 + 0.03 * month_idx + np.random.rand() * 0.1
-        elif is_moderate:
+        # elif is_moderate:
             thermal = 0.4 + np.sin(month_idx / 2) * 0.1 + np.random.rand() * 0.05
-        else:
+        # else:
             thermal = 0.15 + np.random.rand() * 0.1
 
 # ======================================================================
@@ -593,9 +598,9 @@ if is_escalating:
 
 if is_escalating:
             surface_change = 0.25 + 0.035 * month_idx + np.random.rand() * 0.08
-        elif is_moderate:
+        # elif is_moderate:
             surface_change = 0.35 + np.random.rand() * 0.1
-        else:
+        # else:
             surface_change = 0.10 + np.random.rand() * 0.08
 
 # ======================================================================
@@ -609,14 +614,14 @@ ore_frac = 0.3 + np.random.rand() * 0.4
 # ======================================================================
 
 water_quality = 0.8 - (thermal * 0.2) + np.random.rand() * 0.1
-        water_quality = np.clip(water_quality, 0, 1)
+        # water_quality = np.clip(water_quality, 0, 1)
 
 # ======================================================================
 # Code Block 14
 # ======================================================================
 
 air_quality = 0.85 - (surface_change * 0.15) + np.random.rand() * 0.08
-        air_quality = np.clip(air_quality, 0, 1)
+        # air_quality = np.clip(air_quality, 0, 1)
 
 # ======================================================================
 # Code Block 15
@@ -643,20 +648,20 @@ esg_risk = (
 
 incident = 1 if esg_risk > 0.7 else 0
         
-        data.append({
-            'site_id': site,
-            'date': date,
-            'thermal_anomaly': thermal,
-            'surface_change': surface_change,
-            'ore_fraction': ore_frac,
-            'water_quality': water_quality,
-            'air_quality': air_quality,
-            'energy_efficiency': energy_efficiency,
-            'esg_risk_score': esg_risk,
-            'incident': incident,
-            'latitude': -30.0 + site_idx * 0.5,
-            'longitude': 115.0 + site_idx * 0.3
-        })
+        # data.append({
+            # 'site_id': site,
+            # 'date': date,
+            # 'thermal_anomaly': thermal,
+            # 'surface_change': surface_change,
+            # 'ore_fraction': ore_frac,
+            # 'water_quality': water_quality,
+            # 'air_quality': air_quality,
+            # 'energy_efficiency': energy_efficiency,
+            # 'esg_risk_score': esg_risk,
+            # 'incident': incident,
+            # 'latitude': -30.0 + site_idx * 0.5,
+            # 'longitude': 115.0 + site_idx * 0.3
+        # })
 
 df = pd.DataFrame(data)
 
@@ -669,7 +674,7 @@ incident_count = df['incident'].sum()
 escalating_site = df[df['site_id'] == 'Site_A']
 escalation_change = escalating_site.iloc[-1]['esg_risk_score'] - escalating_site.iloc[0]['esg_risk_score']
 
-print(f"\n✓ ESG Data Generated")
+# print(f"\n✓ ESG Data Generated")
 print(f"  Sites: {n_sites}")
 print(f"  Months: {n_months}")
 print(f"  Total observations: {len(df)}")
@@ -683,25 +688,25 @@ return df
 # Code Block 19
 # ======================================================================
 
-======================================================================
-GENERATING ESG MONITORING DATA
-======================================================================
+# ======================================================================
+# GENERATING ESG MONITORING DATA
+# ======================================================================
 
-✓ ESG Data Generated
-  Sites: 8
-  Months: 12
-  Total observations: 96
-  High risk observations (>0.6): 8 (8.3%)
-  Incidents flagged: 3
-  Escalating site (Site_A) risk change: +0.372 (0.377 → 0.749)
+# ✓ ESG Data Generated
+  # Sites: 8
+  # Months: 12
+  # Total observations: 96
+  # High risk observations (>0.6): 8 (8.3%)
+  # Incidents flagged: 3
+  # Escalating site (Site_A) risk change: +0.372 (0.377 → 0.749)
 
-Sample data:
-  site_id       date  thermal_anomaly  surface_change  ore_fraction  water_quality  air_quality  energy_efficiency  esg_risk_score  incident   latitude  longitude
-0  Site_A 2023-01-31            0.374           0.327         0.417          0.722        0.803              0.762           0.377         0 -30.000000     115.00
-1  Site_A 2023-02-28            0.364           0.377         0.720          0.759        0.790              0.889           0.423         0 -30.000000     115.00
-2  Site_A 2023-03-31            0.441           0.391         0.301          0.689        0.770              0.824           0.472         0 -30.000000     115.00
-3  Site_A 2023-04-30            0.467           0.430         0.648          0.744        0.787              0.730           0.477         0 -30.000000     115.00
-4  Site_A 2023-05-31            0.459           0.473         0.414          0.716        0.755              0.767           0.514         0 -30.000000     115.00
+# Sample data:
+  # site_id       date  thermal_anomaly  surface_change  ore_fraction  water_quality  air_quality  energy_efficiency  esg_risk_score  incident   latitude  longitude
+# 0  Site_A 2023-01-31            0.374           0.327         0.417          0.722        0.803              0.762           0.377         0 -30.000000     115.00
+# 1  Site_A 2023-02-28            0.364           0.377         0.720          0.759        0.790              0.889           0.423         0 -30.000000     115.00
+# 2  Site_A 2023-03-31            0.441           0.391         0.301          0.689        0.770              0.824           0.472         0 -30.000000     115.00
+# 3  Site_A 2023-04-30            0.467           0.430         0.648          0.744        0.787              0.730           0.477         0 -30.000000     115.00
+# 4  Site_A 2023-05-31            0.459           0.473         0.414          0.716        0.755              0.767           0.514         0 -30.000000     115.00
 
 # ======================================================================
 # Code Block 20
@@ -716,7 +721,7 @@ This would run in Databricks notebooks to automate:
 3. Gold: Unified ESG metrics with risk scoring
 """
 
-dlt_code = '''
+# dlt_code = '''
 
 # ======================================================================
 # Code Block 21
@@ -853,16 +858,16 @@ print("="*70)
 print("\nPipeline Structure:")
 print("  Bronze → Silver → Gold → Alerts")
 print("\nTables Created:")
-print("  • thermal_anomalies_bronze")
-print("  • drillcore_features_bronze")
-print("  • aerial_anomalies_bronze")
-print("  • thermal_anomalies_silver (with rolling stats)")
-print("  • esg_metrics_gold (unified)")
-print("  • esg_alerts (high-risk sites)")
+# print("  • thermal_anomalies_bronze")
+# print("  • drillcore_features_bronze")
+# print("  • aerial_anomalies_bronze")
+# print("  • thermal_anomalies_silver (with rolling stats)")
+# print("  • esg_metrics_gold (unified)")
+# print("  • esg_alerts (high-risk sites)")
 print("\nData Quality:")
-print("  • Expect risk scores in [0, 1] range")
-print("  • Drop invalid records")
-print("  • Track data lineage in Unity Catalog")
+# print("  • Expect risk scores in [0, 1] range")
+# print("  • Drop invalid records")
+# print("  • Track data lineage in Unity Catalog")
 
 return dlt_code
 
@@ -870,25 +875,25 @@ return dlt_code
 # Code Block 37
 # ======================================================================
 
-======================================================================
-DELTA LIVE TABLES PIPELINE
-======================================================================
+# ======================================================================
+# DELTA LIVE TABLES PIPELINE
+# ======================================================================
 
-Pipeline Structure:
-  Bronze → Silver → Gold → Alerts
+# Pipeline Structure:
+  # Bronze → Silver → Gold → Alerts
 
-Tables Created:
-  • thermal_anomalies_bronze
-  • drillcore_features_bronze
-  • aerial_anomalies_bronze
-  • thermal_anomalies_silver (with rolling stats)
-  • esg_metrics_gold (unified)
-  • esg_alerts (high-risk sites)
+# Tables Created:
+  # • thermal_anomalies_bronze
+  # • drillcore_features_bronze
+  # • aerial_anomalies_bronze
+  # • thermal_anomalies_silver (with rolling stats)
+  # • esg_metrics_gold (unified)
+  # • esg_alerts (high-risk sites)
 
-Data Quality:
-  • Expect risk scores in [0, 1] range
-  • Drop invalid records
-  • Track data lineage in Unity Catalog
+# Data Quality:
+  # • Expect risk scores in [0, 1] range
+  # • Drop invalid records
+  # • Track data lineage in Unity Catalog
 
 # ======================================================================
 # Code Block 38
@@ -933,11 +938,11 @@ for site in esg_data['site_id'].unique():
 trends_df = pd.DataFrame(trends)
 escalating = trends_df[trends_df['trend_status'] == 'ESCALATING']
 
-print(f"\n✓ Alert Configuration Complete")
+# print(f"\n✓ Alert Configuration Complete")
 print(f"\nCritical Sites (Risk > 0.7):")
 if len(critical_sites) > 0:
     for _, site in critical_sites.iterrows():
-        print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
+        # print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
         print(f"    → Thermal: {site['thermal_anomaly']:.3f}, Surface: {site['surface_change']:.3f}")
 else:
     print(f"  None")
@@ -945,14 +950,16 @@ else:
 print(f"\nWarning Sites (Risk > 0.5):")
 if len(warning_sites) > 0:
     for _, site in warning_sites.iterrows():
-        print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
+        pass
+        # print(f"  • {site['site_id']}: {site['esg_risk_score']:.3f}")
 else:
     print(f"  None")
 
 print(f"\nEscalating Trends (MoM increase > 0.15):")
 if len(escalating) > 0:
     for _, trend in escalating.iterrows():
-        print(f"  • {trend['site_id']}: +{trend['monthly_change']:.3f}/month")
+        pass
+        # print(f"  • {trend['site_id']}: +{trend['monthly_change']:.3f}/month")
 else:
     print(f"  None")
 
@@ -962,18 +969,18 @@ return critical_sites, warning_sites, escalating
 # Code Block 41
 # ======================================================================
 
-======================================================================
-ESG ALERTING CONFIGURATION
-======================================================================
+# ======================================================================
+# ESG ALERTING CONFIGURATION
+# ======================================================================
 
-✓ Alert Configuration Complete
+# ✓ Alert Configuration Complete
 
-Critical Sites (Risk > 0.7):
-  • Site_A: 0.749
-    → Thermal: 0.725, Surface: 0.695
+# Critical Sites (Risk > 0.7):
+  # • Site_A: 0.749
+    # → Thermal: 0.725, Surface: 0.695
 
-Warning Sites (Risk > 0.5):
-  • Site_B: 0.532
+# Warning Sites (Risk > 0.5):
+  # • Site_B: 0.532
 
-Escalating Trends (MoM increase > 0.15):
-  • Site_A: +0.196/month
+# Escalating Trends (MoM increase > 0.15):
+  # • Site_A: +0.196/month

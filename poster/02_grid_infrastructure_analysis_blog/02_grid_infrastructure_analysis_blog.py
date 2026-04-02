@@ -700,6 +700,9 @@ def __init__(self, data_path: str = "HIFLD_Transmission_Lines.parquet"):
 def _load_data(self) -> None:
     """Load transmission lines data from Parquet or CSV."""
     try:
+        pass
+    except Exception:
+        pass
         if os.path.exists(self.data_path):
             logger.info(f"Loading transmission lines data from {self.data_path}")
 
@@ -709,10 +712,10 @@ def _load_data(self) -> None:
 
 if self.data_path.endswith('.parquet'):
                 self.lines_data = pd.read_parquet(self.data_path)
-            else:
+            # else:
                 self.lines_data = pd.read_csv(self.data_path)
             
-            logger.info(f"Loaded {len(self.lines_data):,} transmission lines")
+            # logger.info(f"Loaded {len(self.lines_data):,} transmission lines")
 
 # ======================================================================
 # Code Block 9
@@ -722,13 +725,13 @@ if 'START_LAT' in self.lines_data.columns:
                 self.lines_data['latitude'] = self.lines_data['START_LAT']
                 self.lines_data['longitude'] = self.lines_data['START_LON']
             
-        else:
-            logger.warning(f"Transmission lines file not found: {self.data_path}")
-            self.lines_data = pd.DataFrame()
+        # else:
+            # logger.warning(f"Transmission lines file not found: {self.data_path}")
+            # self.lines_data = pd.DataFrame()
             
-    except Exception as e:
-        logger.error(f"Failed to load transmission lines data: {e}")
-        self.lines_data = pd.DataFrame()
+    # except Exception as e:
+        # logger.error(f"Failed to load transmission lines data: {e}")
+        # self.lines_data = pd.DataFrame()
 
 def get_statistics(self) -> Dict[str, Any]:
     """Get statistics about the transmission lines data."""
@@ -736,30 +739,34 @@ def get_statistics(self) -> Dict[str, Any]:
         return {}
     
     try:
+        pass
+    except Exception:
+        pass
+        pass
 
 # ======================================================================
 # Code Block 10
-# ======================================================================
+# # ======================================================================
 
-stats = {
-            "total_lines": len(self.lines_data),
-            "in_service": len(self.lines_data[self.lines_data['STATUS'] == 'IN SERVICE']),
-            "voltage_classes": len(self.lines_data['VOLT_CLASS'].dropna().unique()),
-            "unique_owners": len(self.lines_data['OWNER'].dropna().unique()),
-            "total_length_miles": self.lines_data.get('SHAPE_Length', 
-                                                     self.lines_data.get('SHAPE__Length', 
-                                                     pd.Series([0]))).sum() / 5280,
-            "avg_voltage": self.lines_data['VOLTAGE'].replace(-999999, None).mean(),
-            "overhead_lines": len(self.lines_data[self.lines_data['TYPE'].str.contains('OVERHEAD', na=False)]),
-            "underground_lines": len(self.lines_data[self.lines_data['TYPE'].str.contains('UNDERGROUND', na=False)])
-        }
+# stats = {
+            # "total_lines": len(self.lines_data),
+            # "in_service": len(self.lines_data[self.lines_data['STATUS'] == 'IN SERVICE']),
+            # "voltage_classes": len(self.lines_data['VOLT_CLASS'].dropna().unique()),
+            # "unique_owners": len(self.lines_data['OWNER'].dropna().unique()),
+            # "total_length_miles": self.lines_data.get('SHAPE_Length', 
+                                                     # self.lines_data.get('SHAPE__Length', 
+                                                     # pd.Series([0]))).sum() / 5280,
+            # "avg_voltage": self.lines_data['VOLTAGE'].replace(-999999, None).mean(),
+            # "overhead_lines": len(self.lines_data[self.lines_data['TYPE'].str.contains('OVERHEAD', na=False)]),
+            # "underground_lines": len(self.lines_data[self.lines_data['TYPE'].str.contains('UNDERGROUND', na=False)])
+        # }
 
 # ======================================================================
 # Code Block 11
 # ======================================================================
 
 voltage_distribution = self.get_voltage_class_distribution()
-        stats['voltage_distribution'] = voltage_distribution
+        # stats['voltage_distribution'] = voltage_distribution
 
 # ======================================================================
 # Code Block 12
@@ -768,11 +775,11 @@ voltage_distribution = self.get_voltage_class_distribution()
 if 'STATE' in self.lines_data.columns:
             stats['states_covered'] = self.lines_data['STATE'].nunique()
         
-        return stats
+        # return stats
         
-    except Exception as e:
-        logger.error(f"Failed to calculate statistics: {e}")
-        return {}
+    # except Exception as e:
+        # logger.error(f"Failed to calculate statistics: {e}")
+        # return {}
 
 def get_voltage_class_distribution(self) -> List[Dict[str, Any]]:
     """Get voltage class distribution with counts."""
@@ -780,15 +787,16 @@ def get_voltage_class_distribution(self) -> List[Dict[str, Any]]:
         return []
     
     try:
+        pass
 
 # ======================================================================
 # Code Block 13
-# ======================================================================
+# # ======================================================================
 
-valid_data = self.lines_data[
-            (self.lines_data['VOLT_CLASS'].notna()) & 
-            (self.lines_data['VOLT_CLASS'] != '-999999')
-        ]
+# valid_data = self.lines_data[
+            # (self.lines_data['VOLT_CLASS'].notna()) & 
+            # (self.lines_data['VOLT_CLASS'] != '-999999')
+        # ]
         
         voltage_counts = valid_data['VOLT_CLASS'].value_counts().head(10)
         
@@ -862,22 +870,24 @@ def get_major_utilities(self, limit: int = 20) -> List[Dict[str, Any]]:
         return []
     
     try:
+        pass
 
 # ======================================================================
 # Code Block 14
-# ======================================================================
+# # ======================================================================
 
-utility_counts = self.lines_data['OWNER'].value_counts().head(limit)
+# utility_counts = self.lines_data['OWNER'].value_counts().head(limit)
         
         utilities = []
         for owner, count in utility_counts.items():
             if owner not in ['NOT AVAILABLE', 'UNKNOWN', '-999999']:
+                pass
 
 # ======================================================================
 # Code Block 15
-# ======================================================================
+# # ======================================================================
 
-utility_lines = self.lines_data[self.lines_data['OWNER'] == owner]
+# utility_lines = self.lines_data[self.lines_data['OWNER'] == owner]
                 
                 utilities.append({
                     'name': owner,
@@ -908,6 +918,9 @@ def analyze_grid_connectivity(self, region: Optional[str] = None) -> Dict[str, A
         return {}
     
     try:
+        pass
+    except Exception:
+        pass
         df = self.lines_data
 
 # ======================================================================
@@ -928,18 +941,18 @@ backbone_lines = df[df['VOLTAGE'] >= 345]
 # ======================================================================
 
 connections = df.groupby(['SUB_1', 'SUB_2']).size().reset_index(name='line_count')
-            critical_corridors = connections.nlargest(10, 'line_count')
-        else:
-            critical_corridors = pd.DataFrame()
+            # critical_corridors = connections.nlargest(10, 'line_count')
+        # else:
+            # critical_corridors = pd.DataFrame()
         
-        analysis = {
-            'total_lines': len(df),
-            'backbone_lines': len(backbone_lines),
-            'backbone_percentage': round(len(backbone_lines) / len(df) * 100, 2),
-            'avg_backbone_voltage': round(backbone_lines['VOLTAGE'].mean(), 2),
-            'unique_substations': len(set(list(df['SUB_1'].dropna().unique()) + list(df['SUB_2'].dropna().unique()))),
-            'critical_corridors': critical_corridors.to_dict('records') if not critical_corridors.empty else []
-        }
+        # analysis = {
+            # 'total_lines': len(df),
+            # 'backbone_lines': len(backbone_lines),
+            # 'backbone_percentage': round(len(backbone_lines) / len(df) * 100, 2),
+            # 'avg_backbone_voltage': round(backbone_lines['VOLTAGE'].mean(), 2),
+            # 'unique_substations': len(set(list(df['SUB_1'].dropna().unique()) + list(df['SUB_2'].dropna().unique()))),
+            # 'critical_corridors': critical_corridors.to_dict('records') if not critical_corridors.empty else []
+        # }
 
 # ======================================================================
 # Code Block 19
@@ -949,11 +962,11 @@ if not critical_corridors.empty:
             analysis['max_parallel_lines'] = int(critical_corridors['line_count'].max())
             analysis['avg_parallel_lines'] = round(critical_corridors['line_count'].mean(), 2)
         
-        return analysis
+        # return analysis
         
-    except Exception as e:
-        logger.error(f"Failed to analyze connectivity: {e}")
-        return {}
+    # except Exception as e:
+        # logger.error(f"Failed to analyze connectivity: {e}")
+        # return {}
 
 def search_lines(self, query: str, limit: int = 100) -> List[Dict[str, Any]]:
     """Search transmission lines by multiple criteria.
@@ -969,17 +982,18 @@ def search_lines(self, query: str, limit: int = 100) -> List[Dict[str, Any]]:
         return []
     
     try:
+        pass
 
 # ======================================================================
 # Code Block 20
-# ======================================================================
+# # ======================================================================
 
-mask = (
-            self.lines_data['OWNER'].str.contains(query, case=False, na=False) |
-            self.lines_data['SUB_1'].str.contains(query, case=False, na=False) |
-            self.lines_data['SUB_2'].str.contains(query, case=False, na=False) |
-            self.lines_data['VOLT_CLASS'].str.contains(query, case=False, na=False)
-        )
+# mask = (
+            # self.lines_data['OWNER'].str.contains(query, case=False, na=False) |
+            # self.lines_data['SUB_1'].str.contains(query, case=False, na=False) |
+            # self.lines_data['SUB_2'].str.contains(query, case=False, na=False) |
+            # self.lines_data['VOLT_CLASS'].str.contains(query, case=False, na=False)
+        # )
         
         results = self.lines_data[mask].head(limit)
         return results.to_dict('records')
@@ -1003,6 +1017,9 @@ def export_for_visualization(self, voltage_filter: Optional[str] = None,
         return {"type": "FeatureCollection", "features": []}
     
     try:
+        pass
+    except Exception:
+        pass
         df = self.lines_data
 
 # ======================================================================
@@ -1019,8 +1036,8 @@ if voltage_filter:
 if len(df) > limit:
             df = df.sample(n=limit)
         
-        features = []
-        for _, line in df.iterrows():
+        # features = []
+        # for _, line in df.iterrows():
             feature = {
                 "type": "Feature",
                 "properties": {
@@ -1041,19 +1058,19 @@ if len(df) > limit:
             }
             features.append(feature)
         
-        return {
-            "type": "FeatureCollection",
-            "features": features,
-            "metadata": {
-                "total_available": len(self.lines_data),
-                "displayed": len(features),
-                "voltage_filter": voltage_filter
-            }
-        }
+        # return {
+            # "type": "FeatureCollection",
+            # "features": features,
+            # "metadata": {
+                # "total_available": len(self.lines_data),
+                # "displayed": len(features),
+                # "voltage_filter": voltage_filter
+            # }
+        # }
         
-    except Exception as e:
-        logger.error(f"Failed to export for visualization: {e}")
-        return {"type": "FeatureCollection", "features": []}
+    # except Exception as e:
+        # logger.error(f"Failed to export for visualization: {e}")
+        # return {"type": "FeatureCollection", "features": []}
 
 def _extract_coordinates(self, line_row: pd.Series) -> List[List[float]]:
     """Extract coordinate pairs from line geometry."""
@@ -1064,21 +1081,21 @@ def _extract_coordinates(self, line_row: pd.Series) -> List[List[float]]:
 
 coords = []
     
-    if 'START_LON' in line_row and 'START_LAT' in line_row:
-        start_lon = line_row['START_LON']
-        start_lat = line_row['START_LAT']
+    # if 'START_LON' in line_row and 'START_LAT' in line_row:
+        # start_lon = line_row['START_LON']
+        # start_lat = line_row['START_LAT']
         
-        if pd.notna(start_lon) and pd.notna(start_lat):
-            coords.append([float(start_lon), float(start_lat)])
+        # if pd.notna(start_lon) and pd.notna(start_lat):
+            # coords.append([float(start_lon), float(start_lat)])
     
-    if 'END_LON' in line_row and 'END_LAT' in line_row:
-        end_lon = line_row['END_LON']
-        end_lat = line_row['END_LAT']
+    # if 'END_LON' in line_row and 'END_LAT' in line_row:
+        # end_lon = line_row['END_LON']
+        # end_lat = line_row['END_LAT']
         
-        if pd.notna(end_lon) and pd.notna(end_lat):
-            coords.append([float(end_lon), float(end_lat)])
+        # if pd.notna(end_lon) and pd.notna(end_lat):
+            # coords.append([float(end_lon), float(end_lat)])
     
-    return coords
+    # return coords
 
 # ======================================================================
 # Code Block 24
@@ -1090,7 +1107,7 @@ print(f"  {utility['name'][:40]:40s} | {utility['line_count']:>6,} lines | {util
 # Code Block 25
 # ======================================================================
 
-min_voltage: int = 345) -> pd.DataFrame:
+# min_voltage: int = 345) -> pd.DataFrame:
 """Identify critical transmission corridors based on voltage and parallel lines.
 
 Args:
@@ -1208,7 +1225,7 @@ print(f"  Overhead: {stats['overhead_percentage']:.1f}%")
 # Code Block 35
 # ======================================================================
 
-top_n: int = 15) -> pd.DataFrame:
+# top_n: int = 15) -> pd.DataFrame:
 """Create utility territory profile based on transmission ownership.
 
 Args:
@@ -1276,7 +1293,7 @@ print(f"{str(row['owner'])[:38]:<40} "
 # Code Block 42
 # ======================================================================
 
-output_file: str = "grid_map.geojson") -> str:
+# output_file: str = "grid_map.geojson") -> str:
 """Create interactive grid map data for web visualization.
 
 Args:
@@ -1328,8 +1345,8 @@ return output_file
 # Code Block 46
 # ======================================================================
 
-forecast_load_mw: float,
-                          region_corridors: List[str]) -> Dict[str, Any]:
+# forecast_load_mw: float,
+                          # region_corridors: List[str]) -> Dict[str, Any]:
 """Analyze whether transmission corridors can handle forecast load.
 
 Args:
@@ -1363,6 +1380,7 @@ analysis = {
 }
 
 for corridor_id in region_corridors:
+    pass
 
 # ======================================================================
 # Code Block 48
@@ -1371,15 +1389,15 @@ for corridor_id in region_corridors:
 corridor_lines = df[df['SUB_1'].str.contains(corridor_id, na=False) |
                        df['SUB_2'].str.contains(corridor_id, na=False)]
     
-    if len(corridor_lines) > 0:
+    # if len(corridor_lines) > 0:
 
 # ======================================================================
 # Code Block 49
 # ======================================================================
 
 corridor_capacity = 0
-        for _, line in corridor_lines.iterrows():
-            voltage = line['VOLTAGE']
+        # for _, line in corridor_lines.iterrows():
+            # voltage = line['VOLTAGE']
 
 # ======================================================================
 # Code Block 50
@@ -1387,16 +1405,16 @@ corridor_capacity = 0
 
 closest_voltage = min(voltage_capacity.keys(), 
                                 key=lambda x: abs(x - voltage))
-            corridor_capacity += voltage_capacity[closest_voltage]
+            # corridor_capacity += voltage_capacity[closest_voltage]
         
-        analysis['corridors'].append({
-            'id': corridor_id,
-            'line_count': len(corridor_lines),
-            'capacity_mw': corridor_capacity,
-            'avg_voltage': corridor_lines['VOLTAGE'].mean()
-        })
+        # analysis['corridors'].append({
+            # 'id': corridor_id,
+            # 'line_count': len(corridor_lines),
+            # 'capacity_mw': corridor_capacity,
+            # 'avg_voltage': corridor_lines['VOLTAGE'].mean()
+        # })
         
-        analysis['total_capacity_mw'] += corridor_capacity
+        # analysis['total_capacity_mw'] += corridor_capacity
 
 # ======================================================================
 # Code Block 51

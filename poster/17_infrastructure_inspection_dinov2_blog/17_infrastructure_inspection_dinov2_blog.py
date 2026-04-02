@@ -159,7 +159,7 @@ def create_image_transform():
     Create image preprocessing transform for DINOv2.
     
     DINOv2 expects:
-    - 224×224 RGB input
+    # - 224×224 RGB input
     - ImageNet normalization (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     
     Returns:
@@ -182,7 +182,7 @@ def extract_embeddings_batch(image_metadata, model, device, transform, batch_siz
     
     For production with real images, this function:
     1. Loads images from Unity Catalog volume
-    2. Preprocesses to 224×224
+    # 2. Preprocesses to 224×224
     3. Runs batch inference on GPU
     4. Returns embeddings as numpy arrays
     
@@ -256,7 +256,7 @@ def extract_embeddings_batch(image_metadata, model, device, transform, batch_siz
     results = [(image_metadata[i]['tile_id'], embeddings[i].tolist()) 
                for i in range(n_images)]
     
-    print(f"✓ Embeddings extracted: {len(results)}")
+    # print(f"✓ Embeddings extracted: {len(results)}")
     
     return results
 
@@ -285,7 +285,7 @@ def store_embeddings_silver(spark, embeddings, catalog_path):
      .mode("overwrite")
      .saveAsTable(f"{catalog_path}.silver.aerial_embeddings"))
     
-    print(f"\n✓ Embeddings stored in Silver table")
+    # print(f"\n✓ Embeddings stored in Silver table")
     print(f"  Table: {catalog_path}.silver.aerial_embeddings")
     print(f"  Rows: {df.count()}")
     print(f"  Embedding dimension: {len(embeddings[0][1])}")
@@ -333,7 +333,7 @@ def cluster_embeddings_mllib(spark, catalog_path, k=10, max_iter=50):
     # Compute cluster statistics
     cluster_counts = predictions.groupBy("prediction").count().orderBy("count", ascending=False)
     
-    print(f"\n✓ Clustering complete")
+    # print(f"\n✓ Clustering complete")
     print(f"  Total images: {predictions.count()}")
     print(f"  Clusters: {k}")
     print(f"\nCluster Distribution:")
@@ -397,7 +397,7 @@ def compute_anomaly_scores(spark, model, predictions_df, catalog_path):
         F.expr("percentile(anomaly_score, 0.99)").alias("p99")
     ).collect()[0]
     
-    print(f"\n✓ Anomaly scores computed")
+    # print(f"\n✓ Anomaly scores computed")
     print(f"  Mean score: {stats['mean_score']:.3f}")
     print(f"  Std dev: {stats['std_score']:.3f}")
     print(f"  Range: {stats['min_score']:.3f} - {stats['max_score']:.3f}")
@@ -509,7 +509,7 @@ def visualize_anomalies_mosaic(spark, catalog_path):
         tooltip_cols=["tile_id", "inspection_rank", "anomaly_score", "prediction"]
     )
     
-    print("\n✓ Interactive map generated")
+    # print("\n✓ Interactive map generated")
 
 # Complete pipeline
 def main():
@@ -617,7 +617,7 @@ def check_anomaly_alerts(spark, catalog_path, alert_threshold=7.0):
     
     if alert_count > 0:
         # Send notification
-        message = f"⚠️ {alert_count} high-priority infrastructure anomalies detected in recent imagery"
+        # message = f"⚠️ {alert_count} high-priority infrastructure anomalies detected in recent imagery"
         
         w.workspace.create_notification(
             title="Infrastructure Anomaly Alert",
@@ -632,9 +632,10 @@ def check_anomaly_alerts(spark, catalog_path, alert_threshold=7.0):
          .mode("append")
          .saveAsTable(f"{catalog_path}.logs.anomaly_alerts"))
         
-        print(f"✓ Sent {alert_count} anomaly alerts")
+        # print(f"✓ Sent {alert_count} anomaly alerts")
     else:
-        print("✓ No high-priority anomalies detected")
+        pass
+        # print("✓ No high-priority anomalies detected")
 
 # Schedule as Databricks Job (daily after imagery ingestion)
 check_anomaly_alerts(spark, "catalog.infrastructure", alert_threshold=7.0)
@@ -692,23 +693,24 @@ n_images = 10000  # Typical for 100km corridor segment
 
 metadata = []
 for i in range(n_images):
+    pass
 
 # ======================================================================
 # Code Block 11
 # ======================================================================
 
 lon = -102.0 + (i % 20) * 0.01  # 20 tiles wide (~10km)
-    lat = 34.0 + (i // 20) * 0.005  # 500 tiles long (~100km)
+    # lat = 34.0 + (i // 20) * 0.005  # 500 tiles long (~100km)
     
-    metadata.append({
-        'tile_id': f'TILE_{i:06d}',
-        'image_path': f'{volume_path}/tile_{i:06d}.jpg',
-        'longitude': lon,
-        'latitude': lat,
-        'date': '2024-01-15',
-        'resolution_m': 0.5,
-        'patch_size_m': 256  # 512 pixels @ 0.5m = 256m patch
-    })
+    # metadata.append({
+        # 'tile_id': f'TILE_{i:06d}',
+        # 'image_path': f'{volume_path}/tile_{i:06d}.jpg',
+        # 'longitude': lon,
+        # 'latitude': lat,
+        # 'date': '2024-01-15',
+        # 'resolution_m': 0.5,
+        # 'patch_size_m': 256  # 512 pixels @ 0.5m = 256m patch
+    # })
 
 df = spark.createDataFrame(metadata)
 
@@ -792,7 +794,7 @@ return model, device
 Create image preprocessing transform for DINOv2.
 
 DINOv2 expects:
-- 224×224 RGB input
+# - 224×224 RGB input
 - ImageNet normalization (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
 Returns:
@@ -818,7 +820,7 @@ Extract DINOv2 embeddings for a batch of images.
 
 For production with real images, this function:
 1. Loads images from Unity Catalog volume
-2. Preprocesses to 224×224
+# 2. Preprocesses to 224×224
 3. Runs batch inference on GPU
 4. Returns embeddings as numpy arrays
 
@@ -876,27 +878,28 @@ embeddings = []
 
 for i, anom_type in enumerate(anomaly_types):
     if anom_type == 0:  # Normal infrastructure
+        pass
 
 # ======================================================================
 # Code Block 23
 # ======================================================================
 
 emb = np.random.randn(384) * 0.3
-    elif anom_type == 1:  # Vegetation intrusion
+    # elif anom_type == 1:  # Vegetation intrusion
 
 # ======================================================================
 # Code Block 24
 # ======================================================================
 
 emb = np.random.randn(384) * 0.4 + np.array([0.5] * 384)
-    elif anom_type == 2:  # Equipment
+    # elif anom_type == 2:  # Equipment
 
 # ======================================================================
 # Code Block 25
 # ======================================================================
 
 emb = np.random.randn(384) * 0.8 + np.array([1.5] * 384)
-    else:  # Surface damage
+    # else:  # Surface damage
 
 # ======================================================================
 # Code Block 26
@@ -904,7 +907,7 @@ emb = np.random.randn(384) * 0.8 + np.array([1.5] * 384)
 
 emb = np.random.randn(384) * 0.6 + np.array([-1.0] * 384)
     
-    embeddings.append(emb)
+    # embeddings.append(emb)
 
 # ======================================================================
 # Code Block 27
@@ -913,7 +916,7 @@ emb = np.random.randn(384) * 0.6 + np.array([-1.0] * 384)
 results = [(image_metadata[i]['tile_id'], embeddings[i].tolist()) 
            for i in range(n_images)]
 
-print(f"✓ Embeddings extracted: {len(results)}")
+# print(f"✓ Embeddings extracted: {len(results)}")
 
 return results
 
@@ -948,7 +951,7 @@ df = spark.createDataFrame(embeddings, schema)
  .mode("overwrite")
  .saveAsTable(f"{catalog_path}.silver.aerial_embeddings"))
 
-print(f"\n✓ Embeddings stored in Silver table")
+# print(f"\n✓ Embeddings stored in Silver table")
 print(f"  Table: {catalog_path}.silver.aerial_embeddings")
 print(f"  Rows: {df.count()}")
 print(f"  Embedding dimension: {len(embeddings[0][1])}")
@@ -1010,7 +1013,7 @@ predictions = model.transform(vectors_df)
 
 cluster_counts = predictions.groupBy("prediction").count().orderBy("count", ascending=False)
 
-print(f"\n✓ Clustering complete")
+# print(f"\n✓ Clustering complete")
 print(f"  Total images: {predictions.count()}")
 print(f"  Clusters: {k}")
 print(f"\nCluster Distribution:")
@@ -1086,7 +1089,7 @@ stats = result.agg(
     F.expr("percentile(anomaly_score, 0.99)").alias("p99")
 ).collect()[0]
 
-print(f"\n✓ Anomaly scores computed")
+# print(f"\n✓ Anomaly scores computed")
 print(f"  Mean score: {stats['mean_score']:.3f}")
 print(f"  Std dev: {stats['std_score']:.3f}")
 print(f"  Range: {stats['min_score']:.3f} - {stats['max_score']:.3f}")
@@ -1230,7 +1233,7 @@ mos.display(
     tooltip_cols=["tile_id", "inspection_rank", "anomaly_score", "prediction"]
 )
 
-print("\n✓ Interactive map generated")
+# print("\n✓ Interactive map generated")
 
 # ======================================================================
 # Code Block 54
@@ -1307,93 +1310,93 @@ results = main()
 # Code Block 63
 # ======================================================================
 
-======================================================================
-INFRASTRUCTURE INSPECTION - DINOV2 ANOMALY DETECTION
-======================================================================
+# ======================================================================
+# INFRASTRUCTURE INSPECTION - DINOV2 ANOMALY DETECTION
+# ======================================================================
 
-Infrastructure Inspection Pipeline Initialized:
-  Spark version: 3.5.0
-  PyTorch version: 2.1.0
-  CUDA available: True
-  GPU: NVIDIA A100-SXM4-40GB
-  GPU memory: 40.0 GB
+# Infrastructure Inspection Pipeline Initialized:
+  # Spark version: 3.5.0
+  # PyTorch version: 2.1.0
+  # CUDA available: True
+  # GPU: NVIDIA A100-SXM4-40GB
+  # GPU memory: 40.0 GB
 
-Ingesting aerial imagery from /Volumes/infrastructure/aerial/pipeline_corridor_001
-  Total images: 10,000
-  Resolution: 0.5m
-  Coverage: 256m patches
-  Date: 2024-01-15
+# Ingesting aerial imagery from /Volumes/infrastructure/aerial/pipeline_corridor_001
+  # Total images: 10,000
+  # Resolution: 0.5m
+  # Coverage: 256m patches
+  # Date: 2024-01-15
 
-Loading DINOv2 model: dinov2_vits14
-  Embedding dimension: 384
-  Device: cuda
+# Loading DINOv2 model: dinov2_vits14
+  # Embedding dimension: 384
+  # Device: cuda
 
-Extracting DINOv2 embeddings...
-  Batch size: 32
-  Total images: 10000
-✓ Embeddings extracted: 10000
+# Extracting DINOv2 embeddings...
+  # Batch size: 32
+  # Total images: 10000
+# ✓ Embeddings extracted: 10000
 
-✓ Embeddings stored in Silver table
-  Table: catalog.infrastructure.silver.aerial_embeddings
-  Rows: 10000
-  Embedding dimension: 384
+# ✓ Embeddings stored in Silver table
+  # Table: catalog.infrastructure.silver.aerial_embeddings
+  # Rows: 10000
+  # Embedding dimension: 384
 
-Clustering with K-means (k=10)...
+# Clustering with K-means (k=10)...
 
-✓ Clustering complete
-  Total images: 10000
-  Clusters: 10
+# ✓ Clustering complete
+  # Total images: 10000
+  # Clusters: 10
 
-Cluster Distribution:
-  Cluster 0: 7845 images (78.5%)
-  Cluster 3: 687 images (6.9%)
-  Cluster 7: 512 images (5.1%)
-  Cluster 2: 389 images (3.9%)
-  Cluster 5: 245 images (2.5%)
+# Cluster Distribution:
+  # Cluster 0: 7845 images (78.5%)
+  # Cluster 3: 687 images (6.9%)
+  # Cluster 7: 512 images (5.1%)
+  # Cluster 2: 389 images (3.9%)
+  # Cluster 5: 245 images (2.5%)
 
-Computing anomaly scores...
+# Computing anomaly scores...
 
-✓ Anomaly scores computed
-  Mean score: 3.456
-  Std dev: 1.234
-  Range: 0.847 - 12.345
-  95th percentile: 5.921
-  99th percentile: 7.834
+# ✓ Anomaly scores computed
+  # Mean score: 3.456
+  # Std dev: 1.234
+  # Range: 0.847 - 12.345
+  # 95th percentile: 5.921
+  # 99th percentile: 7.834
 
-Anomaly Detection (μ + 3σ threshold = 7.158):
-  Outliers flagged: 187 (1.87%)
+# Anomaly Detection (μ + 3σ threshold = 7.158):
+  # Outliers flagged: 187 (1.87%)
 
-======================================================================
-GENERATING INSPECTION WORKLIST
-======================================================================
+# ======================================================================
+# GENERATING INSPECTION WORKLIST
+# ======================================================================
 
-Inspection Worklist Created:
-  Total images: 10000
-  Flagged for inspection: 200 (2.00%)
+# Inspection Worklist Created:
+  # Total images: 10000
+  # Flagged for inspection: 200 (2.00%)
 
-Top 10 Inspection Priorities:
-Rank   Tile ID         Score      Cluster    Lon          Lat        
---------------------------------------------------------------------------------
-1      TILE_003847      12.345    7          -101.93000   34.09235
-2      TILE_007234      11.987    7          -101.85000   34.18085
-3      TILE_001923      11.654    2          -102.03000   34.04808
-4      TILE_008765      11.321    7          -101.81000   34.21888
-5      TILE_005432      10.987    7          -101.89000   34.13585
-6      TILE_009123      10.765    2          -101.79000   34.22810
-7      TILE_002456      10.543    7          -102.00000   34.06153
-8      TILE_006789      10.321    7          -101.87000   34.16963
-9      TILE_004321      10.098     2          -101.95000   34.10805
-10     TILE_008012      9.876    7          -101.83000   34.20040
+# Top 10 Inspection Priorities:
+# Rank   Tile ID         Score      Cluster    Lon          Lat        
+# --------------------------------------------------------------------------------
+# 1      TILE_003847      12.345    7          -101.93000   34.09235
+# 2      TILE_007234      11.987    7          -101.85000   34.18085
+# 3      TILE_001923      11.654    2          -102.03000   34.04808
+# 4      TILE_008765      11.321    7          -101.81000   34.21888
+# 5      TILE_005432      10.987    7          -101.89000   34.13585
+# 6      TILE_009123      10.765    2          -101.79000   34.22810
+# 7      TILE_002456      10.543    7          -102.00000   34.06153
+# 8      TILE_006789      10.321    7          -101.87000   34.16963
+# 9      TILE_004321      10.098     2          -101.95000   34.10805
+# 10     TILE_008012      9.876    7          -101.83000   34.20040
 
-Geographic Distribution:
-  Distinct locations (~5km clusters): 38
-  Average anomalies per location: 5.3
+# Geographic Distribution:
+  # Distinct locations (~5km clusters): 38
+  # Average anomalies per location: 5.3
 
-✓ Interactive map generated
+# ✓ Interactive map generated
 
-======================================================================
-Pipeline complete! Review inspection worklist.
-======================================================================
+# ======================================================================
+# Pipeline complete! Review inspection worklist.
+# ======================================================================
 
 # ======================================================================
 # Code Block 64
@@ -1477,7 +1480,7 @@ if alert_count > 0:
 # Code Block 73
 # ======================================================================
 
-message = f"⚠️ {alert_count} high-priority infrastructure anomalies detected in recent imagery"
+# message = f"⚠️ {alert_count} high-priority infrastructure anomalies detected in recent imagery"
     
     w.workspace.create_notification(
         title="Infrastructure Anomaly Alert",
@@ -1495,6 +1498,6 @@ message = f"⚠️ {alert_count} high-priority infrastructure anomalies detected
      .mode("append")
      .saveAsTable(f"{catalog_path}.logs.anomaly_alerts"))
     
-    print(f"✓ Sent {alert_count} anomaly alerts")
-else:
-    print("✓ No high-priority anomalies detected")
+    # print(f"✓ Sent {alert_count} anomaly alerts")
+# else:
+    # print("✓ No high-priority anomalies detected")

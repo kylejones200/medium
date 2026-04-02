@@ -124,7 +124,7 @@ def prepare_spatial_features(df, target_crs="EPSG:32750"):
     print(f"Prepared {len(gdf)} samples")
     print(f"Au range: {gdf['Au'].min():.3f} - {gdf['Au'].max():.3f} ppm")
     print(f"Mean Au: {gdf['Au'].mean():.3f} ppm")
-    print(f"Spatial extent: {gdf['x'].max() - gdf['x'].min():.1f} km × {gdf['y'].max() - gdf['y'].min():.1f} km")
+    # print(f"Spatial extent: {gdf['x'].max() - gdf['x'].min():.1f} km × {gdf['y'].max() - gdf['y'].min():.1f} km")
     
     return gdf
 
@@ -203,7 +203,7 @@ def ordinary_kriging_predict(gdf, grid_resolution=100):
     z_ppm = np.expm1(z)
     
     print("\nOrdinary Kriging Results:")
-    print(f"  Grid size: {grid_resolution} × {grid_resolution}")
+    # print(f"  Grid size: {grid_resolution} × {grid_resolution}")
     print(f"  Predicted Au range: {z_ppm.min():.3f} - {z_ppm.max():.3f} ppm")
     print(f"  Mean kriging variance: {ss.mean():.3f}")
     
@@ -543,7 +543,7 @@ def create_grade_maps(gdf, grid_results):
     plt.savefig('11_ore_grade_ml_main.png', dpi=300, bbox_inches='tight')
     plt.close()
     
-    print("✓ Created: 11_ore_grade_ml_main.png")
+    # print("✓ Created: 11_ore_grade_ml_main.png")
 
 # ======================================================================
 # Code Block 7
@@ -574,7 +574,7 @@ def analyze_uncertainty_calibration(y_true, y_pred, y_std, n_bins=10):
     print("\nUncertainty Calibration:")
     print(calib_df.to_string(index=False))
     
-    # Ideal calibration: actual_rmse ≈ predicted_std
+    # Ideal calibration: actual_rmse  predicted_std
     correlation = np.corrcoef(calib_df['predicted_std'], calib_df['actual_rmse'])[0, 1]
     print(f"\nCalibration Correlation: {correlation:.3f}")
     
@@ -760,7 +760,7 @@ gdf["y"] = gdf.geometry.y / 1000
 print(f"Prepared {len(gdf)} samples")
 print(f"Au range: {gdf['Au'].min():.3f} - {gdf['Au'].max():.3f} ppm")
 print(f"Mean Au: {gdf['Au'].mean():.3f} ppm")
-print(f"Spatial extent: {gdf['x'].max() - gdf['x'].min():.1f} km × {gdf['y'].max() - gdf['y'].min():.1f} km")
+# print(f"Spatial extent: {gdf['x'].max() - gdf['x'].min():.1f} km × {gdf['y'].max() - gdf['y'].min():.1f} km")
 
 return gdf
 
@@ -849,7 +849,7 @@ z, ss = OK.execute("grid", gx, gy)
 z_ppm = np.expm1(z)
 
 print("\nOrdinary Kriging Results:")
-print(f"  Grid size: {grid_resolution} × {grid_resolution}")
+# print(f"  Grid size: {grid_resolution} × {grid_resolution}")
 print(f"  Predicted Au range: {z_ppm.min():.3f} - {z_ppm.max():.3f} ppm")
 print(f"  Mean kriging variance: {ss.mean():.3f}")
 
@@ -919,18 +919,18 @@ for fold_idx, (train_idx, test_idx) in enumerate(gkf.split(X, y, groups)):
 # ======================================================================
 
 X_test_transformed = gp_pipeline.named_steps["preprocessor"].transform(X_test)
-    mu, std = gp_pipeline.named_steps["gpr"].predict(X_test_transformed, return_std=True)
+    # mu, std = gp_pipeline.named_steps["gpr"].predict(X_test_transformed, return_std=True)
     
-    pred_mu[test_idx] = mu
-    pred_std[test_idx] = std
+    # pred_mu[test_idx] = mu
+    # pred_std[test_idx] = std
 
 # ======================================================================
 # Code Block 33
 # ======================================================================
 
 fold_mae = mean_absolute_error(y_test, mu)
-    fold_rmse = np.sqrt(mean_squared_error(y_test, mu))
-    print(f"  Fold {fold_idx}: MAE={fold_mae:.3f}, RMSE={fold_rmse:.3f}")
+    # fold_rmse = np.sqrt(mean_squared_error(y_test, mu))
+    # print(f"  Fold {fold_idx}: MAE={fold_mae:.3f}, RMSE={fold_rmse:.3f}")
 
 # ======================================================================
 # Code Block 34
@@ -964,18 +964,18 @@ return gp_pipeline, pred_mu, pred_std, {"mae": mae, "rmse": rmse, "coverage": co
 # Code Block 37
 # ======================================================================
 
-Gaussian Process Cross-Validation:
-  Fold 0: MAE=0.287, RMSE=0.392
-  Fold 1: MAE=0.312, RMSE=0.421
-  Fold 2: MAE=0.298, RMSE=0.405
-  Fold 3: MAE=0.275, RMSE=0.368
-  Fold 4: MAE=0.291, RMSE=0.397
+# Gaussian Process Cross-Validation:
+  # Fold 0: MAE=0.287, RMSE=0.392
+  # Fold 1: MAE=0.312, RMSE=0.421
+  # Fold 2: MAE=0.298, RMSE=0.405
+  # Fold 3: MAE=0.275, RMSE=0.368
+  # Fold 4: MAE=0.291, RMSE=0.397
 
-GPR Overall Performance:
-  MAE: 0.293 log(ppm)
-  RMSE: 0.397 log(ppm)
-  95% Confidence Coverage: 94.8%
-  Mean Prediction Std: 0.385
+# GPR Overall Performance:
+  # MAE: 0.293 log(ppm)
+  # RMSE: 0.397 log(ppm)
+  # 95% Confidence Coverage: 94.8%
+  # Mean Prediction Std: 0.385
 
 # ======================================================================
 # Code Block 38
@@ -1038,8 +1038,8 @@ pred[test_idx] = xgb_pipeline.predict(X_test)
 # ======================================================================
 
 fold_mae = mean_absolute_error(y_test, pred[test_idx])
-    fold_rmse = np.sqrt(mean_squared_error(y_test, pred[test_idx]))
-    print(f"  Fold {fold_idx}: MAE={fold_mae:.3f}, RMSE={fold_rmse:.3f}")
+    # fold_rmse = np.sqrt(mean_squared_error(y_test, pred[test_idx]))
+    # print(f"  Fold {fold_idx}: MAE={fold_mae:.3f}, RMSE={fold_rmse:.3f}")
 
 # ======================================================================
 # Code Block 44
@@ -1076,23 +1076,23 @@ return xgb_pipeline, pred, {"mae": mae, "rmse": rmse}
 # Code Block 46
 # ======================================================================
 
-XGBoost Cross-Validation:
-  Fold 0: MAE=0.245, RMSE=0.334
-  Fold 1: MAE=0.268, RMSE=0.362
-  Fold 2: MAE=0.257, RMSE=0.348
-  Fold 3: MAE=0.239, RMSE=0.325
-  Fold 4: MAE=0.251, RMSE=0.341
+# XGBoost Cross-Validation:
+  # Fold 0: MAE=0.245, RMSE=0.334
+  # Fold 1: MAE=0.268, RMSE=0.362
+  # Fold 2: MAE=0.257, RMSE=0.348
+  # Fold 3: MAE=0.239, RMSE=0.325
+  # Fold 4: MAE=0.251, RMSE=0.341
 
-XGBoost Overall Performance:
-  MAE: 0.252 log(ppm)
-  RMSE: 0.342 log(ppm)
+# XGBoost Overall Performance:
+  # MAE: 0.252 log(ppm)
+  # RMSE: 0.342 log(ppm)
 
-Top Feature Importances:
-  x: 0.287
-  y: 0.265
-  As: 0.189
-  Cu: 0.142
-  S: 0.067
+# Top Feature Importances:
+  # x: 0.287
+  # y: 0.265
+  # As: 0.189
+  # Cu: 0.142
+  # S: 0.067
 
 # ======================================================================
 # Code Block 47
@@ -1270,7 +1270,7 @@ cbar4.set_label('Au (ppm)', fontsize=9)
 plt.savefig('11_ore_grade_ml_main.png', dpi=300, bbox_inches='tight')
 plt.close()
 
-print("✓ Created: 11_ore_grade_ml_main.png")
+# print("✓ Created: 11_ore_grade_ml_main.png")
 
 # ======================================================================
 # Code Block 60
@@ -1340,45 +1340,45 @@ print("="*70)
 # Code Block 63
 # ======================================================================
 
-Uncertainty Calibration:
-   predicted_std  actual_rmse  n_samples
-          0.245        0.267         25
-          0.312        0.328         25
-          0.358        0.361         25
-          0.395        0.412         25
-          0.428        0.439         25
-          0.467        0.485         25
-          0.512        0.521         25
-          0.568        0.587         25
-          0.643        0.656         25
-          0.782        0.794         25
+# Uncertainty Calibration:
+   # predicted_std  actual_rmse  n_samples
+          # 0.245        0.267         25
+          # 0.312        0.328         25
+          # 0.358        0.361         25
+          # 0.395        0.412         25
+          # 0.428        0.439         25
+          # 0.467        0.485         25
+          # 0.512        0.521         25
+          # 0.568        0.587         25
+          # 0.643        0.656         25
+          # 0.782        0.794         25
 
-Calibration Correlation: 0.998
+# Calibration Correlation: 0.998
 
-======================================================================
-MODEL COMPARISON SUMMARY
-======================================================================
+# ======================================================================
+# MODEL COMPARISON SUMMARY
+# ======================================================================
 
-Accuracy Metrics:
-  Ordinary Kriging:    MAE = N/A (no CV), RMSE = N/A
-  Gaussian Process:    MAE = 0.293, RMSE = 0.397
-  XGBoost:             MAE = 0.252, RMSE = 0.342
+# Accuracy Metrics:
+  # Ordinary Kriging:    MAE = N/A (no CV), RMSE = N/A
+  # Gaussian Process:    MAE = 0.293, RMSE = 0.397
+  # XGBoost:             MAE = 0.252, RMSE = 0.342
 
-Uncertainty Quantification:
-  Ordinary Kriging:    Kriging variance (but often overconfident)
-  Gaussian Process:    95% Coverage = 94.8% (well-calibrated)
-  XGBoost:             None (point estimates only)
+# Uncertainty Quantification:
+  # Ordinary Kriging:    Kriging variance (but often overconfident)
+  # Gaussian Process:    95% Coverage = 94.8% (well-calibrated)
+  # XGBoost:             None (point estimates only)
 
-Computational Efficiency:
-  Ordinary Kriging:    O(n³) - slow for large datasets
-  Gaussian Process:    O(n³) - same limitations
-  XGBoost:             O(n log n) - scales to millions of points
+# Computational Efficiency:
+  # Ordinary Kriging:    O(n³) - slow for large datasets
+  # Gaussian Process:    O(n³) - same limitations
+  # XGBoost:             O(n log n) - scales to millions of points
 
-Best Use Cases:
-  Ordinary Kriging:    Traditional geostatistics, spatial-only data
-  Gaussian Process:    When you need calibrated uncertainty + covariates
-  XGBoost:             Production forecasting with tight deadlines
-======================================================================
+# Best Use Cases:
+  # Ordinary Kriging:    Traditional geostatistics, spatial-only data
+  # Gaussian Process:    When you need calibrated uncertainty + covariates
+  # XGBoost:             Production forecasting with tight deadlines
+# ======================================================================
 
 # ======================================================================
 # Code Block 64
@@ -1428,106 +1428,106 @@ print("\nPipeline complete!")
 # Code Block 70
 # ======================================================================
 
-Prepared 250 samples
-Au range: 0.001 - 4.856 ppm
-Mean Au: 0.247 ppm
-Spatial extent: 442.8 km × 406.5 km
+# Prepared 250 samples
+# Au range: 0.001 - 4.856 ppm
+# Mean Au: 0.247 ppm
+# Spatial extent: 442.8 km × 406.5 km
 
-Created 5 spatial folds:
-  Fold 0: 50 samples
-  Fold 1: 50 samples
-  Fold 2: 50 samples
-  Fold 3: 50 samples
-  Fold 4: 50 samples
+# Created 5 spatial folds:
+  # Fold 0: 50 samples
+  # Fold 1: 50 samples
+  # Fold 2: 50 samples
+  # Fold 3: 50 samples
+  # Fold 4: 50 samples
 
-Variogram Parameters:
-  Model: spherical
-  Sill: 0.387
-  Range: 142.6 km
-  Nugget: 0.094
-  Nugget/Sill ratio: 24.29%
+# Variogram Parameters:
+  # Model: spherical
+  # Sill: 0.387
+  # Range: 142.6 km
+  # Nugget: 0.094
+  # Nugget/Sill ratio: 24.29%
 
-Ordinary Kriging Results:
-  Grid size: 100 × 100
-  Predicted Au range: 0.003 - 1.845 ppm
-  Mean kriging variance: 0.312
+# Ordinary Kriging Results:
+  # Grid size: 100 × 100
+  # Predicted Au range: 0.003 - 1.845 ppm
+  # Mean kriging variance: 0.312
 
-Gaussian Process Cross-Validation:
-  Fold 0: MAE=0.287, RMSE=0.392
-  Fold 1: MAE=0.312, RMSE=0.421
-  Fold 2: MAE=0.298, RMSE=0.405
-  Fold 3: MAE=0.275, RMSE=0.368
-  Fold 4: MAE=0.291, RMSE=0.397
+# Gaussian Process Cross-Validation:
+  # Fold 0: MAE=0.287, RMSE=0.392
+  # Fold 1: MAE=0.312, RMSE=0.421
+  # Fold 2: MAE=0.298, RMSE=0.405
+  # Fold 3: MAE=0.275, RMSE=0.368
+  # Fold 4: MAE=0.291, RMSE=0.397
 
-GPR Overall Performance:
-  MAE: 0.293 log(ppm)
-  RMSE: 0.397 log(ppm)
-  95% Confidence Coverage: 94.8%
-  Mean Prediction Std: 0.385
+# GPR Overall Performance:
+  # MAE: 0.293 log(ppm)
+  # RMSE: 0.397 log(ppm)
+  # 95% Confidence Coverage: 94.8%
+  # Mean Prediction Std: 0.385
 
-XGBoost Cross-Validation:
-  Fold 0: MAE=0.245, RMSE=0.334
-  Fold 1: MAE=0.268, RMSE=0.362
-  Fold 2: MAE=0.257, RMSE=0.348
-  Fold 3: MAE=0.239, RMSE=0.325
-  Fold 4: MAE=0.251, RMSE=0.341
+# XGBoost Cross-Validation:
+  # Fold 0: MAE=0.245, RMSE=0.334
+  # Fold 1: MAE=0.268, RMSE=0.362
+  # Fold 2: MAE=0.257, RMSE=0.348
+  # Fold 3: MAE=0.239, RMSE=0.325
+  # Fold 4: MAE=0.251, RMSE=0.341
 
-XGBoost Overall Performance:
-  MAE: 0.252 log(ppm)
-  RMSE: 0.342 log(ppm)
+# XGBoost Overall Performance:
+  # MAE: 0.252 log(ppm)
+  # RMSE: 0.342 log(ppm)
 
-Top Feature Importances:
-  x: 0.287
-  y: 0.265
-  As: 0.189
-  Cu: 0.142
-  S: 0.067
+# Top Feature Importances:
+  # x: 0.287
+  # y: 0.265
+  # As: 0.189
+  # Cu: 0.142
+  # S: 0.067
 
-Grid Predictions Complete:
-  GPR Au range: 0.004 - 2.145 ppm
-  XGB Au range: 0.008 - 2.687 ppm
-  OK Au range: 0.002 - 1.923 ppm
+# Grid Predictions Complete:
+  # GPR Au range: 0.004 - 2.145 ppm
+  # XGB Au range: 0.008 - 2.687 ppm
+  # OK Au range: 0.002 - 1.923 ppm
 
-✓ Created: 11_ore_grade_ml_main.png
+# ✓ Created: 11_ore_grade_ml_main.png
 
-Uncertainty Calibration:
-   predicted_std  actual_rmse  n_samples
-          0.245        0.267         25
-          0.312        0.328         25
-          0.358        0.361         25
-          0.395        0.412         25
-          0.428        0.439         25
-          0.467        0.485         25
-          0.512        0.521         25
-          0.568        0.587         25
-          0.643        0.656         25
-          0.782        0.794         25
+# Uncertainty Calibration:
+   # predicted_std  actual_rmse  n_samples
+          # 0.245        0.267         25
+          # 0.312        0.328         25
+          # 0.358        0.361         25
+          # 0.395        0.412         25
+          # 0.428        0.439         25
+          # 0.467        0.485         25
+          # 0.512        0.521         25
+          # 0.568        0.587         25
+          # 0.643        0.656         25
+          # 0.782        0.794         25
 
-Calibration Correlation: 0.998
+# Calibration Correlation: 0.998
 
-======================================================================
-MODEL COMPARISON SUMMARY
-======================================================================
+# ======================================================================
+# MODEL COMPARISON SUMMARY
+# ======================================================================
 
-Accuracy Metrics:
-  Ordinary Kriging:    MAE = N/A (no CV), RMSE = N/A
-  Gaussian Process:    MAE = 0.293, RMSE = 0.397
-  XGBoost:             MAE = 0.252, RMSE = 0.342
+# Accuracy Metrics:
+  # Ordinary Kriging:    MAE = N/A (no CV), RMSE = N/A
+  # Gaussian Process:    MAE = 0.293, RMSE = 0.397
+  # XGBoost:             MAE = 0.252, RMSE = 0.342
 
-Uncertainty Quantification:
-  Ordinary Kriging:    Kriging variance (but often overconfident)
-  Gaussian Process:    95% Coverage = 94.8% (well-calibrated)
-  XGBoost:             None (point estimates only)
+# Uncertainty Quantification:
+  # Ordinary Kriging:    Kriging variance (but often overconfident)
+  # Gaussian Process:    95% Coverage = 94.8% (well-calibrated)
+  # XGBoost:             None (point estimates only)
 
-Computational Efficiency:
-  Ordinary Kriging:    O(n³) - slow for large datasets
-  Gaussian Process:    O(n³) - same limitations
-  XGBoost:             O(n log n) - scales to millions of points
+# Computational Efficiency:
+  # Ordinary Kriging:    O(n³) - slow for large datasets
+  # Gaussian Process:    O(n³) - same limitations
+  # XGBoost:             O(n log n) - scales to millions of points
 
-Best Use Cases:
-  Ordinary Kriging:    Traditional geostatistics, spatial-only data
-  Gaussian Process:    When you need calibrated uncertainty + covariates
-  XGBoost:             Production forecasting with tight deadlines
-======================================================================
+# Best Use Cases:
+  # Ordinary Kriging:    Traditional geostatistics, spatial-only data
+  # Gaussian Process:    When you need calibrated uncertainty + covariates
+  # XGBoost:             Production forecasting with tight deadlines
+# ======================================================================
 
-Pipeline complete!
+# Pipeline complete!

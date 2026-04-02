@@ -66,7 +66,7 @@ geochem = pd.DataFrame({
     'sample_type': np.random.choice(['soil', 'stream_sed', 'rock'], n_samples, p=[0.7, 0.2, 0.1])
 })
 
-print(f"✓ Generated {len(geochem):,} synthetic samples")
+# print(f" Generated {len(geochem):,} synthetic samples")
 print(f"Au grade range: {gold_ppm.min():.3f} - {gold_ppm.max():.3f} ppm")
 print(f"Au grade mean: {gold_ppm.mean():.3f} ppm")
 
@@ -88,7 +88,7 @@ gdf = gdf.to_crs('EPSG:32750')
 gdf['x'] = gdf.geometry.x
 gdf['y'] = gdf.geometry.y
 
-print("✓ Projected to UTM coordinates")
+# print(" Projected to UTM coordinates")
 
 # ======================================================================
 # Code Block 4
@@ -142,7 +142,7 @@ nx, ny = 100, 100
 gridx = np.linspace(x_min, x_max, nx)
 gridy = np.linspace(y_min, y_max, ny)
 
-print(f"Grid dimensions: {nx} × {ny} = {nx*ny:,} blocks")
+# print(f"Grid dimensions: {nx}  {ny} = {nx*ny:,} blocks")
 
 # Ordinary Kriging
 print("\nRunning Ordinary Kriging...")
@@ -161,7 +161,7 @@ z_ok, ss_ok = OK.execute('grid', gridx, gridy)
 # Back-transform to ppm
 grade_ok = np.expm1(z_ok)  # exp(log1p(x)) - 1 = x
 
-print(f"✓ Kriging complete")
+# print(f" Kriging complete")
 print(f"Grade range: {grade_ok.min():.3f} - {grade_ok.max():.3f} ppm")
 print(f"Grade mean: {grade_ok.mean():.3f} ppm")
 
@@ -202,7 +202,7 @@ for i in range(n_realizations):
 # Stack realizations
 sim_stack = np.stack(simulations)  # Shape: (n_realizations, ny, nx)
 
-print(f"✓ Generated {n_realizations} realizations")
+# print(f" Generated {n_realizations} realizations")
 print(f"Simulation stack shape: {sim_stack.shape}")
 
 # ======================================================================
@@ -289,7 +289,7 @@ geochem = pd.DataFrame({
     'Au_ppm': gold_ppm
 })
 
-print(f"✓ Generated {len(geochem):,} samples")
+# print(f" Generated {len(geochem):,} samples")
 
 # ============================================================================
 # 2. Project and transform
@@ -302,7 +302,7 @@ gdf['x'] = gdf.geometry.x
 gdf['y'] = gdf.geometry.y
 gdf['log_Au'] = np.log1p(gdf['Au_ppm'])
 
-print("✓ Projected to UTM")
+# print(" Projected to UTM")
 
 # ============================================================================
 # 3. Variogram modeling
@@ -312,7 +312,7 @@ coords = gdf[['x', 'y']].values
 values = gdf['log_Au'].values
 
 V = Variogram(coords, values, model='spherical', maxlag=50000, n_lags=20)
-print(f"✓ Variogram: range={V.parameters[0]/1000:.1f}km, sill={V.parameters[1]:.4f}")
+# print(f" Variogram: range={V.parameters[0]/1000:.1f}km, sill={V.parameters[1]:.4f}")
 
 # ============================================================================
 # 4. Ordinary Kriging baseline
@@ -331,7 +331,7 @@ OK = OrdinaryKriging(gdf['x'], gdf['y'], gdf['log_Au'],
                       verbose=False, enable_plotting=False)
 
 z_ok, ss_ok = OK.execute('grid', gridx, gridy)
-print("✓ Kriging complete")
+# print(" Kriging complete")
 
 # ============================================================================
 # 5. Sequential Gaussian Simulation
@@ -353,7 +353,7 @@ for i in range(n_realizations):
     simulations.append(z_sim)
 
 sim_stack = np.stack(simulations)
-print(f"✓ Generated {n_realizations} realizations")
+# print(f" Generated {n_realizations} realizations")
 
 # ============================================================================
 # 6. Uncertainty quantification
@@ -388,21 +388,21 @@ print(f"\nProbability(grade > {cutoff} ppm): {prob_exceed.mean():.1%}")
 # Code Block 11
 # ======================================================================
 
-Total samples: 180,294
-Geographic extent: All of Australia (7.7M km²)
-Collection period: 1989-2022
-Commodities: Au, Cu, Zn, Pb, Ag, As, Mo, W, Sn, REE
-Detection limits: Au = 0.1 ppb, Cu = 1 ppm
+# Total samples: 180,294
+# Geographic extent: All of Australia (7.7M km)
+# Collection period: 1989-2022
+# Commodities: Au, Cu, Zn, Pb, Ag, As, Mo, W, Sn, REE
+# Detection limits: Au = 0.1 ppb, Cu = 1 ppm
 
 # ======================================================================
 # Code Block 12
 # ======================================================================
 
-'sample_id': [f'GA{i:06d}' for i in range(n_samples)],
-'longitude': lons,
-'latitude': lats,
-'Au_ppm': gold_ppm,
-'sample_type': np.random.choice(['soil', 'stream_sed', 'rock'], n_samples, p=[0.7, 0.2, 0.1])
+# 'sample_id': [f'GA{i:06d}' for i in range(n_samples)],
+# 'longitude': lons,
+# 'latitude': lats,
+# 'Au_ppm': gold_ppm,
+# 'sample_type': np.random.choice(['soil', 'stream_sed', 'rock'], n_samples, p=[0.7, 0.2, 0.1])
 
 # ======================================================================
 # Code Block 13
@@ -463,8 +463,8 @@ simulations.append(z_sim)
 # ======================================================================
 
 variogram_model='spherical',
-                  variogram_parameters={'sill': 0.0954, 'range': 12300, 'nugget': 0.0187},
-                  verbose=False, enable_plotting=False)
+variogram_parameters={'sill': 0.0954, 'range': 12300, 'nugget': 0.0187},
+# verbose=False, enable_plotting=False
 
 # ======================================================================
 # Code Block 19

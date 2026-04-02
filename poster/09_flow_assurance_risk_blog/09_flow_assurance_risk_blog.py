@@ -257,7 +257,7 @@ def prioritize_high_risk_segments(model_results, telemetry_data, top_n=20):
     Rank pipeline segments by risk-adjusted criticality.
     
     Combines predicted risk probability with operational criticality
-    (pressure × flow rate) to prioritize inspection and intervention.
+    # (pressure × flow rate) to prioritize inspection and intervention.
     
     Parameters:
     -----------
@@ -285,7 +285,7 @@ def prioritize_high_risk_segments(model_results, telemetry_data, top_n=20):
     )
     
     # Combined risk ranking (Pythonic)
-    # Risk probability × (1 + criticality factor)
+    # Risk probability  (1 + criticality factor)
     test_segments['risk_rank_score'] = (
         test_segments['risk_probability'] * 
         (1 + 0.003 * test_segments['criticality_score'])

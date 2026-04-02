@@ -99,10 +99,10 @@ def prepare_drill_core_dataset(image_dir, assay_data_path, save_path):
     waste_trays = (grades <= 0.5).sum()
     mean_ore_grade = grades[grades > 0.5].mean() if ore_trays > 0 else 0
     
-    print(f"\n✓ Dataset Generated")
+    # print(f"\n✓ Dataset Generated")
     print(f"  Total trays: {n_trays}")
     print(f"  Ore trays (>0.5 g/t): {ore_trays} ({ore_trays/n_trays*100:.1f}%)")
-    print(f"  Waste trays (≤0.5 g/t): {waste_trays} ({waste_trays/n_trays*100:.1f}%)")
+    # print(f"  Waste trays (≤0.5 g/t): {waste_trays} ({waste_trays/n_trays*100:.1f}%)")
     print(f"  Mean ore grade: {mean_ore_grade:.2f} g/t Au")
     print(f"  Image shape: {images.shape}")
     print(f"  Mask shape: {masks.shape}")
@@ -334,7 +334,7 @@ def train_drill_core_unet(images, masks, epochs=20, batch_size=8, learning_rate=
                   f"Val Loss: {val_loss:.4f}, "
                   f"Val IoU: {val_iou:.4f}")
     
-    print(f"\n✓ Training Complete")
+    # print(f"\n✓ Training Complete")
     print(f"  Final Train Loss: {history['train_loss'][-1]:.4f}")
     print(f"  Final Val Loss: {history['val_loss'][-1]:.4f}")
     print(f"  Final Val IoU: {history['val_iou'][-1]:.4f}")
@@ -386,10 +386,10 @@ def predict_ore_zones(model, core_images, confidence_threshold=0.5):
     high_ore_trays = (ore_fractions > 0.3).sum()
     low_ore_trays = (ore_fractions <= 0.3).sum()
     
-    print(f"\n✓ Inference Complete")
+    # print(f"\n✓ Inference Complete")
     print(f"  Total trays: {len(core_images)}")
     print(f"  High ore trays (>30% ore): {high_ore_trays} ({high_ore_trays/len(core_images)*100:.1f}%)")
-    print(f"  Low ore trays (≤30% ore): {low_ore_trays} ({low_ore_trays/len(core_images)*100:.1f}%)")
+    # print(f"  Low ore trays (≤30% ore): {low_ore_trays} ({low_ore_trays/len(core_images)*100:.1f}%)")
     print(f"  Mean ore fraction: {ore_fractions.mean():.3f}")
     print(f"  Inference speed: {len(core_images) / 0.04:.0f} trays/second (~{len(core_images) * 1.0 / 0.04:.0f} meters/second)")
     
@@ -517,6 +517,7 @@ masks = []
 grades = []
 
 for i in range(n_trays):
+    pass
 
 # ======================================================================
 # Code Block 10
@@ -529,19 +530,19 @@ img = np.random.rand(128, 512, 3) * 0.3 + 0.3  # Base gray rock
 # ======================================================================
 
 n_ore_zones = np.random.randint(0, 4)
-    mask = np.zeros((128, 512), dtype=np.float32)
-    grade = 0.0
+    # mask = np.zeros((128, 512), dtype=np.float32)
+    # grade = 0.0
     
-    for j in range(n_ore_zones):
+    # for j in range(n_ore_zones):
 
 # ======================================================================
 # Code Block 12
 # ======================================================================
 
 x_start = np.random.randint(0, 400)
-        x_width = np.random.randint(50, 150)
-        y_start = np.random.randint(20, 80)
-        y_height = np.random.randint(30, 60)
+        # x_width = np.random.randint(50, 150)
+        # y_start = np.random.randint(20, 80)
+        # y_height = np.random.randint(30, 60)
 
 # ======================================================================
 # Code Block 13
@@ -554,7 +555,7 @@ img[y_start:y_start+y_height, x_start:x_start+x_width] *= 0.5
 # ======================================================================
 
 texture = np.random.rand(y_height, x_width, 3) * 0.15
-        img[y_start:y_start+y_height, x_start:x_start+x_width] += texture
+        # img[y_start:y_start+y_height, x_start:x_start+x_width] += texture
 
 # ======================================================================
 # Code Block 15
@@ -568,9 +569,9 @@ mask[y_start:y_start+y_height, x_start:x_start+x_width] = 1.0
 
 grade += np.random.uniform(0.3, 1.5)
     
-    images.append(img)
-    masks.append(mask)
-    grades.append(grade)
+    # images.append(img)
+    # masks.append(mask)
+    # grades.append(grade)
 
 images = np.array(images, dtype=np.float32)
 masks = np.array(masks, dtype=np.float32)
@@ -584,10 +585,10 @@ ore_trays = (grades > 0.5).sum()
 waste_trays = (grades <= 0.5).sum()
 mean_ore_grade = grades[grades > 0.5].mean() if ore_trays > 0 else 0
 
-print(f"\n✓ Dataset Generated")
+# print(f"\n✓ Dataset Generated")
 print(f"  Total trays: {n_trays}")
 print(f"  Ore trays (>0.5 g/t): {ore_trays} ({ore_trays/n_trays*100:.1f}%)")
-print(f"  Waste trays (≤0.5 g/t): {waste_trays} ({waste_trays/n_trays*100:.1f}%)")
+# print(f"  Waste trays (≤0.5 g/t): {waste_trays} ({waste_trays/n_trays*100:.1f}%)")
 print(f"  Mean ore grade: {mean_ore_grade:.2f} g/t Au")
 print(f"  Image shape: {images.shape}")
 print(f"  Mask shape: {masks.shape}")
@@ -606,20 +607,20 @@ save_path="/dbfs/data/cores/"
 # Code Block 19
 # ======================================================================
 
-======================================================================
-DRILL CORE DATASET PREPARATION
-======================================================================
+# ======================================================================
+# DRILL CORE DATASET PREPARATION
+# ======================================================================
 
-Generating synthetic core tray dataset...
-  Total trays: 500
+# Generating synthetic core tray dataset...
+  # Total trays: 500
 
-✓ Dataset Generated
-  Total trays: 500
-  Ore trays (>0.5 g/t): 234 (46.8%)
-  Waste trays (≤0.5 g/t): 266 (53.2%)
-  Mean ore grade: 1.21 g/t Au
-  Image shape: (500, 128, 512, 3)
-  Mask shape: (500, 128, 512)
+# ✓ Dataset Generated
+  # Total trays: 500
+  # Ore trays (>0.5 g/t): 234 (46.8%)
+  # Waste trays (≤0.5 g/t): 266 (53.2%)
+  # Mean ore grade: 1.21 g/t Au
+  # Image shape: (500, 128, 512, 3)
+  # Mask shape: (500, 128, 512)
 
 # ======================================================================
 # Code Block 20
@@ -645,10 +646,10 @@ def __init__(self):
 # ======================================================================
 
 self.enc1 = self._conv_block(3, 16)
-    self.enc2 = self._conv_block(16, 32)
-    self.enc3 = self._conv_block(32, 64)
+    # self.enc2 = self._conv_block(16, 32)
+    # self.enc3 = self._conv_block(32, 64)
     
-    self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+    # self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
 
 # ======================================================================
 # Code Block 22
@@ -661,20 +662,20 @@ self.bottleneck = self._conv_block(64, 128)
 # ======================================================================
 
 self.upconv3 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
-    self.dec3 = self._conv_block(128, 64)  # 128 = 64 (upconv) + 64 (skip)
+    # self.dec3 = self._conv_block(128, 64)  # 128 = 64 (upconv) + 64 (skip)
     
-    self.upconv2 = nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2)
-    self.dec2 = self._conv_block(64, 32)  # 64 = 32 (upconv) + 32 (skip)
+    # self.upconv2 = nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2)
+    # self.dec2 = self._conv_block(64, 32)  # 64 = 32 (upconv) + 32 (skip)
     
-    self.upconv1 = nn.ConvTranspose2d(32, 16, kernel_size=2, stride=2)
-    self.dec1 = self._conv_block(32, 16)  # 32 = 16 (upconv) + 16 (skip)
+    # self.upconv1 = nn.ConvTranspose2d(32, 16, kernel_size=2, stride=2)
+    # self.dec1 = self._conv_block(32, 16)  # 32 = 16 (upconv) + 16 (skip)
 
 # ======================================================================
 # Code Block 24
 # ======================================================================
 
 self.out = nn.Conv2d(16, 1, kernel_size=1)
-    self.sigmoid = nn.Sigmoid()
+    # self.sigmoid = nn.Sigmoid()
 
 def _conv_block(self, in_channels, out_channels):
     """Basic conv block: Conv -> ReLU -> Conv -> ReLU"""
@@ -686,14 +687,15 @@ def _conv_block(self, in_channels, out_channels):
     )
 
 def forward(self, x):
+    pass
 
 # ======================================================================
 # Code Block 25
 # ======================================================================
 
 enc1 = self.enc1(x)
-    enc2 = self.enc2(self.pool(enc1))
-    enc3 = self.enc3(self.pool(enc2))
+    # enc2 = self.enc2(self.pool(enc1))
+    # enc3 = self.enc3(self.pool(enc2))
 
 # ======================================================================
 # Code Block 26
@@ -706,39 +708,39 @@ bottleneck = self.bottleneck(self.pool(enc3))
 # ======================================================================
 
 dec3 = self.upconv3(bottleneck)
-    dec3 = torch.cat([dec3, enc3], dim=1)  # Skip connection
-    dec3 = self.dec3(dec3)
+    # dec3 = torch.cat([dec3, enc3], dim=1)  # Skip connection
+    # dec3 = self.dec3(dec3)
     
-    dec2 = self.upconv2(dec3)
-    dec2 = torch.cat([dec2, enc2], dim=1)  # Skip connection
-    dec2 = self.dec2(dec2)
+    # dec2 = self.upconv2(dec3)
+    # dec2 = torch.cat([dec2, enc2], dim=1)  # Skip connection
+    # dec2 = self.dec2(dec2)
     
-    dec1 = self.upconv1(dec2)
-    dec1 = torch.cat([dec1, enc1], dim=1)  # Skip connection
-    dec1 = self.dec1(dec1)
+    # dec1 = self.upconv1(dec2)
+    # dec1 = torch.cat([dec1, enc1], dim=1)  # Skip connection
+    # dec1 = self.dec1(dec1)
 
 # ======================================================================
 # Code Block 28
 # ======================================================================
 
 out = self.out(dec1)
-    return self.sigmoid(out)
+    # return self.sigmoid(out)
 
 # ======================================================================
 # Code Block 29
 # ======================================================================
 
-======================================================================
-U-NET MODEL ARCHITECTURE
-======================================================================
+# ======================================================================
+# U-NET MODEL ARCHITECTURE
+# ======================================================================
 
 Device: cuda
-Total parameters: 1,445,857
-Trainable parameters: 1,445,857
+# Total parameters: 1,445,857
+# Trainable parameters: 1,445,857
 
-Forward pass test:
-  Input shape: torch.Size([1, 3, 128, 512])
-  Output shape: torch.Size([1, 1, 128, 512])
+# Forward pass test:
+  # Input shape: torch.Size([1, 3, 128, 512])
+  # Output shape: torch.Size([1, 1, 128, 512])
 
 # ======================================================================
 # Code Block 30
@@ -820,55 +822,56 @@ print(f"  Batches per epoch: {len(train_loader)}")
 print(f"\nTraining Progress:")
 
 for epoch in range(epochs):
+    pass
 
 # ======================================================================
 # Code Block 36
 # ======================================================================
 
 model.train()
-    train_loss = 0.0
+    # train_loss = 0.0
     
-    for batch_x, batch_y in train_loader:
-        batch_x, batch_y = batch_x.to(device), batch_y.to(device)
+    # for batch_x, batch_y in train_loader:
+        # batch_x, batch_y = batch_x.to(device), batch_y.to(device)
         
-        optimizer.zero_grad()
-        outputs = model(batch_x)
-        loss = criterion(outputs, batch_y)
-        loss.backward()
-        optimizer.step()
+        # optimizer.zero_grad()
+        # outputs = model(batch_x)
+        # loss = criterion(outputs, batch_y)
+        # loss.backward()
+        # optimizer.step()
         
-        train_loss += loss.item()
+        # train_loss += loss.item()
     
-    train_loss /= len(train_loader)
+    # train_loss /= len(train_loader)
 
 # ======================================================================
 # Code Block 37
 # ======================================================================
 
 model.eval()
-    val_loss = 0.0
-    val_iou = 0.0
+    # val_loss = 0.0
+    # val_iou = 0.0
     
-    with torch.no_grad():
-        for batch_x, batch_y in val_loader:
-            batch_x, batch_y = batch_x.to(device), batch_y.to(device)
+    # with torch.no_grad():
+        # for batch_x, batch_y in val_loader:
+            # batch_x, batch_y = batch_x.to(device), batch_y.to(device)
             
-            outputs = model(batch_x)
-            loss = criterion(outputs, batch_y)
-            val_loss += loss.item()
+            # outputs = model(batch_x)
+            # loss = criterion(outputs, batch_y)
+            # val_loss += loss.item()
 
 # ======================================================================
 # Code Block 38
 # ======================================================================
 
 preds = (outputs > 0.5).float()
-            intersection = (preds * batch_y).sum()
-            union = preds.sum() + batch_y.sum() - intersection
-            iou = (intersection / (union + 1e-8)).item()
-            val_iou += iou
+            # intersection = (preds * batch_y).sum()
+            # union = preds.sum() + batch_y.sum() - intersection
+            # iou = (intersection / (union + 1e-8)).item()
+            # val_iou += iou
     
-    val_loss /= len(val_loader)
-    val_iou /= len(val_loader)
+    # val_loss /= len(val_loader)
+    # val_iou /= len(val_loader)
 
 # ======================================================================
 # Code Block 39
@@ -880,7 +883,7 @@ if (epoch + 1) % 5 == 0:
               f"Val Loss: {val_loss:.4f}, "
               f"Val IoU: {val_iou:.4f}")
 
-print(f"\n✓ Training Complete")
+# print(f"\n✓ Training Complete")
 print(f"  Final Train Loss: {history['train_loss'][-1]:.4f}")
 print(f"  Final Val Loss: {history['val_loss'][-1]:.4f}")
 print(f"  Final Val IoU: {history['val_iou'][-1]:.4f}")
@@ -891,36 +894,36 @@ return model, history
 # Code Block 40
 # ======================================================================
 
-images, masks, epochs=20, batch_size=8, learning_rate=1e-3
+# images, masks, epochs=20, batch_size=8, learning_rate=1e-3
 
 # ======================================================================
 # Code Block 41
 # ======================================================================
 
-======================================================================
-TRAINING U-NET MODEL
-======================================================================
+# ======================================================================
+# TRAINING U-NET MODEL
+# ======================================================================
 
-Dataset Split:
-  Training: 400 trays
-  Validation: 100 trays
+# Dataset Split:
+  # Training: 400 trays
+  # Validation: 100 trays
 
-Training Configuration:
-  Epochs: 20
-  Batch size: 8
-  Learning rate: 0.001
-  Batches per epoch: 50
+# Training Configuration:
+  # Epochs: 20
+  # Batch size: 8
+  # Learning rate: 0.001
+  # Batches per epoch: 50
 
-Training Progress:
-  Epoch 5/20 - Train Loss: 0.3421, Val Loss: 0.2987, Val IoU: 0.6234
-  Epoch 10/20 - Train Loss: 0.2156, Val Loss: 0.1943, Val IoU: 0.7512
-  Epoch 15/20 - Train Loss: 0.1534, Val Loss: 0.1421, Val IoU: 0.8156
-  Epoch 20/20 - Train Loss: 0.1187, Val Loss: 0.1098, Val IoU: 0.8543
+# Training Progress:
+  # Epoch 5/20 - Train Loss: 0.3421, Val Loss: 0.2987, Val IoU: 0.6234
+  # Epoch 10/20 - Train Loss: 0.2156, Val Loss: 0.1943, Val IoU: 0.7512
+  # Epoch 15/20 - Train Loss: 0.1534, Val Loss: 0.1421, Val IoU: 0.8156
+  # Epoch 20/20 - Train Loss: 0.1187, Val Loss: 0.1098, Val IoU: 0.8543
 
-✓ Training Complete
-  Final Train Loss: 0.1187
-  Final Val Loss: 0.1098
-  Final Val IoU: 0.8543
+# ✓ Training Complete
+  # Final Train Loss: 0.1187
+  # Final Val Loss: 0.1098
+  # Final Val IoU: 0.8543
 
 # ======================================================================
 # Code Block 42
@@ -973,10 +976,10 @@ ore_fractions = pred_masks.reshape(len(pred_masks), -1).mean(axis=1)
 high_ore_trays = (ore_fractions > 0.3).sum()
 low_ore_trays = (ore_fractions <= 0.3).sum()
 
-print(f"\n✓ Inference Complete")
+# print(f"\n✓ Inference Complete")
 print(f"  Total trays: {len(core_images)}")
 print(f"  High ore trays (>30% ore): {high_ore_trays} ({high_ore_trays/len(core_images)*100:.1f}%)")
-print(f"  Low ore trays (≤30% ore): {low_ore_trays} ({low_ore_trays/len(core_images)*100:.1f}%)")
+# print(f"  Low ore trays (≤30% ore): {low_ore_trays} ({low_ore_trays/len(core_images)*100:.1f}%)")
 print(f"  Mean ore fraction: {ore_fractions.mean():.3f}")
 print(f"  Inference speed: {len(core_images) / 0.04:.0f} trays/second (~{len(core_images) * 1.0 / 0.04:.0f} meters/second)")
 
@@ -992,18 +995,18 @@ trained_model, val_images, confidence_threshold=0.5
 # Code Block 48
 # ======================================================================
 
-======================================================================
-DRILL CORE INFERENCE
-======================================================================
+# ======================================================================
+# DRILL CORE INFERENCE
+# ======================================================================
 
-Running inference on 100 core trays...
+# Running inference on 100 core trays...
 
-✓ Inference Complete
-  Total trays: 100
-  High ore trays (>30% ore): 48 (48.0%)
-  Low ore trays (≤30% ore): 52 (52.0%)
-  Mean ore fraction: 0.284
-  Inference speed: 2500 trays/second (~2500 meters/second)
+# ✓ Inference Complete
+  # Total trays: 100
+  # High ore trays (>30% ore): 48 (48.0%)
+  # Low ore trays (≤30% ore): 52 (52.0%)
+  # Mean ore fraction: 0.284
+  # Inference speed: 2500 trays/second (~2500 meters/second)
 
 # ======================================================================
 # Code Block 49

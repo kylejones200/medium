@@ -68,10 +68,11 @@ print(f"Standard Error: {did_se:.6f}")
 print(f"P-value: {did_pval:.4f}")
 
 if did_pval < 0.05:
-    print(f"\n✓ Policy significantly {'reduced' if did_effect < 0 else 'increased'} emissions")
+    # print(f"\n Policy significantly {'reduced' if did_effect < 0 else 'increased'} emissions")
     print(f"  by {abs(did_effect):.6f} tons/MWh ({abs(did_effect)/states['carbon_intensity'].mean()*100:.1f}%)")
 else:
-    print("\n✗ No significant policy effect detected")
+    pass
+    # print("\n✗ No significant policy effect detected")
 
 # ======================================================================
 # Code Block 3
@@ -269,9 +270,11 @@ print(f"  Mean placebo effect: {np.mean(placebo_effects):.6f}")
 print(f"  P-value: {p_value:.4f}")
 
 if p_value < 0.05:
-    print("  ✓ California's effect is statistically significant")
+    # print("   California's effect is statistically significant")
+    pass
 else:
-    print("  ✗ Effect not distinguishable from random chance")
+    pass
+    # print("  ✗ Effect not distinguishable from random chance")
 
 # ======================================================================
 # Code Block 7
@@ -360,12 +363,13 @@ print(f"Standard Error: {se:.6f}")
 print(f"95% CI: [{att - 1.96*se:.6f}, {att + 1.96*se:.6f}]")
 
 if abs(att) / se > 1.96:
-    print(f"✓ Statistically significant effect at 5% level")
+    # print(f" Statistically significant effect at 5% level")
 
 # ======================================================================
 # Code Block 10
 # ======================================================================
 
+    pass
 print("\nCovariate Balance After Matching:")
 for var in X_features:
     treated_mean = psm_data.loc[matched_treated_idx, var].mean()
@@ -377,7 +381,7 @@ for var in X_features:
     print(f"    Treated mean: {treated_mean:.4f}")
     print(f"    Control mean: {control_mean:.4f}")
     print(f"    Standardized difference: {std_diff:.2f}%")
-    print(f"    {'✓ Good balance' if abs(std_diff) < 10 else '✗ Poor balance'}")
+    # print(f"    {' Good balance' if abs(std_diff) < 10 else ' Poor balance'}")
 
 # ======================================================================
 # Code Block 11
@@ -390,14 +394,14 @@ data=states
 # Code Block 12
 # ======================================================================
 
-print(f"\n✓ Policy significantly {'reduced' if did_effect < 0 else 'increased'} emissions")
+# print(f"\n Policy significantly {'reduced' if did_effect < 0 else 'increased'} emissions")
 print(f"  by {abs(did_effect):.6f} tons/MWh ({abs(did_effect)/states['carbon_intensity'].mean()*100:.1f}%)")
 
 # ======================================================================
 # Code Block 13
 # ======================================================================
 
-print("\n✗ No significant policy effect detected")
+# print("\n✗ No significant policy effect detected")
 
 # ======================================================================
 # Code Block 14
@@ -412,7 +416,7 @@ if year != -1:
 # Code Block 15
 # ======================================================================
 
-f'treated_year_{y}' for y in range(-5, 6) if y != -1
+# f'treated_year_{y}' for y in range(-5, 6) if y != -1
 
 # ======================================================================
 # Code Block 16
@@ -433,8 +437,8 @@ else:
 # ======================================================================
 
 [ci[0] for ci in conf_int], 
-             [ci[1] for ci in conf_int], 
-             alpha=0.3)
+[ci[1] for ci in conf_int], 
+alpha=0.3
 
 # ======================================================================
 # Code Block 18
@@ -499,10 +503,11 @@ if len(placebo_pre) == len(ca_pre):
 # Code Block 23
 # ======================================================================
 
+    pass
 other_controls_pre = []
-    other_controls_post = []
+other_controls_post = []
     
-    for other_state in control_states_list:
+for other_state in control_states_list:
         if other_state != placebo_state:
             other_data = control_data[control_data['Plant state abbreviation'] == other_state]
             pre = other_data[other_data['data_year'] < 2018]['carbon_intensity'].values
@@ -512,7 +517,7 @@ other_controls_pre = []
                 other_controls_pre.append(pre)
                 other_controls_post.append(post)
     
-    if len(other_controls_pre) > 0:
+if len(other_controls_pre) > 0:
         other_controls_pre = np.array(other_controls_pre).T
         other_controls_post = np.array(other_controls_post).T
         
@@ -526,31 +531,31 @@ other_controls_pre = []
 # Code Block 24
 # ======================================================================
 
-print("  ✓ California's effect is statistically significant")
+# print("   California's effect is statistically significant")
 
 # ======================================================================
 # Code Block 25
 # ======================================================================
 
-print("  ✗ Effect not distinguishable from random chance")
+# print("  ✗ Effect not distinguishable from random chance")
 
 # ======================================================================
 # Code Block 26
 # ======================================================================
 
-bins=50, alpha=0.5, label='Control', color='blue'
+# bins=50, alpha=0.5, label='Control', color='blue'
 
 # ======================================================================
 # Code Block 27
 # ======================================================================
 
-bins=50, alpha=0.5, label='Treated', color='red'
+# bins=50, alpha=0.5, label='Treated', color='red'
 
 # ======================================================================
 # Code Block 28
 # ======================================================================
 
-print(f"✓ Statistically significant effect at 5% level")
+# print(f" Statistically significant effect at 5% level")
 
 # ======================================================================
 # Code Block 29
@@ -565,4 +570,4 @@ print(f"  {var}:")
 print(f"    Treated mean: {treated_mean:.4f}")
 print(f"    Control mean: {control_mean:.4f}")
 print(f"    Standardized difference: {std_diff:.2f}%")
-print(f"    {'✓ Good balance' if abs(std_diff) < 10 else '✗ Poor balance'}")
+# print(f"    {' Good balance' if abs(std_diff) < 10 else ' Poor balance'}")

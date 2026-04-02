@@ -96,7 +96,7 @@ def generate_valve_scada_data(n_valves=800, random_state=123):
     
     failure_rate = failed.sum() / n_valves * 100
     
-    print(f"✓ Generated {n_valves} valves")
+    # print(f"✓ Generated {n_valves} valves")
     print(f"  Failure rate: {failure_rate:.1f}% ({failed.sum()} failures)")
     print(f"  Age range: {age.min()}-{age.max()} years")
     print(f"  Features: {len(df.columns)-1} (7 numeric, 2 categorical)")
@@ -195,7 +195,7 @@ def train_valve_failure_model(df, test_size=0.25, random_state=42):
     # Cross-validation for robustness check
     cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='roc_auc')
     
-    print(f"\n✓ Model Training Complete")
+    # print(f"\n✓ Model Training Complete")
     print(f"\nPerformance Metrics:")
     print(f"  ROC AUC (test): {roc_auc:.3f}")
     print(f"  Average Precision (test): {avg_precision:.3f}")
@@ -216,7 +216,7 @@ def rank_valves_by_value(X_test, y_pred_proba, valve_data_test):
     
     Value-per-dollar = Expected failure cost / Inspection cost
     
-    Expected failure cost = P(failure) × (replacement cost + downtime cost)
+    # Expected failure cost = P(failure) × (replacement cost + downtime cost)
     Inspection cost = Base cost + size-dependent cost
     
     Args:
@@ -468,7 +468,7 @@ df = pd.DataFrame({
 
 failure_rate = failed.sum() / n_valves * 100
 
-print(f"✓ Generated {n_valves} valves")
+# print(f"✓ Generated {n_valves} valves")
 print(f"  Failure rate: {failure_rate:.1f}% ({failed.sum()} failures)")
 print(f"  Age range: {age.min()}-{age.max()} years")
 print(f"  Features: {len(df.columns)-1} (7 numeric, 2 categorical)")
@@ -586,7 +586,7 @@ avg_precision = average_precision_score(y_test, y_pred_proba)
 
 cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='roc_auc')
 
-print(f"\n✓ Model Training Complete")
+# print(f"\n✓ Model Training Complete")
 print(f"\nPerformance Metrics:")
 print(f"  ROC AUC (test): {roc_auc:.3f}")
 print(f"  Average Precision (test): {avg_precision:.3f}")
@@ -598,28 +598,28 @@ return model, X_test, y_test, y_pred_proba
 # Code Block 22
 # ======================================================================
 
-======================================================================
-TRAINING VALVE FAILURE PREDICTION MODEL
-======================================================================
+# ======================================================================
+# TRAINING VALVE FAILURE PREDICTION MODEL
+# ======================================================================
 
-Feature Engineering:
-  Numeric features: 7
-    age_years, dp_mean, dp_std, vib_rms, temp_cyc, acts_day, lube_idx, sand_ppm
-  Categorical features: 2
-    make, environment
+# Feature Engineering:
+  # Numeric features: 7
+    # age_years, dp_mean, dp_std, vib_rms, temp_cyc, acts_day, lube_idx, sand_ppm
+  # Categorical features: 2
+    # make, environment
 
-Train/Test Split:
-  Training set: 600 valves (187 failures, 31.2%)
-  Test set: 200 valves (63 failures, 31.5%)
+# Train/Test Split:
+  # Training set: 600 valves (187 failures, 31.2%)
+  # Test set: 200 valves (63 failures, 31.5%)
 
-Training Gradient Boosting model...
+# Training Gradient Boosting model...
 
-✓ Model Training Complete
+# ✓ Model Training Complete
 
-Performance Metrics:
-  ROC AUC (test): 0.847
-  Average Precision (test): 0.802
-  CV ROC AUC (mean ± std): 0.839 ± 0.021
+# Performance Metrics:
+  # ROC AUC (test): 0.847
+  # Average Precision (test): 0.802
+  # CV ROC AUC (mean ± std): 0.839 ± 0.021
 
 # ======================================================================
 # Code Block 23
@@ -630,7 +630,7 @@ Rank valves by value-per-dollar for inspection prioritization.
 
 Value-per-dollar = Expected failure cost / Inspection cost
 
-Expected failure cost = P(failure) × (replacement cost + downtime cost)
+# Expected failure cost = P(failure) × (replacement cost + downtime cost)
 Inspection cost = Base cost + size-dependent cost
 
 Args:
@@ -735,40 +735,40 @@ return ranked
 # Code Block 31
 # ======================================================================
 
-======================================================================
-VALVE INSPECTION PRIORITIZATION
-======================================================================
+# ======================================================================
+# VALVE INSPECTION PRIORITIZATION
+# ======================================================================
 
-Ranking Statistics:
-  Total valves: 200
-  High risk (>70% fail prob): 24 (12.0%)
-  Mean failure probability: 0.312
-  Mean value-per-dollar: 8.47
+# Ranking Statistics:
+  # Total valves: 200
+  # High risk (>70% fail prob): 24 (12.0%)
+  # Mean failure probability: 0.312
+  # Mean value-per-dollar: 8.47
 
-Top 10% Valves (n=20):
-  Mean failure prob: 0.748
-  Mean value-per-dollar: 16.23
-  Total inspection cost: $178,400
-  Total expected loss reduction: $2,418,600
+# Top 10% Valves (n=20):
+  # Mean failure prob: 0.748
+  # Mean value-per-dollar: 16.23
+  # Total inspection cost: $178,400
+  # Total expected loss reduction: $2,418,600
 
-Top 20% Valves (n=40):
-  Mean failure prob: 0.621
-  Total inspection cost: $352,800
-  Total expected loss reduction: $4,234,500
+# Top 20% Valves (n=40):
+  # Mean failure prob: 0.621
+  # Total inspection cost: $352,800
+  # Total expected loss reduction: $4,234,500
 
-Top 10 Valves for Inspection:
-Rank   Fail %   VP$     Replace    Age   Vib    ΔP     Lube  
-----------------------------------------------------------------------
-1       92.3%   18.47   $29,150    31    2.15   27.7   0.42
-2       89.7%   17.82   $27,800    28    1.98   18.7   0.38
-3       87.4%   17.21   $31,450    29    2.04   43.0   0.45
-4       91.1%   16.93   $26,350    27    1.87   22.3   0.41
-5       88.6%   16.78   $28,900    30    1.91   26.0   0.39
-6       86.2%   16.45   $29,700    26    1.94   31.3   0.47
-7       90.3%   16.12   $27,250    29    1.82   15.0   0.36
-8       85.1%   15.89   $30,200    28    1.88   34.7   0.44
-9       87.9%   15.67   $28,400    31    1.96   22.7   0.40
-10      84.7%   15.43   $29,850    27    1.79   39.0   0.46
+# Top 10 Valves for Inspection:
+# Rank   Fail %   VP$     Replace    Age   Vib    ΔP     Lube  
+# ----------------------------------------------------------------------
+# 1       92.3%   18.47   $29,150    31    2.15   27.7   0.42
+# 2       89.7%   17.82   $27,800    28    1.98   18.7   0.38
+# 3       87.4%   17.21   $31,450    29    2.04   43.0   0.45
+# 4       91.1%   16.93   $26,350    27    1.87   22.3   0.41
+# 5       88.6%   16.78   $28,900    30    1.91   26.0   0.39
+# 6       86.2%   16.45   $29,700    26    1.94   31.3   0.47
+# 7       90.3%   16.12   $27,250    29    1.82   15.0   0.36
+# 8       85.1%   15.89   $30,200    28    1.88   34.7   0.44
+# 9       87.9%   15.67   $28,400    31    1.96   22.7   0.40
+# 10      84.7%   15.43   $29,850    27    1.79   39.0   0.46
 
 # ======================================================================
 # Code Block 32

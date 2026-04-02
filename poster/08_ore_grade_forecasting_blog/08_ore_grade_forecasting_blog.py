@@ -222,7 +222,7 @@ def build_gp_grade_model(training_data, kernel_params=None):
     X_normalized = (X - X_mean) / X_std
     
     # Define kernel (similar to variogram structure)
-    # RBF kernel: k(x, x') = σ² * exp(-||x - x'||² / (2 * l²))
+    # RBF kernel: k(x, x') = σ * exp(-||x - x'|| / (2 * l))
     if kernel_params is None:
         length_scale = 1.0  # After normalization
         signal_variance = 1.0
@@ -273,7 +273,7 @@ gp_model = build_gp_grade_model(drillholes)
 
 print("\nGaussian Process Model Performance:")
 print("=" * 60)
-print(f"Cross-Validated R²: {gp_model['cv_r2']:.3f}")
+# print(f"Cross-Validated R: {gp_model['cv_r2']:.3f}")
 print(f"Mean Absolute Error: {gp_model['cv_mae']:.3f} log(ppm)")
 print(f"Root Mean Square Error: {gp_model['cv_rmse']:.3f} log(ppm)")
 print(f"\nOptimized Kernel Parameters:")
@@ -331,7 +331,7 @@ def estimate_block_model(drillhole_data, gp_model, block_size=25, domain_extent=
     mean_pred, std_pred = gp_model['model'].predict(block_coords_normalized, return_std=True)
     
     # Transform back to grade space (from log space)
-    # For log-normal distribution: mean in original space ≈ exp(μ + σ²/2)
+    # For log-normal distribution: mean in original space  exp(μ + σ/2)
     grade_mean = np.exp(mean_pred + std_pred ** 2 / 2)
     grade_std = grade_mean * np.sqrt(np.exp(std_pred ** 2) - 1)
     
@@ -594,9 +594,10 @@ for i in range(n_samples):
 # Code Block 16
 # ======================================================================
 
+            pass
 semivar = 0.5 * (grades[i] - grades[j]) ** 2
-            distances.append(dist)
-            semivariances.append(semivar)
+distances.append(dist)
+semivariances.append(semivar)
 
 distances = np.array(distances)
 semivariances = np.array(semivariances)
@@ -830,9 +831,10 @@ for i in range(n_realizations):
 # Code Block 36
 # ======================================================================
 
+    pass
 sample = gp_model['model'].sample_y(block_coords_norm, n_samples=1, random_state=i)
-    grade_realization = np.exp(sample.ravel())
-    realizations.append(grade_realization)
+grade_realization = np.exp(sample.ravel())
+realizations.append(grade_realization)
 
 realizations = np.array(realizations)
 

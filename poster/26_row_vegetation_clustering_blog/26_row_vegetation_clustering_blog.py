@@ -42,7 +42,7 @@ import numpy as np
 @udf('double')
 def compute_texture_glcm(nir_band):
     """Compute GLCM contrast metric from NIR band."""
-    nir_array = np.array(nir_band).reshape(100, 100)  # Assuming 100×100 pixels per tile
+    # nir_array = np.array(nir_band).reshape(100, 100)  # Assuming 100100 pixels per tile
     nir_normalized = ((nir_array - nir_array.min()) / (nir_array.max() - nir_array.min()) * 255).astype(np.uint8)
     
     glcm = graycomatrix(nir_normalized, distances=[1], angles=[0], levels=256, symmetric=True, normed=True)
@@ -287,7 +287,7 @@ mos.enable_gdal(spark)
 
 # COMMAND ----------
 # Setup
-%pip install -q scipy scikit-learn matplotlib pandas
+# %pip install -q scipy scikit-learn matplotlib pandas
 dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -337,12 +337,12 @@ X = df_row[features].values
 
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
-print('✓ Features normalized')
+# print(' Features normalized')
 
 # COMMAND ----------
 # Hierarchical clustering
 Z = linkage(X_scaled, method='ward')
-print('✓ Linkage computed')
+# print(' Linkage computed')
 
 # COMMAND ----------
 # Dendrogram
@@ -363,7 +363,7 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('/dbfs/FileStore/row_dendrogram.png', dpi=300, bbox_inches='tight')
 plt.show()
-print('✓ Dendrogram saved')
+# print(' Dendrogram saved')
 
 # COMMAND ----------
 # Assign clusters
@@ -380,7 +380,7 @@ print(cluster_profiles.round(3))
 df_spark = spark.createDataFrame(df_row)
 df_spark = df_spark.selectExpr('*', 'ST_Point(longitude, latitude) AS geometry')
 df_spark.write.mode('overwrite').saveAsTable('gold.row_clusters')
-print('✓ Saved to gold.row_clusters')
+# print(' Saved to gold.row_clusters')
 
 # COMMAND ----------
 # Spatial visualization
@@ -407,14 +407,14 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('/dbfs/FileStore/row_spatial.png', dpi=300, bbox_inches='tight')
 plt.show()
-print('✓ Spatial map saved')
+# print(' Spatial map saved')
 
 # ======================================================================
 # Code Block 17
 # ======================================================================
 
 """Compute GLCM contrast metric from NIR band."""
-nir_array = np.array(nir_band).reshape(100, 100)  # Assuming 100×100 pixels per tile
+# nir_array = np.array(nir_band).reshape(100, 100)  # Assuming 100100 pixels per tile
 nir_normalized = ((nir_array - nir_array.min()) / (nir_array.max() - nir_array.min()) * 255).astype(np.uint8)
 
 glcm = graycomatrix(nir_normalized, distances=[1], angles=[0], levels=256, symmetric=True, normed=True)
@@ -425,7 +425,7 @@ return float(contrast)
 # Code Block 18
 # ======================================================================
 
-above_threshold_color='gray', no_labels=True)
+# above_threshold_color='gray', no_labels=True
 
 # ======================================================================
 # Code Block 19
@@ -441,23 +441,23 @@ ax.scatter(cluster_data['chainage_km'], cluster_data['ndvi_mean'],
 # ======================================================================
 
 title='ROW Environmental Clusters', 
-        legend_title='Cluster ID')
+legend_title='Cluster ID'
 
 # ======================================================================
 # Code Block 21
 # ======================================================================
 
 SELECT
-    curr.tile_id,
-    curr.chainage_km,
-    prev.cluster_id AS prev_cluster,
-    curr.cluster_id AS curr_cluster,
-    curr.ndvi_mean - prev.ndvi_mean AS ndvi_change
-FROM gold.row_cluster_history curr
-JOIN gold.row_cluster_history prev
-  ON curr.tile_id = prev.tile_id
-  AND prev.clustering_date = DATE_SUB(curr.clustering_date, 30)  -- 30 days ago
-WHERE curr.clustering_date = CURRENT_DATE()
+curr.tile_id,
+curr.chainage_km,
+# prev.cluster_id AS prev_cluster,
+# curr.cluster_id AS curr_cluster,
+# curr.ndvi_mean - prev.ndvi_mean AS ndvi_change
+# FROM gold.row_cluster_history curr
+# JOIN gold.row_cluster_history prev
+# ON curr.tile_id = prev.tile_id
+# AND prev.clustering_date = DATE_SUB(curr.clustering_date, 30)  -- 30 days ago
+# WHERE curr.clustering_date = CURRENT_DATE()
 
 # ======================================================================
 # Code Block 22
@@ -471,7 +471,7 @@ for wo in work_orders:
 # Code Block 23
 # ======================================================================
 
-above_threshold_color='gray', no_labels=True)
+# above_threshold_color='gray', no_labels=True
 
 # ======================================================================
 # Code Block 24

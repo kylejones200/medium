@@ -479,10 +479,10 @@ print(f"  Net Exposure: ${dashboard['concentration_metrics']['net_exposure']:,.2
 print(f"  Effective Positions: {dashboard['concentration_metrics']['effective_positions']:.1f}")
 
 # Display alerts or confirmation message
-alert_messages = [f"\n⚠️  ACTIVE ALERTS ({len(dashboard['alerts'])}):" + 
-                  ''.join(f"\n  [{a['severity']}] {a['metric']}\n    Current: {a['current']:,.2f} | Limit: {a['limit']:,.2f} | Breach: +{a['breach_pct']:.0f}%\n    Action: {a['action']}" 
-                          for a in dashboard['alerts'])] * bool(dashboard['alerts']) + \
-                 ["\n✅ All metrics within limits"] * (not bool(dashboard['alerts']))
+# alert_messages = [f"\n⚠️  ACTIVE ALERTS ({len(dashboard['alerts'])}):" + 
+# ''.join(f"\n  [{a['severity']}] {a['metric']}\n    Current: {a['current']:,.2f} | Limit: {a['limit']:,.2f} | Breach: +{a['breach_pct']:.0f}%\n    Action: {a['action']}" 
+                          # for a in dashboard['alerts'])] * bool(dashboard['alerts']) + \
+["\n✅ All metrics within limits"] * (not bool(dashboard['alerts']))
 
 print(alert_messages[0])
 
@@ -490,7 +490,7 @@ print(alert_messages[0])
 # Code Block 5
 # ======================================================================
 
-time_horizon_days=1, method='parametric'):
+# time_horizon_days=1, method='parametric'):
 """
 Calculate Value at Risk for power trading portfolio.
 
@@ -622,11 +622,11 @@ for scenario in stress_scenarios:
 # ======================================================================
 
 price_shock_pct = scenario['shocks'].get(asset, 0)
-        new_price = current_price * (1 + price_shock_pct / 100)
-        position_pnl = quantity * (new_price - current_price)
+new_price = current_price * (1 + price_shock_pct / 100)
+position_pnl = quantity * (new_price - current_price)
         
-        scenario_pnl += position_pnl
-        position_impacts.append({
+scenario_pnl += position_pnl
+position_impacts.append({
             'asset': asset,
             'position_value': position_value,
             'pnl': position_pnl,
@@ -638,10 +638,10 @@ price_shock_pct = scenario['shocks'].get(asset, 0)
 # ======================================================================
 
 pnl_ratio = abs(scenario_pnl) / portfolio_value
-    severity_thresholds = [(0.15, 'CRITICAL'), (0.10, 'HIGH'), (0, 'MODERATE')]
-    severity = next((sev for thresh, sev in filter(lambda x: pnl_ratio > x[0], severity_thresholds)), 'MODERATE')
+severity_thresholds = [(0.15, 'CRITICAL'), (0.10, 'HIGH'), (0, 'MODERATE')]
+severity = next((sev for thresh, sev in filter(lambda x: pnl_ratio > x[0], severity_thresholds)), 'MODERATE')
     
-    stress_results.append({
+stress_results.append({
         'scenario_name': scenario['name'],
         'scenario_description': scenario['description'],
         'total_pnl': scenario_pnl,

@@ -6,7 +6,7 @@ This code was automatically extracted from the markdown file.
 You may need to adjust imports and add necessary dependencies.
 """
 
-%pip install apache-sedona[spark]==1.5.1
+# %pip install apache-sedona[spark]==1.5.1
 
 # Import libraries
 from sedona.spark import *
@@ -24,7 +24,7 @@ spark = (SparkSession.builder
 
 SedonaRegistrator.registerAll(spark)
 
-print("✓ Sedona registered")
+# print(" Sedona registered")
 
 # ======================================================================
 # Code Block 2
@@ -91,7 +91,7 @@ geochem_df = pd.DataFrame({
 geochem = spark.createDataFrame(geochem_df)
 geochem.write.format("delta").mode("overwrite").saveAsTable("bronze.geochemical_samples")
 
-print(f"✓ Loaded {geochem.count():,} samples to bronze.geochemical_samples")
+# print(f" Loaded {geochem.count():,} samples to bronze.geochemical_samples")
 
 # ======================================================================
 # Code Block 3
@@ -115,7 +115,7 @@ anomalous = samples.filter(
 
 anomalous.write.format("delta").mode("overwrite").saveAsTable("silver.anomalous_samples")
 
-print(f"✓ Filtered to {anomalous.count():,} anomalous samples")
+# print(f" Filtered to {anomalous.count():,} anomalous samples")
 
 # ======================================================================
 # Code Block 4
@@ -144,7 +144,7 @@ clustered = spark.sql("""
 
 clustered.write.format("delta").mode("overwrite").saveAsTable("gold.clustered_samples")
 
-print("✓ DBSCAN clustering complete")
+# print(" DBSCAN clustering complete")
 
 # Cluster statistics
 cluster_stats = spark.sql("""
@@ -185,7 +185,7 @@ deposits = deposits.selectExpr(
 )
 
 deposits.write.format("delta").mode("overwrite").saveAsTable("bronze.known_deposits")
-print("✓ Loaded known deposits")
+# print(" Loaded known deposits")
 
 # ======================================================================
 # Code Block 6
@@ -271,7 +271,7 @@ cluster_classification.show(truncate=False)
 # Code Block 8
 # ======================================================================
 
-%pip install databricks-mosaic
+# %pip install databricks-mosaic
 
 import mosaic as mos
 mos.enable_mosaic(spark, dbutils)
@@ -280,16 +280,16 @@ mos.enable_mosaic(spark, dbutils)
 # Code Block 9
 # ======================================================================
 
-%%mosaic_kepler
+# %%mosaic_kepler
 
 SELECT 
-    cluster_id,
-    deposit_class,
-    n_samples,
-    avg_Au,
-    cluster_polygon AS geometry
-FROM gold.cluster_classification
-WHERE cluster_id IS NOT NULL
+cluster_id,
+deposit_class,
+n_samples,
+avg_Au,
+# cluster_polygon AS geometry
+# FROM gold.cluster_classification
+# WHERE cluster_id IS NOT NULL
 
 # ======================================================================
 # Code Block 10
@@ -303,7 +303,7 @@ cluster_classification.selectExpr(
     "ST_AsText(cluster_polygon) AS wkt_geometry"
 ).write.format("json").mode("overwrite").save("/mnt/geo/clusters.geojson")
 
-print("✓ Exported to GeoJSON")
+# print(" Exported to GeoJSON")
 
 # ======================================================================
 # Code Block 11
@@ -329,7 +329,7 @@ spark = (SparkSession.builder
     .getOrCreate())
 
 SedonaRegistrator.registerAll(spark)
-print("✓ Sedona initialized")
+# print(" Sedona initialized")
 
 # ============================================================================
 # 2. Generate synthetic geochemical data
@@ -366,7 +366,7 @@ geochem_df = pd.DataFrame({
 
 geochem = spark.createDataFrame(geochem_df)
 geochem.write.format("delta").mode("overwrite").saveAsTable("bronze.geochem")
-print(f"✓ Generated {n_samples:,} samples")
+# print(f" Generated {n_samples:,} samples")
 
 # ============================================================================
 # 3. Create spatial points
@@ -386,7 +386,7 @@ samples = spark.sql("""
 """)
 
 samples.write.format("delta").mode("overwrite").saveAsTable("silver.anomalous")
-print(f"✓ Filtered to {samples.count():,} anomalous samples")
+# print(f" Filtered to {samples.count():,} anomalous samples")
 
 # ============================================================================
 # 4. Spatial clustering with DBSCAN
@@ -400,7 +400,7 @@ clustered = spark.sql("""
 """)
 
 clustered.write.format("delta").mode("overwrite").saveAsTable("gold.clustered")
-print("✓ DBSCAN complete")
+# print(" DBSCAN complete")
 
 # ============================================================================
 # 5. Cluster statistics
@@ -429,7 +429,7 @@ stats = spark.sql("""
 """)
 
 stats.show(10, truncate=False)
-print("\n✓ Analysis complete")
+# print("\n Analysis complete")
 
 # ======================================================================
 # Code Block 12
@@ -456,26 +456,26 @@ else:  # Zinc-lead cluster
 # Code Block 14
 # ======================================================================
 
-'sample_id': [f'GS{i:06d}' for i in range(n_samples)],
-'longitude': lons,
-'latitude': lats,
-'Au_ppm': Au_ppm,
-'Cu_ppm': Cu_ppm,
-'Zn_ppm': Zn_ppm,
-'sample_type': np.random.choice(['soil', 'stream_sed', 'rock'], n_samples, p=[0.7, 0.2, 0.1])
+# 'sample_id': [f'GS{i:06d}' for i in range(n_samples)],
+# 'longitude': lons,
+# 'latitude': lats,
+# 'Au_ppm': Au_ppm,
+# 'Cu_ppm': Cu_ppm,
+# 'Zn_ppm': Zn_ppm,
+# 'sample_type': np.random.choice(['soil', 'stream_sed', 'rock'], n_samples, p=[0.7, 0.2, 0.1])
 
 # ======================================================================
 # Code Block 15
 # ======================================================================
 
-+----------+---------+-------+--------+--------+------------------+
-|cluster_id|n_samples|avg_Au |avg_Cu  |avg_Zn  |deposit_class     |
-+----------+---------+-------+--------+--------+------------------+
-|0         |1247     |0.845  |1834.2  |187.3   |Porphyry Au-Cu    |
-|1         |892      |0.234  |2847.6  |176.8   |Porphyry Cu       |
-|2         |531      |0.187  |102.4   |1872.4  |VMS Zn-Pb         |
-|3         |89       |0.456  |234.6   |198.1   |Orogenic Au       |
-+----------+---------+-------+--------+--------+------------------+
+# +----------+---------+-------+--------+--------+------------------+
+# |cluster_id|n_samples|avg_Au |avg_Cu  |avg_Zn  |deposit_class     |
+# +----------+---------+-------+--------+--------+------------------+
+# |0         |1247     |0.845  |1834.2  |187.3   |Porphyry Au-Cu    |
+# |1         |892      |0.234  |2847.6  |176.8   |Porphyry Cu       |
+# |2         |531      |0.187  |102.4   |1872.4  |VMS Zn-Pb         |
+# |3         |89       |0.456  |234.6   |198.1   |Orogenic Au       |
+# +----------+---------+-------+--------+--------+------------------+
 
 # ======================================================================
 # Code Block 16

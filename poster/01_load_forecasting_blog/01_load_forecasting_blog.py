@@ -317,8 +317,8 @@ historical_df = pd.concat(historical_data, ignore_index=True)
 # Build and evaluate model
 ml_results = build_ml_load_forecast(historical_df)
 print(f"Model Performance:")
-print(f"Training R²: {ml_results['train_r2']:.3f}")
-print(f"Testing R²: {ml_results['test_r2']:.3f}")
+# print(f"Training R²: {ml_results['train_r2']:.3f}")
+# print(f"Testing R²: {ml_results['test_r2']:.3f}")
 print(f"Mean Absolute Error: {ml_results['mae_mw']:.2f} MW")
 print(f"Mean Absolute Percentage Error: {ml_results['mape_pct']:.2f}%")
 
@@ -388,6 +388,7 @@ if date is None:
 hourly_data = []
 
 for hour in range(24):
+    pass
 
 # ======================================================================
 # Code Block 8
@@ -395,25 +396,25 @@ for hour in range(24):
 
 if 6 <= hour <= 9:  # Morning ramp
         load_factor = 0.85 + np.random.uniform(-0.03, 0.03)
-    elif 17 <= hour <= 21:  # Evening peak
+elif 17 <= hour <= 21:  # Evening peak
         load_factor = 0.95 + np.random.uniform(-0.03, 0.03)
-    elif 22 <= hour <= 5:  # Night valley
+elif 22 <= hour <= 5:  # Night valley
         load_factor = 0.60 + np.random.uniform(-0.03, 0.03)
-    else:  # Day hours
+else:  # Day hours
         load_factor = 0.75 + np.random.uniform(-0.03, 0.03)
     
-    peak_load = base_load_mw * load_factor
-    average_load = peak_load * 0.70
+peak_load = base_load_mw * load_factor
+average_load = peak_load * 0.70
 
 # ======================================================================
 # Code Block 9
 # ======================================================================
 
 base_price = 82.44  # $/MWh
-    price_multiplier = 0.8 + (load_factor * 0.4)
-    lmp_price = base_price * price_multiplier
+price_multiplier = 0.8 + (load_factor * 0.4)
+lmp_price = base_price * price_multiplier
     
-    hourly_data.append({
+hourly_data.append({
         'timestamp': date + timedelta(hours=hour),
         'hour': hour,
         'peak_load_mw': peak_load,
@@ -481,7 +482,7 @@ for day in range(days):
 
 if weekday >= 5:  # Weekend
         daily_base = base_load_mw * 0.85
-    else:  # Weekday
+else:  # Weekday
         daily_base = base_load_mw
 
 # ======================================================================
@@ -489,10 +490,10 @@ if weekday >= 5:  # Weekend
 # ======================================================================
 
 daily_curve = generate_realistic_load_curve(daily_base, current_date)
-    daily_curve['day_of_week'] = weekday
-    daily_curve['day_type'] = 'Weekend' if weekday >= 5 else 'Weekday'
+daily_curve['day_of_week'] = weekday
+daily_curve['day_type'] = 'Weekend' if weekday >= 5 else 'Weekday'
     
-    forecast_data.append(daily_curve)
+forecast_data.append(daily_curve)
 
 # ======================================================================
 # Code Block 16
@@ -521,22 +522,23 @@ cooling_threshold = 75
 heating_threshold = 55
 
 if temperature_f > cooling_threshold:
+    pass
 
 # ======================================================================
 # Code Block 19
 # ======================================================================
 
 cooling_multiplier = 1 + ((temperature_f - cooling_threshold) * 0.025)
-elif temperature_f < heating_threshold:
+# elif temperature_f < heating_threshold:
 
 # ======================================================================
 # Code Block 20
 # ======================================================================
 
 heating_multiplier = 1 + ((heating_threshold - temperature_f) * 0.015)
-    cooling_multiplier = heating_multiplier
-else:
-    cooling_multiplier = 1.0
+cooling_multiplier = heating_multiplier
+# else:
+cooling_multiplier = 1.0
 
 # ======================================================================
 # Code Block 21
@@ -572,38 +574,39 @@ features = []
 targets = []
 
 for i in range(len(historical_data) - forecast_horizon):
+    pass
 
 # ======================================================================
 # Code Block 24
 # ======================================================================
 
 lag_1 = historical_data['peak_load_mw'].iloc[i]
-    lag_24 = historical_data['peak_load_mw'].iloc[max(0, i-24)]
-    lag_168 = historical_data['peak_load_mw'].iloc[max(0, i-168)]  # Week ago
+lag_24 = historical_data['peak_load_mw'].iloc[max(0, i-24)]
+lag_168 = historical_data['peak_load_mw'].iloc[max(0, i-168)]  # Week ago
 
 # ======================================================================
 # Code Block 25
 # ======================================================================
 
 hour = historical_data['hour'].iloc[i]
-    day_of_week = historical_data['timestamp'].iloc[i].weekday()
+day_of_week = historical_data['timestamp'].iloc[i].weekday()
 
 # ======================================================================
 # Code Block 26
 # ======================================================================
 
 hour_sin = np.sin(2 * np.pi * hour / 24)
-    hour_cos = np.cos(2 * np.pi * hour / 24)
+hour_cos = np.cos(2 * np.pi * hour / 24)
     
-    feature_vec = [
+feature_vec = [
         lag_1, lag_24, lag_168,
         hour_sin, hour_cos,
         day_of_week,
         historical_data['load_factor'].iloc[i]
     ]
     
-    features.append(feature_vec)
-    targets.append(historical_data['peak_load_mw'].iloc[i + forecast_horizon])
+features.append(feature_vec)
+targets.append(historical_data['peak_load_mw'].iloc[i + forecast_horizon])
 
 X = np.array(features)
 y = np.array(targets)
@@ -688,11 +691,11 @@ updated_forecast = base_forecast.copy()
 # ======================================================================
 
 hours_ahead = i - current_hour
-    dampening_factor = np.exp(-0.1 * hours_ahead)
+dampening_factor = np.exp(-0.1 * hours_ahead)
     
-    adjustment = forecast_error_pct * dampening_factor
-    updated_forecast.loc[updated_forecast['hour'] == i, 'peak_load_mw'] *= (1 + adjustment)
-    updated_forecast.loc[updated_forecast['hour'] == i, 'average_load_mw'] *= (1 + adjustment)
+adjustment = forecast_error_pct * dampening_factor
+updated_forecast.loc[updated_forecast['hour'] == i, 'peak_load_mw'] *= (1 + adjustment)
+updated_forecast.loc[updated_forecast['hour'] == i, 'average_load_mw'] *= (1 + adjustment)
 
 # ======================================================================
 # Code Block 36

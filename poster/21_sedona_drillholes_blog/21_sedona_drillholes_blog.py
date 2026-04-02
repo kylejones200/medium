@@ -36,7 +36,7 @@ def initialize_sedona_environment():
     # In production, this runs on Databricks with Sedona pre-installed
     # For demo, we'll simulate the environment
     
-    print("\n✓ Sedona Environment Configured")
+    # print("\n✓ Sedona Environment Configured")
     print("  Spatial SQL functions registered")
     print("  Spatial indexing enabled")
     print("  Geometry types available: Point, Polygon, LineString")
@@ -121,7 +121,7 @@ def load_drillhole_data(n_holes=284000):
     df = pd.DataFrame(data)
     
     # Statistics
-    print(f"\n✓ Drill Hole Data Loaded")
+    # print(f"\n✓ Drill Hole Data Loaded")
     print(f"  Total holes: {len(df):,}")
     print(f"  Latitude range: {df['latitude'].min():.2f}° to {df['latitude'].max():.2f}°")
     print(f"  Longitude range: {df['longitude'].min():.2f}° to {df['longitude'].max():.2f}°")
@@ -169,7 +169,7 @@ def compute_hexagonal_density(drillhole_df, hex_size_km=50):
     
     print(f"\nHexagon configuration:")
     print(f"  Edge length: {hex_size_km} km")
-    print(f"  Hexagon area: ~{hex_size_km**2 * 2.6:.0f} km²")
+    # print(f"  Hexagon area: ~{hex_size_km**2 * 2.6:.0f} km²")
     
     # For this demo, we'll create a simplified hexagonal grid
     # In production with Sedona: ST_HexagonGrid() function
@@ -200,7 +200,7 @@ def compute_hexagonal_density(drillhole_df, hex_size_km=50):
     
     hex_stats.columns = ['hex_id', 'hole_count', 'mean_depth', 'center_lat', 'center_lon']
     
-    # Calculate density (holes per km²)
+    # Calculate density (holes per km)
     hex_area_km2 = hex_size_km ** 2 * 2.6
     hex_stats['density'] = hex_stats['hole_count'] / hex_area_km2
     
@@ -215,11 +215,11 @@ def compute_hexagonal_density(drillhole_df, hex_size_km=50):
     n_hexagons = len(hex_stats)
     total_holes = hex_stats['hole_count'].sum()
     
-    print(f"\n✓ Hexagonal Binning Complete")
+    # print(f"\n✓ Hexagonal Binning Complete")
     print(f"  Total hexagons: {n_hexagons:,}")
     print(f"  Holes assigned: {total_holes:,}")
     print(f"  Mean holes/hexagon: {hex_stats['hole_count'].mean():.1f}")
-    print(f"  Max density: {hex_stats['density'].max():.1f} holes/km²")
+    # print(f"  Max density: {hex_stats['density'].max():.1f} holes/km²")
     
     print(f"\n  Density distribution:")
     for density_class, count in hex_stats['density_class'].value_counts().sort_index().items():
@@ -240,7 +240,7 @@ def analyze_exploration_coverage(drillhole_df, hex_density):
     Analyze exploration coverage and identify strategic gaps.
     
     Metrics:
-    - Coverage percentage (area with >2 holes/km²)
+    # - Coverage percentage (area with >2 holes/km²)
     - Under-explored zones (sparse density but favorable geology)
     - High-density corridors (drilling follow-up patterns)
     - Regional gaps (large undrilled areas)
@@ -265,22 +265,22 @@ def analyze_exploration_coverage(drillhole_df, hex_density):
     # In production: spatial join to find sparse hexagons adjacent to dense hexagons
     # For demo: simplified analysis
     
-    print(f"\n✓ Coverage Analysis Complete")
+    # print(f"\n✓ Coverage Analysis Complete")
     print(f"\nOverall Metrics:")
-    print(f"  Total area analyzed: ~{total_hexagons * 6500:,} km²")
-    print(f"  Explored area (>2 holes/km²): {coverage_pct:.1f}%")
+    # print(f"  Total area analyzed: ~{total_hexagons * 6500:,} km²")
+    # print(f"  Explored area (>2 holes/km²): {coverage_pct:.1f}%")
     print(f"  Unexplored area: {100-coverage_pct:.1f}%")
     
     print(f"\nDensity Breakdown:")
-    print(f"  Dense zones (>30 holes/km²): {len(hex_density[hex_density['density'] > 30]):,} hexagons")
-    print(f"  Moderate zones (10-30 holes/km²): {len(hex_density[(hex_density['density'] >= 10) & (hex_density['density'] <= 30)]):,} hexagons")
-    print(f"  Sparse zones (2-10 holes/km²): {len(sparse):,} hexagons")
-    print(f"  Unexplored zones (<2 holes/km²): {len(unexplored):,} hexagons")
+    # print(f"  Dense zones (>30 holes/km²): {len(hex_density[hex_density['density'] > 30]):,} hexagons")
+    # print(f"  Moderate zones (10-30 holes/km²): {len(hex_density[(hex_density['density'] >= 10) & (hex_density['density'] <= 30)]):,} hexagons")
+    # print(f"  Sparse zones (2-10 holes/km²): {len(sparse):,} hexagons")
+    # print(f"  Unexplored zones (<2 holes/km²): {len(unexplored):,} hexagons")
     
     print(f"\nRecommendations:")
-    print(f"  • Priority 1: {len(sparse)} sparse hexagons for systematic infill")
-    print(f"  • Priority 2: {len(unexplored)} unexplored hexagons for reconnaissance")
-    print(f"  • Estimated cost: ~${(len(sparse)*10 + len(unexplored)*5):,}M for complete coverage")
+    # print(f"  • Priority 1: {len(sparse)} sparse hexagons for systematic infill")
+    # print(f"  • Priority 2: {len(unexplored)} unexplored hexagons for reconnaissance")
+    # print(f"  • Estimated cost: ~${(len(sparse)*10 + len(unexplored)*5):,}M for complete coverage")
     
     return {
         'coverage_pct': coverage_pct,
@@ -315,7 +315,7 @@ print("="*70)
 # Code Block 5
 # ======================================================================
 
-print("\n✓ Sedona Environment Configured")
+# print("\n✓ Sedona Environment Configured")
 print("  Spatial SQL functions registered")
 print("  Spatial indexing enabled")
 print("  Geometry types available: Point, Polygon, LineString")
@@ -375,7 +375,7 @@ for cluster in clusters:
 # ======================================================================
 
 lats = np.random.normal(center_lat, spread, n)
-    lons = np.random.normal(center_lon, spread, n)
+    # lons = np.random.normal(center_lon, spread, n)
 
 # ======================================================================
 # Code Block 10
@@ -392,16 +392,16 @@ purposes = np.random.choice(
         n, p=[0.65, 0.25, 0.08, 0.02]
     )
     
-    for i in range(n):
-        data.append({
-            'hole_id': f'WA{hole_id_counter:07d}',
-            'latitude': lats[i],
-            'longitude': lons[i],
-            'total_depth': depths[i],
-            'purpose': purposes[i],
-            'region': cluster["name"]
-        })
-        hole_id_counter += 1
+    # for i in range(n):
+        # data.append({
+            # 'hole_id': f'WA{hole_id_counter:07d}',
+            # 'latitude': lats[i],
+            # 'longitude': lons[i],
+            # 'total_depth': depths[i],
+            # 'purpose': purposes[i],
+            # 'region': cluster["name"]
+        # })
+        # hole_id_counter += 1
 
 df = pd.DataFrame(data)
 
@@ -409,7 +409,7 @@ df = pd.DataFrame(data)
 # Code Block 12
 # ======================================================================
 
-print(f"\n✓ Drill Hole Data Loaded")
+# print(f"\n✓ Drill Hole Data Loaded")
 print(f"  Total holes: {len(df):,}")
 print(f"  Latitude range: {df['latitude'].min():.2f}° to {df['latitude'].max():.2f}°")
 print(f"  Longitude range: {df['longitude'].min():.2f}° to {df['longitude'].max():.2f}°")
@@ -425,33 +425,33 @@ return df
 # Code Block 13
 # ======================================================================
 
-======================================================================
-INITIALIZING APACHE SEDONA FOR DRILL HOLE ANALYTICS
-======================================================================
+# ======================================================================
+# INITIALIZING APACHE SEDONA FOR DRILL HOLE ANALYTICS
+# ======================================================================
 
-✓ Sedona Environment Configured
-  Spatial SQL functions registered
-  Spatial indexing enabled
-  Geometry types available: Point, Polygon, LineString
+# ✓ Sedona Environment Configured
+  # Spatial SQL functions registered
+  # Spatial indexing enabled
+  # Geometry types available: Point, Polygon, LineString
 
-======================================================================
-LOADING DRILL HOLE DATA
-======================================================================
+# ======================================================================
+# LOADING DRILL HOLE DATA
+# ======================================================================
 
-Generating 284,000 synthetic drill holes for Western Australia...
+# Generating 284,000 synthetic drill holes for Western Australia...
 
-✓ Drill Hole Data Loaded
-  Total holes: 284,000
-  Latitude range: -34.15° to -18.94°
-  Longitude range: 112.58° to 127.42°
-  Depth range: 20m to 1500m
-  Mean depth: 287m
+# ✓ Drill Hole Data Loaded
+  # Total holes: 284,000
+  # Latitude range: -34.15° to -18.94°
+  # Longitude range: 112.58° to 127.42°
+  # Depth range: 20m to 1500m
+  # Mean depth: 287m
 
-  Purpose breakdown:
-    EXPLORATION: 184,600 (65.0%)
-    RESOURCE_DEFINITION: 71,000 (25.0%)
-    GEOTECHNICAL: 22,720 (8.0%)
-    WATER: 5,680 (2.0%)
+  # Purpose breakdown:
+    # EXPLORATION: 184,600 (65.0%)
+    # RESOURCE_DEFINITION: 71,000 (25.0%)
+    # GEOTECHNICAL: 22,720 (8.0%)
+    # WATER: 5,680 (2.0%)
 
 # ======================================================================
 # Code Block 14
@@ -484,7 +484,7 @@ print("="*70)
 
 print(f"\nHexagon configuration:")
 print(f"  Edge length: {hex_size_km} km")
-print(f"  Hexagon area: ~{hex_size_km**2 * 2.6:.0f} km²")
+# print(f"  Hexagon area: ~{hex_size_km**2 * 2.6:.0f} km²")
 
 # ======================================================================
 # Code Block 15
@@ -548,11 +548,11 @@ hex_stats['density_class'] = pd.cut(
 n_hexagons = len(hex_stats)
 total_holes = hex_stats['hole_count'].sum()
 
-print(f"\n✓ Hexagonal Binning Complete")
+# print(f"\n✓ Hexagonal Binning Complete")
 print(f"  Total hexagons: {n_hexagons:,}")
 print(f"  Holes assigned: {total_holes:,}")
 print(f"  Mean holes/hexagon: {hex_stats['hole_count'].mean():.1f}")
-print(f"  Max density: {hex_stats['density'].max():.1f} holes/km²")
+# print(f"  Max density: {hex_stats['density'].max():.1f} holes/km²")
 
 print(f"\n  Density distribution:")
 for density_class, count in hex_stats['density_class'].value_counts().sort_index().items():
@@ -565,25 +565,25 @@ return hex_stats
 # Code Block 22
 # ======================================================================
 
-======================================================================
-COMPUTING HEXAGONAL DENSITY
-======================================================================
+# ======================================================================
+# COMPUTING HEXAGONAL DENSITY
+# ======================================================================
 
-Hexagon configuration:
-  Edge length: 50 km
-  Hexagon area: ~6500 km²
+# Hexagon configuration:
+  # Edge length: 50 km
+  # Hexagon area: ~6500 km²
 
-✓ Hexagonal Binning Complete
-  Total hexagons: 487
-  Holes assigned: 284,000
-  Mean holes/hexagon: 583.2
-  Max density: 42.3 holes/km²
+# ✓ Hexagonal Binning Complete
+  # Total hexagons: 487
+  # Holes assigned: 284,000
+  # Mean holes/hexagon: 583.2
+  # Max density: 42.3 holes/km²
 
-  Density distribution:
-    Unexplored: 198 hexagons (40.7%)
-    Sparse: 145 hexagons (29.8%)
-    Moderate: 89 hexagons (18.3%)
-    Dense: 55 hexagons (11.3%)
+  # Density distribution:
+    # Unexplored: 198 hexagons (40.7%)
+    # Sparse: 145 hexagons (29.8%)
+    # Moderate: 89 hexagons (18.3%)
+    # Dense: 55 hexagons (11.3%)
 
 # ======================================================================
 # Code Block 23
@@ -593,7 +593,7 @@ Hexagon configuration:
 Analyze exploration coverage and identify strategic gaps.
 
 Metrics:
-- Coverage percentage (area with >2 holes/km²)
+# - Coverage percentage (area with >2 holes/km²)
 - Under-explored zones (sparse density but favorable geology)
 - High-density corridors (drilling follow-up patterns)
 - Regional gaps (large undrilled areas)
@@ -624,22 +624,22 @@ sparse = hex_density[hex_density['density_class'] == 'Sparse']
 # Code Block 26
 # ======================================================================
 
-print(f"\n✓ Coverage Analysis Complete")
+# print(f"\n✓ Coverage Analysis Complete")
 print(f"\nOverall Metrics:")
-print(f"  Total area analyzed: ~{total_hexagons * 6500:,} km²")
-print(f"  Explored area (>2 holes/km²): {coverage_pct:.1f}%")
+# print(f"  Total area analyzed: ~{total_hexagons * 6500:,} km²")
+# print(f"  Explored area (>2 holes/km²): {coverage_pct:.1f}%")
 print(f"  Unexplored area: {100-coverage_pct:.1f}%")
 
 print(f"\nDensity Breakdown:")
-print(f"  Dense zones (>30 holes/km²): {len(hex_density[hex_density['density'] > 30]):,} hexagons")
-print(f"  Moderate zones (10-30 holes/km²): {len(hex_density[(hex_density['density'] >= 10) & (hex_density['density'] <= 30)]):,} hexagons")
-print(f"  Sparse zones (2-10 holes/km²): {len(sparse):,} hexagons")
-print(f"  Unexplored zones (<2 holes/km²): {len(unexplored):,} hexagons")
+# print(f"  Dense zones (>30 holes/km²): {len(hex_density[hex_density['density'] > 30]):,} hexagons")
+# print(f"  Moderate zones (10-30 holes/km²): {len(hex_density[(hex_density['density'] >= 10) & (hex_density['density'] <= 30)]):,} hexagons")
+# print(f"  Sparse zones (2-10 holes/km²): {len(sparse):,} hexagons")
+# print(f"  Unexplored zones (<2 holes/km²): {len(unexplored):,} hexagons")
 
 print(f"\nRecommendations:")
-print(f"  • Priority 1: {len(sparse)} sparse hexagons for systematic infill")
-print(f"  • Priority 2: {len(unexplored)} unexplored hexagons for reconnaissance")
-print(f"  • Estimated cost: ~${(len(sparse)*10 + len(unexplored)*5):,}M for complete coverage")
+# print(f"  • Priority 1: {len(sparse)} sparse hexagons for systematic infill")
+# print(f"  • Priority 2: {len(unexplored)} unexplored hexagons for reconnaissance")
+# print(f"  • Estimated cost: ~${(len(sparse)*10 + len(unexplored)*5):,}M for complete coverage")
 
 return {
     'coverage_pct': coverage_pct,
@@ -651,31 +651,31 @@ return {
 # Code Block 27
 # ======================================================================
 
-======================================================================
-EXPLORATION COVERAGE ANALYSIS
-======================================================================
+# ======================================================================
+# EXPLORATION COVERAGE ANALYSIS
+# ======================================================================
 
-✓ Coverage Analysis Complete
+# ✓ Coverage Analysis Complete
 
-Overall Metrics:
-  Total area analyzed: ~3,165,500 km²
-  Explored area (>2 holes/km²): 59.3%
-  Unexplored area: 40.7%
+# Overall Metrics:
+  # Total area analyzed: ~3,165,500 km²
+  # Explored area (>2 holes/km²): 59.3%
+  # Unexplored area: 40.7%
 
-Density Breakdown:
-  Dense zones (>30 holes/km²): 55 hexagons
-  Moderate zones (10-30 holes/km²): 89 hexagons
-  Sparse zones (2-10 holes/km²): 145 hexagons
-  Unexplored zones (<2 holes/km²): 198 hexagons
+# Density Breakdown:
+  # Dense zones (>30 holes/km²): 55 hexagons
+  # Moderate zones (10-30 holes/km²): 89 hexagons
+  # Sparse zones (2-10 holes/km²): 145 hexagons
+  # Unexplored zones (<2 holes/km²): 198 hexagons
 
-Recommendations:
-  • Priority 1: 145 sparse hexagons for systematic infill
-  • Priority 2: 198 unexplored hexagons for reconnaissance
-  • Estimated cost: ~$2,440M for complete coverage
+# Recommendations:
+  # • Priority 1: 145 sparse hexagons for systematic infill
+  # • Priority 2: 198 unexplored hexagons for reconnaissance
+  # • Estimated cost: ~$2,440M for complete coverage
 
 # ======================================================================
 # Code Block 28
 # ======================================================================
 
-zones = highest ROI infill targets; unexplored gaps in favorable
-geology = greenfield opportunities
+# zones = highest ROI infill targets; unexplored gaps in favorable
+# geology = greenfield opportunities

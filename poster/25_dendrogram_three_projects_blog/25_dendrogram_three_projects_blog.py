@@ -330,18 +330,18 @@ if new_high_risk.count() > 0:
 # Code Block 15
 # ======================================================================
 
-'segment_id': [f'SEG-{i:04d}' for i in range(N)],
-'avg_wall_loss_pct': np.random.normal(15, 8, N).clip(0, 70),
-'cp_potential_mv': np.random.normal(-900, 50, N),
-'soil_resistivity_ohm_cm': np.random.normal(3000, 600, N).clip(200, 8000),
-'coating': np.random.choice(['FBE', 'PE', 'CoalTar', 'Tape'], N, p=[0.4, 0.3, 0.2, 0.1]),
-'near_water': np.random.choice([0, 1], N, p=[0.8, 0.2])
+# 'segment_id': [f'SEG-{i:04d}' for i in range(N)],
+# 'avg_wall_loss_pct': np.random.normal(15, 8, N).clip(0, 70),
+# 'cp_potential_mv': np.random.normal(-900, 50, N),
+# 'soil_resistivity_ohm_cm': np.random.normal(3000, 600, N).clip(200, 8000),
+# 'coating': np.random.choice(['FBE', 'PE', 'CoalTar', 'Tape'], N, p=[0.4, 0.3, 0.2, 0.1]),
+# 'near_water': np.random.choice([0, 1], N, p=[0.8, 0.2])
 
 # ======================================================================
 # Code Block 16
 # ======================================================================
 
-above_threshold_color='gray', no_labels=True)
+# above_threshold_color='gray', no_labels=True
 
 # ======================================================================
 # Code Block 17
@@ -362,7 +362,7 @@ daily_features.append({
 # Code Block 18
 # ======================================================================
 
-above_threshold_color='gray', no_labels=True)
+# above_threshold_color='gray', no_labels=True
 
 # ======================================================================
 # Code Block 19
@@ -374,13 +374,13 @@ ax.bar(day, 1, color=colors_regimes[cluster], edgecolor='black', linewidth=0.3)
 # Code Block 20
 # ======================================================================
 
-above_threshold_color='gray', no_labels=True)
+# above_threshold_color='gray', no_labels=True
 
 # ======================================================================
 # Code Block 21
 # ======================================================================
 
-title='ROW Environmental Clusters Along Pipeline')
+title='ROW Environmental Clusters Along Pipeline'
 
 # ======================================================================
 # Code Block 22
@@ -418,14 +418,14 @@ return spark.createDataFrame(pdf[['segment_id', 'cluster_id']])
 # Code Block 27
 # ======================================================================
 
-- **Leak events:** 12 → 2 (83% reduction)
-- **Annual inspection cost:** \$4.2M → \$3.1M (26% savings)
-- **Avoided leak costs:** 10 leaks × \$850K = \$8.5M
-- **Net ROI:** \$8.5M + 3 × \$1.1M - \$9.1M = **\$2.7M positive**
+# - **Leak events:** 12 → 2 (83% reduction)
+# - **Annual inspection cost:** \$4.2M → \$3.1M (26% savings)
+# - **Avoided leak costs:** 10 leaks  \$850K = \$8.5M
+# - **Net ROI:** \$8.5M + 3  \$1.1M - \$9.1M = **\$2.7M positive**
 
 # ======================================================================
 # Code Block 28
 # ======================================================================
 
-SELECT segment_id FROM gold.cluster_history
-WHERE clustering_date = DATE_SUB(CURRENT_DATE(), 7) AND cluster_id IN (2, 4)
+# SELECT segment_id FROM gold.cluster_history
+# WHERE clustering_date = DATE_SUB(CURRENT_DATE(), 7) AND cluster_id IN (2, 4)

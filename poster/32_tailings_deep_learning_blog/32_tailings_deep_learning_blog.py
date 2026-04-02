@@ -6,7 +6,7 @@ This code was automatically extracted from the markdown file.
 You may need to adjust imports and add necessary dependencies.
 """
 
-%pip install torch torchvision apache-sedona databricks-mosaic rasterio
+# %pip install torch torchvision apache-sedona databricks-mosaic rasterio
 
 import torch
 import torch.nn as nn
@@ -28,7 +28,7 @@ spark = (SparkSession.builder
 SedonaRegistrator.registerAll(spark)
 mos.enable_mosaic(spark, dbutils)
 
-print("✓ Environment ready")
+# print("✓ Environment ready")
 
 # ======================================================================
 # Code Block 2
@@ -52,14 +52,14 @@ tailings_active = tailings.filter(
 
 tailings_active.write.format("delta").mode("overwrite").saveAsTable("bronze.tailings_locations")
 
-print(f"✓ Loaded {tailings_active.count()} active tailings dams")
+# print(f"✓ Loaded {tailings_active.count()} active tailings dams")
 
 # ======================================================================
 # Code Block 3
 # ======================================================================
 
 def generate_synthetic_sentinel2_patch(size=256, has_change=False):
-    """Generate synthetic 256×256 Sentinel-2 patch (RGB + NIR)."""
+    """Generate synthetic 256256 Sentinel-2 patch (RGB + NIR)."""
     
     # Base layers
     blue = np.random.uniform(0.05, 0.15, (size, size))
@@ -118,7 +118,7 @@ X_before = np.array(X_before)  # Shape: (500, 256, 256, 4)
 X_after = np.array(X_after)
 y_change = np.array(y_change)  # Shape: (500, 256, 256)
 
-print(f"✓ Generated {n_train} training samples")
+# print(f"✓ Generated {n_train} training samples")
 print(f"Change samples: {(y_change.sum(axis=(1,2)) > 0).sum()} ({(y_change.sum(axis=(1,2)) > 0).mean()*100:.1f}%)")
 
 # ======================================================================
@@ -196,7 +196,7 @@ class UNet(nn.Module):
 
 # Initialize model
 model = UNet(in_channels=8, out_channels=1)
-print(f"✓ U-Net initialized")
+# print(f"✓ U-Net initialized")
 print(f"Parameters: {sum(p.numel() for p in model.parameters()):,}")
 
 # ======================================================================
@@ -230,7 +230,7 @@ train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size
 train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=8, shuffle=False)
 
-print(f"✓ Data loaders ready: {train_size} train, {test_size} test")
+# print(f"✓ Data loaders ready: {train_size} train, {test_size} test")
 
 # ======================================================================
 # Code Block 6
@@ -294,7 +294,7 @@ with mlflow.start_run():
     
     # Save model
     mlflow.pytorch.log_model(model, "unet_model")
-    print("✓ Model saved to MLflow")
+    # print("✓ Model saved to MLflow")
 
 # ======================================================================
 # Code Block 7
@@ -315,7 +315,7 @@ with torch.no_grad():
 predictions = np.concatenate(predictions, axis=0)  # (100, 1, 256, 256)
 ground_truth = np.concatenate(ground_truth, axis=0)
 
-print(f"✓ Inference complete: {predictions.shape[0]} samples")
+# print(f"✓ Inference complete: {predictions.shape[0]} samples")
 
 # Compute metrics
 pred_binary = (predictions > 0.5).astype(np.float32)
@@ -447,14 +447,14 @@ for epoch in range(20):
         loss_sum += loss.item()
     print(f"Epoch {epoch+1}: Loss={loss_sum/len(train_loader):.4f}")
 
-print("✓ Training complete")
+# print("✓ Training complete")
 
 # ======================================================================
 # Code Block 9
 # ======================================================================
 
-(tailings.latitude.isNotNull()) & 
-(tailings.longitude.isNotNull()) &
+# (tailings.latitude.isNotNull()) & 
+# (tailings.longitude.isNotNull()) &
 (tailings.status == "Active")
 
 # ======================================================================
@@ -498,14 +498,15 @@ image = np.stack([blue, green, red, nir], axis=-1)  # Shape: (256, 256, 4)
 change_mask = np.zeros((size, size), dtype=np.float32)
 
 if has_change:
+    pass
 
 # ======================================================================
 # Code Block 15
 # ======================================================================
 
 seepage_y = int(size * 0.65)
-    seepage_x = int(size * 0.75)
-    for dy in range(10):
+seepage_x = int(size * 0.75)
+for dy in range(10):
         for dx in range(15):
             y_pos = seepage_y + dy
             x_pos = seepage_x + dx
@@ -550,8 +551,8 @@ def __init__(self, in_channels=8, out_channels=1):
 # ======================================================================
 
 self.enc1 = self.conv_block(in_channels, 64)
-    self.enc2 = self.conv_block(64, 128)
-    self.enc3 = self.conv_block(128, 256)
+self.enc2 = self.conv_block(64, 128)
+self.enc3 = self.conv_block(128, 256)
 
 # ======================================================================
 # Code Block 19
@@ -564,13 +565,13 @@ self.bottleneck = self.conv_block(256, 512)
 # ======================================================================
 
 self.upconv3 = nn.ConvTranspose2d(512, 256, kernel_size=2, stride=2)
-    self.dec3 = self.conv_block(512, 256)  # 512 = 256 (upconv) + 256 (skip)
+self.dec3 = self.conv_block(512, 256)  # 512 = 256 (upconv) + 256 (skip)
     
-    self.upconv2 = nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2)
-    self.dec2 = self.conv_block(256, 128)
+self.upconv2 = nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2)
+self.dec2 = self.conv_block(256, 128)
     
-    self.upconv1 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
-    self.dec1 = self.conv_block(128, 64)
+self.upconv1 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
+self.dec1 = self.conv_block(128, 64)
 
 # ======================================================================
 # Code Block 21
@@ -588,14 +589,15 @@ def conv_block(self, in_channels, out_channels):
     )
     
 def forward(self, x):
+    pass
 
 # ======================================================================
 # Code Block 22
 # ======================================================================
 
 enc1 = self.enc1(x)
-    enc2 = self.enc2(F.max_pool2d(enc1, 2))
-    enc3 = self.enc3(F.max_pool2d(enc2, 2))
+enc2 = self.enc2(F.max_pool2d(enc1, 2))
+enc3 = self.enc3(F.max_pool2d(enc2, 2))
 
 # ======================================================================
 # Code Block 23
@@ -608,16 +610,16 @@ bottleneck = self.bottleneck(F.max_pool2d(enc3, 2))
 # ======================================================================
 
 dec3 = self.upconv3(bottleneck)
-    dec3 = torch.cat([dec3, enc3], dim=1)
-    dec3 = self.dec3(dec3)
+dec3 = torch.cat([dec3, enc3], dim=1)
+dec3 = self.dec3(dec3)
     
-    dec2 = self.upconv2(dec3)
-    dec2 = torch.cat([dec2, enc2], dim=1)
-    dec2 = self.dec2(dec2)
+dec2 = self.upconv2(dec3)
+dec2 = torch.cat([dec2, enc2], dim=1)
+dec2 = self.dec2(dec2)
     
-    dec1 = self.upconv1(dec2)
-    dec1 = torch.cat([dec1, enc1], dim=1)
-    dec1 = self.dec1(dec1)
+dec1 = self.upconv1(dec2)
+dec1 = torch.cat([dec1, enc1], dim=1)
+dec1 = self.dec1(dec1)
 
 # ======================================================================
 # Code Block 25
@@ -638,14 +640,15 @@ def __len__(self):
     return len(self.X_before)
 
 def __getitem__(self, idx):
+    pass
 
 # ======================================================================
 # Code Block 27
 # ======================================================================
 
 x = torch.cat([self.X_before[idx], self.X_after[idx]], dim=0)  # (8, H, W)
-    y = self.y_change[idx]  # (1, H, W)
-    return x, y
+y = self.y_change[idx]  # (1, H, W)
+return x, y
 
 # ======================================================================
 # Code Block 28
@@ -667,46 +670,46 @@ for epoch in range(n_epochs):
 # ======================================================================
 
 outputs = model(batch_x)
-        loss = criterion(outputs, batch_y)
+loss = criterion(outputs, batch_y)
 
 # ======================================================================
 # Code Block 30
 # ======================================================================
 
 optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+loss.backward()
+optimizer.step()
         
-        train_loss += loss.item()
+train_loss += loss.item()
     
-    avg_train_loss = train_loss / len(train_loader)
+avg_train_loss = train_loss / len(train_loader)
 
 # ======================================================================
 # Code Block 31
 # ======================================================================
 
 model.eval()
-    test_loss = 0.0
-    with torch.no_grad():
+test_loss = 0.0
+with torch.no_grad():
         for batch_x, batch_y in test_loader:
             batch_x, batch_y = batch_x.to(device), batch_y.to(device)
             outputs = model(batch_x)
             loss = criterion(outputs, batch_y)
             test_loss += loss.item()
     
-    avg_test_loss = test_loss / len(test_loader)
+avg_test_loss = test_loss / len(test_loader)
     
-    print(f"Epoch {epoch+1}/{n_epochs} - Train Loss: {avg_train_loss:.4f}, Test Loss: {avg_test_loss:.4f}")
+print(f"Epoch {epoch+1}/{n_epochs} - Train Loss: {avg_train_loss:.4f}, Test Loss: {avg_test_loss:.4f}")
     
-    mlflow.log_metric("train_loss", avg_train_loss, step=epoch)
-    mlflow.log_metric("test_loss", avg_test_loss, step=epoch)
+mlflow.log_metric("train_loss", avg_train_loss, step=epoch)
+mlflow.log_metric("test_loss", avg_test_loss, step=epoch)
 
 # ======================================================================
 # Code Block 32
 # ======================================================================
 
 mlflow.pytorch.log_model(model, "unet_model")
-print("✓ Model saved to MLflow")
+# print("✓ Model saved to MLflow")
 
 # ======================================================================
 # Code Block 33
@@ -816,10 +819,10 @@ print(f"Epoch {epoch+1}: Loss={loss_sum/len(train_loader):.4f}")
 # Code Block 38
 # ======================================================================
 
-\$15M response = 478× ROI.
+# \$15M response = 478× ROI.
 
 # ======================================================================
 # Code Block 39
 # ======================================================================
 
-= 26,645 images in \<8 hours.
+# = 26,645 images in \<8 hours.

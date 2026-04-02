@@ -549,12 +549,14 @@ print(f"  CO2 Emissions: {specs['emissions_co2_ton_mwh']:.2f} tons/MWh")
 available_gen = []
 
 for source_name, specs in generation_sources.items():
+    pass
 
 # ======================================================================
 # Code Block 9
 # ======================================================================
 
 if source_name == 'solar':
+    pass
 
 # ======================================================================
 # Code Block 10
@@ -562,26 +564,26 @@ if source_name == 'solar':
 
 if 6 <= hour <= 18:
             capacity = specs['capacity_mw'] * (0.1 + 0.9 * np.sin((hour - 6) * np.pi / 12))
-        else:
+        # else:
             capacity = 0
-    elif source_name == 'wind':
+    # elif source_name == 'wind':
 
 # ======================================================================
 # Code Block 11
 # ======================================================================
 
 capacity = specs['capacity_mw'] * 0.70
-    else:
-        capacity = specs['capacity_mw']
+    # else:
+        # capacity = specs['capacity_mw']
     
-    if capacity > 0:
-        available_gen.append({
-            'source': source_name,
-            'capacity_mw': capacity,
-            'min_output_mw': specs.get('min_output_mw', 0),
-            'variable_cost_mwh': specs['variable_cost_mwh'],
-            'emissions_co2_ton_mwh': specs['emissions_co2_ton_mwh']
-        })
+    # if capacity > 0:
+        # available_gen.append({
+            # 'source': source_name,
+            # 'capacity_mw': capacity,
+            # 'min_output_mw': specs.get('min_output_mw', 0),
+            # 'variable_cost_mwh': specs['variable_cost_mwh'],
+            # 'emissions_co2_ton_mwh': specs['emissions_co2_ton_mwh']
+        # })
 
 # ======================================================================
 # Code Block 12
@@ -615,7 +617,7 @@ dispatch_mw = min(gen['capacity_mw'], remaining_demand)
 if dispatch_mw < gen['min_output_mw'] and dispatch_mw > 0:
         dispatch_mw = gen['min_output_mw']
     
-    if dispatch_mw > 0:
+    # if dispatch_mw > 0:
         cost = dispatch_mw * gen['variable_cost_mwh']
         emissions = dispatch_mw * gen['emissions_co2_ton_mwh']
         
@@ -680,7 +682,7 @@ for hour, demand_mw in enumerate(demand_profile_24h):
 if specs.get('variability', False):
             continue
         
-        current_state = unit_states[source_name]
+        # current_state = unit_states[source_name]
 
 # ======================================================================
 # Code Block 20
@@ -688,11 +690,11 @@ if specs.get('variability', False):
 
 if source_name == 'coal':
             should_be_online = demand_mw > 800
-        elif source_name == 'natural_gas_combined_cycle':
+        # elif source_name == 'natural_gas_combined_cycle':
             should_be_online = demand_mw > 1200
-        elif source_name == 'natural_gas_peaker':
+        # elif source_name == 'natural_gas_peaker':
             should_be_online = demand_mw > 1600
-        else:
+        # else:
             should_be_online = True
 
 # ======================================================================
@@ -702,7 +704,7 @@ if source_name == 'coal':
 if current_state['online']:
             if current_state['hours_online'] < specs['min_up_time_hours']:
                 should_be_online = True  # Can't shut down yet
-        else:
+        # else:
             if current_state['hours_offline'] < specs['min_down_time_hours']:
                 should_be_online = False  # Can't start yet
 
@@ -711,28 +713,28 @@ if current_state['online']:
 # ======================================================================
 
 hour_dispatch['hour_cost'] += specs['startup_cost']
-            total_cost += specs['startup_cost']
-            current_state['online'] = True
-            current_state['hours_online'] = 1
-            current_state['hours_offline'] = 0
-        elif not should_be_online and current_state['online']:
+            # total_cost += specs['startup_cost']
+            # current_state['online'] = True
+            # current_state['hours_online'] = 1
+            # current_state['hours_offline'] = 0
+        # elif not should_be_online and current_state['online']:
 
 # ======================================================================
 # Code Block 23
 # ======================================================================
 
 hour_dispatch['hour_cost'] += specs['shutdown_cost']
-            total_cost += specs['shutdown_cost']
-            current_state['online'] = False
-            current_state['hours_offline'] = 1
-            current_state['hours_online'] = 0
-        elif current_state['online']:
-            current_state['hours_online'] += 1
-        else:
-            current_state['hours_offline'] += 1
+            # total_cost += specs['shutdown_cost']
+            # current_state['online'] = False
+            # current_state['hours_offline'] = 1
+            # current_state['hours_online'] = 0
+        # elif current_state['online']:
+            # current_state['hours_online'] += 1
+        # else:
+            # current_state['hours_offline'] += 1
         
-        if current_state['online']:
-            hour_dispatch['units_online'].append(source_name)
+        # if current_state['online']:
+            # hour_dispatch['units_online'].append(source_name)
 
 # ======================================================================
 # Code Block 24
@@ -741,12 +743,12 @@ hour_dispatch['hour_cost'] += specs['shutdown_cost']
 online_sources = {name: specs for name, specs in generation_sources.items() 
                      if unit_states[name]['online'] or specs.get('variability', False)}
     
-    dispatch = calculate_merit_order_dispatch(demand_mw, online_sources, hour)
-    hour_dispatch['generation'] = dispatch['dispatch']
-    hour_dispatch['hour_cost'] += dispatch['total_cost']
-    total_cost += dispatch['total_cost']
+    # dispatch = calculate_merit_order_dispatch(demand_mw, online_sources, hour)
+    # hour_dispatch['generation'] = dispatch['dispatch']
+    # hour_dispatch['hour_cost'] += dispatch['total_cost']
+    # total_cost += dispatch['total_cost']
     
-    commitment_schedule.append(hour_dispatch)
+    # commitment_schedule.append(hour_dispatch)
 
 return {
     'schedule': commitment_schedule,
@@ -850,7 +852,7 @@ hour=14
 # Code Block 35
 # ======================================================================
 
-daily_emissions_limit_tons):
+# daily_emissions_limit_tons):
 """
 Optimize dispatch subject to daily emissions constraint.
 
@@ -862,14 +864,15 @@ cumulative_emissions = 0
 total_cost = 0
 
 for hour, demand_mw in enumerate(demand_profile_24h):
+    pass
 
 # ======================================================================
 # Code Block 36
 # ======================================================================
 
 hours_remaining = 24 - hour
-    emissions_budget = daily_emissions_limit_tons - cumulative_emissions
-    emissions_budget_per_hour = emissions_budget / hours_remaining if hours_remaining > 0 else 0
+    # emissions_budget = daily_emissions_limit_tons - cumulative_emissions
+    # emissions_budget_per_hour = emissions_budget / hours_remaining if hours_remaining > 0 else 0
 
 # ======================================================================
 # Code Block 37
@@ -882,8 +885,8 @@ emissions_penalty = 50  # $/ton CO2 (carbon price)
 # ======================================================================
 
 available_sources = {}
-    for name, specs in generation_sources.items():
-        modified_specs = specs.copy()
+    # for name, specs in generation_sources.items():
+        # modified_specs = specs.copy()
 
 # ======================================================================
 # Code Block 39
@@ -893,9 +896,9 @@ modified_specs['variable_cost_mwh'] = (
             specs['variable_cost_mwh'] + 
             specs['emissions_co2_ton_mwh'] * emissions_penalty
         )
-        available_sources[name] = modified_specs
+        # available_sources[name] = modified_specs
     
-    dispatch = calculate_merit_order_dispatch(demand_mw, available_sources, hour)
+    # dispatch = calculate_merit_order_dispatch(demand_mw, available_sources, hour)
 
 # ======================================================================
 # Code Block 40
@@ -908,16 +911,16 @@ print(f"  Hour {hour}: Emissions constraint binding, adjusting dispatch")
 # ======================================================================
 
 cumulative_emissions += dispatch['total_emissions_tons']
-    total_cost += dispatch['total_cost']
+    # total_cost += dispatch['total_cost']
     
-    schedule.append({
-        'hour': hour,
-        'demand': demand_mw,
-        'dispatch': dispatch,
-        'hour_emissions': dispatch['total_emissions_tons'],
-        'cumulative_emissions': cumulative_emissions,
-        'emissions_budget_remaining': daily_emissions_limit_tons - cumulative_emissions
-    })
+    # schedule.append({
+        # 'hour': hour,
+        # 'demand': demand_mw,
+        # 'dispatch': dispatch,
+        # 'hour_emissions': dispatch['total_emissions_tons'],
+        # 'cumulative_emissions': cumulative_emissions,
+        # 'emissions_budget_remaining': daily_emissions_limit_tons - cumulative_emissions
+    # })
 
 return {
     'schedule': schedule,

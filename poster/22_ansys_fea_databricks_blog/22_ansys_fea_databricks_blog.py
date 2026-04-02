@@ -214,7 +214,7 @@ spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.{schema}")
 
 # COMMAND ----------
 # Install dependencies
-%pip install -q ansys-mapdl-reader pyvista matplotlib pandas
+# %pip install -q ansys-mapdl-reader pyvista matplotlib pandas
 dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -301,12 +301,12 @@ for dbfs_path in rst_paths:
 if all_disp:
     disp_df = pd.concat(all_disp, ignore_index=True)
     spark.createDataFrame(disp_df).write.mode('overwrite').saveAsTable(TABLE_DISP)
-    print(f'✓ Wrote {len(disp_df):,} displacement records to {TABLE_DISP}')
+    # print(f' Wrote {len(disp_df):,} displacement records to {TABLE_DISP}')
 
 if all_stress:
     stress_df = pd.concat(all_stress, ignore_index=True)
     spark.createDataFrame(stress_df).write.mode('overwrite').saveAsTable(TABLE_STRESS)
-    print(f'✓ Wrote {len(stress_df):,} stress records to {TABLE_STRESS}')
+    # print(f' Wrote {len(stress_df):,} stress records to {TABLE_STRESS}')
 
 # COMMAND ----------
 # Query: Find high-stress nodes
@@ -348,7 +348,7 @@ ax.spines['bottom'].set_position(('outward', 5))
 plt.tight_layout()
 plt.savefig('/dbfs/FileStore/von_mises_profile.png', dpi=300, bbox_inches='tight')
 plt.show()
-print('✓ Saved visualization')
+# print(' Saved visualization')
 
 # COMMAND ----------
 # ML: Train surrogate model
@@ -384,7 +384,7 @@ model = rf.fit(train)
 
 predictions = model.transform(test)
 predictions.select('source_file', 'max_stress', 'prediction').show(10)
-print('✓ Surrogate model trained')
+# print(' Surrogate model trained')
 
 # ======================================================================
 # Code Block 9
@@ -420,7 +420,7 @@ for j, node in enumerate(nnum):
 # Code Block 11
 # ======================================================================
 
-color='black', linewidth=1, marker='o', markersize=2)
+# color='black', linewidth=1, marker='o', markersize=2
 
 # ======================================================================
 # Code Block 12
@@ -471,8 +471,9 @@ for i in range(n_sets):
 # Code Block 17
 # ======================================================================
 
+    pass
 disp = res.nodal_displacement(i)
-    disp_records = pd.DataFrame({
+disp_records = pd.DataFrame({
         'source_file': filename,
         'set_idx': i,
         'node': nnum,
@@ -480,16 +481,16 @@ disp = res.nodal_displacement(i)
         'uy': disp[:, 1],
         'uz': disp[:, 2]
     })
-    all_disp.append(disp_records)
+all_disp.append(disp_records)
 
 # ======================================================================
 # Code Block 18
 # ======================================================================
 
 stress = res.nodal_stress(i)
-    vm = von_mises(stress[:, 0], stress[:, 1], stress[:, 2],
+vm = von_mises(stress[:, 0], stress[:, 1], stress[:, 2],
                    stress[:, 3], stress[:, 4], stress[:, 5])
-    stress_records = pd.DataFrame({
+stress_records = pd.DataFrame({
         'source_file': filename,
         'set_idx': i,
         'node': nnum,
@@ -501,7 +502,7 @@ stress = res.nodal_stress(i)
         'txz': stress[:, 5],
         'von_mises': vm
     })
-    all_stress.append(stress_records)
+all_stress.append(stress_records)
 
 # ======================================================================
 # Code Block 19
@@ -509,7 +510,7 @@ stress = res.nodal_stress(i)
 
 disp_df = pd.concat(all_disp, ignore_index=True)
 spark.createDataFrame(disp_df).write.mode('overwrite').saveAsTable(TABLE_DISP)
-print(f'✓ Wrote {len(disp_df):,} displacement records to {TABLE_DISP}')
+# print(f' Wrote {len(disp_df):,} displacement records to {TABLE_DISP}')
 
 # ======================================================================
 # Code Block 20
@@ -517,13 +518,13 @@ print(f'✓ Wrote {len(disp_df):,} displacement records to {TABLE_DISP}')
 
 stress_df = pd.concat(all_stress, ignore_index=True)
 spark.createDataFrame(stress_df).write.mode('overwrite').saveAsTable(TABLE_STRESS)
-print(f'✓ Wrote {len(stress_df):,} stress records to {TABLE_STRESS}')
+# print(f' Wrote {len(stress_df):,} stress records to {TABLE_STRESS}')
 
 # ======================================================================
 # Code Block 21
 # ======================================================================
 
-color='black', linewidth=1, marker='o', markersize=2)
+# color='black', linewidth=1, marker='o', markersize=2
 
 # ======================================================================
 # Code Block 22

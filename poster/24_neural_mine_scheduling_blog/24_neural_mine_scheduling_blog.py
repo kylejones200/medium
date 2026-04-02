@@ -68,7 +68,7 @@ def generate_pit_block_model(nx=50, ny=50, nz=10, seed=42):
     
     df['grade_cu_pct'] = np.clip(df['grade_cu_pct'], 0.1, 3.5)
     
-    # Tonnage (assume 25m × 25m × 10m blocks, density 2.5 t/m³)
+    # Tonnage (assume 25m  25m  10m blocks, density 2.5 t/m³)
     df['tonnage'] = 25 * 25 * 10 * 2.5
     
     # Rock type (waste vs ore based on cutoff grade)
@@ -416,7 +416,7 @@ def evaluate_schedule_npv(df, schedule, discount_rate=0.08):
 # Code Block 8
 # ======================================================================
 
-# Use mixed precision for 2× speedup
+# Use mixed precision for 2 speedup
 model = model.half()  # FP16
 features = features.half()
 
@@ -428,34 +428,34 @@ pruned_indices = df.nlargest(top_k, 'net_value')['block_id'].values
 # Code Block 9
 # ======================================================================
 
-def schedule_pit_beam_search(model, df, beam_width=5, ...):
-    """
-    Use beam search to explore top-K candidate blocks at each step.
-    """
+# def schedule_pit_beam_search(model, df, beam_width=5, ...):
+    # """
+    # Use beam search to explore top-K candidate blocks at each step.
+    # """
     # Maintain top-K partial schedules
-    beams = [{'schedule': [], 'mined': set(), 'score': 0}]
+    # beams = [{'schedule': [], 'mined': set(), 'score': 0}]
     
-    for period in range(n_periods):
-        candidates = []
-        for beam in beams:
+    # for period in range(n_periods):
+        # candidates = []
+        # for beam in beams:
             # Generate all legal next moves
-            legal_mask = compute_legal_mask(df, beam['mined'], ...)
-            probs = model(x, legal_mask)
+            # legal_mask = compute_legal_mask(df, beam['mined'], ...)
+            # probs = model(x, legal_mask)
             
             # Take top-K moves
-            top_k_blocks = probs.topk(beam_width)
-            for block_idx, prob in zip(top_k_blocks.indices, top_k_blocks.values):
-                new_beam = {
-                    'schedule': beam['schedule'] + [(block_idx, period)],
-                    'mined': beam['mined'] | {block_idx},
-                    'score': beam['score'] + prob.log()
-                }
-                candidates.append(new_beam)
+            # top_k_blocks = probs.topk(beam_width)
+            # for block_idx, prob in zip(top_k_blocks.indices, top_k_blocks.values):
+                # new_beam = {
+                    # 'schedule': beam['schedule'] + [(block_idx, period)],
+                    # 'mined': beam['mined'] | {block_idx},
+                    # 'score': beam['score'] + prob.log()
+                # }
+                # candidates.append(new_beam)
         
         # Keep top-K beams
-        beams = sorted(candidates, key=lambda b: b['score'], reverse=True)[:beam_width]
+        # beams = sorted(candidates, key=lambda b: b['score'], reverse=True)[:beam_width]
     
-    return beams[0]['schedule']
+    # return beams[0]['schedule']
 
 # ======================================================================
 # Code Block 10
@@ -714,19 +714,19 @@ if __name__ == '__main__':
     ax.spines['right'].set_visible(False)
     plt.tight_layout()
     plt.savefig('mine_schedule_demo.png', dpi=300, bbox_inches='tight')
-    print('✓ Visualization saved')
+    # print('✓ Visualization saved')
 
 # ======================================================================
 # Code Block 13
 # ======================================================================
 
-maximize: Σ_{b,t} (revenue[b] - cost[b]) × discount^t × x[b,t]
+# maximize: Σ_{b,t} (revenue[b] - cost[b]) × discount^t × x[b,t]
 
-subject to:
-  Σ_b x[b,t] = 1                    for all blocks b (mine once)
-  x[b,t] ≤ Σ_{t'<t} x[p,t']         for all predecessors p of b (precedence)
-  Σ_b tonnage[b] × x[b,t] ≤ capacity[t]   (capacity)
-  grade_min ≤ Σ_b grade[b]×tonnage[b]×x[b,t] / Σ_b tonnage[b]×x[b,t] ≤ grade_max  (blend)
+# subject to:
+  # Σ_b x[b,t] = 1                    for all blocks b (mine once)
+  # x[b,t] ≤ Σ_{t'<t} x[p,t']         for all predecessors p of b (precedence)
+  # Σ_b tonnage[b] × x[b,t] ≤ capacity[t]   (capacity)
+  # grade_min ≤ Σ_b grade[b]×tonnage[b]×x[b,t] / Σ_b tonnage[b]×x[b,t] ≤ grade_max  (blend)
 
 # ======================================================================
 # Code Block 14
@@ -749,18 +749,18 @@ block_id = 0
 # ======================================================================
 
 r = np.sqrt((x - nx/2)**2 + (y - ny/2)**2)
-            max_r = (nx/2) - z * 2  # Narrower at depth
-            if r > max_r:
-                continue
+            # max_r = (nx/2) - z * 2  # Narrower at depth
+            # if r > max_r:
+                # continue
             
-            blocks.append({
-                'block_id': block_id,
-                'x': x,
-                'y': y,
-                'z': z,
-                'bench': nz - z  # Higher bench number = higher elevation
-            })
-            block_id += 1
+            # blocks.append({
+                # 'block_id': block_id,
+                # 'x': x,
+                # 'y': y,
+                # 'z': z,
+                # 'bench': nz - z  # Higher bench number = higher elevation
+            # })
+            # block_id += 1
 
 df = pd.DataFrame(blocks)
 n = len(df)
@@ -785,8 +785,8 @@ for _, row in df.iterrows():
 # ======================================================================
 
 grade_cu = 0.8 + 0.5 * grade_base
-    grade_cu = np.clip(grade_cu, 0.1, 3.0)
-    grades.append(grade_cu)
+    # grade_cu = np.clip(grade_cu, 0.1, 3.0)
+    # grades.append(grade_cu)
 
 df['grade_cu_pct'] = grades
 
@@ -869,7 +869,7 @@ return predecessors
 # Code Block 27
 # ======================================================================
 
-grade_min=0.8, grade_max=1.2):
+# grade_min=0.8, grade_max=1.2):
 """
 Returns a boolean mask [n_blocks] indicating which blocks can be legally mined this period.
 """
@@ -884,8 +884,8 @@ for i, row in df.iterrows():
 # ======================================================================
 
 preds = predecessors[block_id]
-    if not all(p in mined_blocks for p in preds):
-        continue
+    # if not all(p in mined_blocks for p in preds):
+        # continue
 
 # ======================================================================
 # Code Block 29
@@ -898,7 +898,7 @@ if row['rock_type'] == 'ore':
         if new_blend_avg < grade_min or new_blend_avg > grade_max:
             continue
     
-    mask[i] = True
+    # mask[i] = True
 
 return mask
 
@@ -929,7 +929,7 @@ encoder_layer = nn.TransformerEncoderLayer(
         batch_first=True,
         dropout=0.1
     )
-    self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=nlayers)
+    # self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=nlayers)
 
 # ======================================================================
 # Code Block 33
@@ -971,7 +971,7 @@ h = self.transformer_encoder(h)  # [batch, n_blocks, d_model]
 # ======================================================================
 
 q = self.query_token.expand(batch_size, -1, -1)  # [batch, 1, d_model]
-    q_proj = self.score_proj(q)  # [batch, 1, d_model]
+    # q_proj = self.score_proj(q)  # [batch, 1, d_model]
 
 # ======================================================================
 # Code Block 38
@@ -991,7 +991,7 @@ scores = scores.masked_fill(~legal_mask, -1e9)
 
 probs = F.softmax(scores, dim=-1)
     
-    return probs
+    # return probs
 
 # ======================================================================
 # Code Block 41
@@ -1103,16 +1103,16 @@ features = (features - features.mean(dim=0)) / (features.std(dim=0) + 1e-8)
 # ======================================================================
 
 mined_blocks = set()
-    remaining_capacity = 10000
+    # remaining_capacity = 10000
     
-    for step, (target_block_id, period) in enumerate(teacher_schedule[:100]):  # Limit steps
+    # for step, (target_block_id, period) in enumerate(teacher_schedule[:100]):  # Limit steps
 
 # ======================================================================
 # Code Block 53
 # ======================================================================
 
 legal_mask_np = compute_legal_mask(df, mined_blocks, remaining_capacity, 0, 0)
-        legal_mask = torch.tensor(legal_mask_np, dtype=torch.bool).unsqueeze(0).to(device)
+        # legal_mask = torch.tensor(legal_mask_np, dtype=torch.bool).unsqueeze(0).to(device)
 
 # ======================================================================
 # Code Block 54
@@ -1121,9 +1121,9 @@ legal_mask_np = compute_legal_mask(df, mined_blocks, remaining_capacity, 0, 0)
 dynamic_features = torch.tensor([
             [remaining_capacity / 10000, len(mined_blocks) / n_blocks, period / 50]
         ], dtype=torch.float32).to(device)
-        dynamic_features = dynamic_features.repeat(n_blocks, 1)
+        # dynamic_features = dynamic_features.repeat(n_blocks, 1)
         
-        x = torch.cat([features, dynamic_features], dim=-1).unsqueeze(0)  # [1, n_blocks, d_in]
+        # x = torch.cat([features, dynamic_features], dim=-1).unsqueeze(0)  # [1, n_blocks, d_in]
 
 # ======================================================================
 # Code Block 55
@@ -1143,21 +1143,21 @@ target_idx = torch.tensor([target_block_id], dtype=torch.long).to(device)
 
 loss = F.cross_entropy(probs.log(), target_idx)
         
-        optimizer.zero_grad()
-        loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-        optimizer.step()
+        # optimizer.zero_grad()
+        # loss.backward()
+        # torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        # optimizer.step()
         
-        total_loss += loss.item()
+        # total_loss += loss.item()
 
 # ======================================================================
 # Code Block 58
 # ======================================================================
 
 mined_blocks.add(target_block_id)
-        remaining_capacity -= df.loc[target_block_id, 'tonnage']
-        if remaining_capacity <= 0:
-            remaining_capacity = 10000  # Reset for next period
+        # remaining_capacity -= df.loc[target_block_id, 'tonnage']
+        # if remaining_capacity <= 0:
+            # remaining_capacity = 10000  # Reset for next period
     
 return total_loss / len(train_pits)
 
@@ -1188,16 +1188,17 @@ for period in range(n_periods):
     remaining_capacity = capacity_per_period
     
     while True:
+        pass
 
 # ======================================================================
 # Code Block 61
 # ======================================================================
 
 legal_mask_np = compute_legal_mask(df, mined_blocks, remaining_capacity, 0, 0)
-        if not legal_mask_np.any():
-            break  # No legal moves
+        # if not legal_mask_np.any():
+            # break  # No legal moves
         
-        legal_mask = torch.tensor(legal_mask_np, dtype=torch.bool).unsqueeze(0).to(device)
+        # legal_mask = torch.tensor(legal_mask_np, dtype=torch.bool).unsqueeze(0).to(device)
 
 # ======================================================================
 # Code Block 62
@@ -1206,9 +1207,9 @@ legal_mask_np = compute_legal_mask(df, mined_blocks, remaining_capacity, 0, 0)
 dynamic_features = torch.tensor([
             [remaining_capacity / capacity_per_period, len(mined_blocks) / n_blocks, period / n_periods]
         ], dtype=torch.float32).to(device)
-        dynamic_features = dynamic_features.repeat(n_blocks, 1)
+        # dynamic_features = dynamic_features.repeat(n_blocks, 1)
         
-        x = torch.cat([features, dynamic_features], dim=-1).unsqueeze(0)
+        # x = torch.cat([features, dynamic_features], dim=-1).unsqueeze(0)
 
 # ======================================================================
 # Code Block 63
@@ -1222,18 +1223,18 @@ with torch.no_grad():
 # ======================================================================
 
 block_idx = probs.argmax().item()
-        block_id = df.iloc[block_idx]['block_id']
+        # block_id = df.iloc[block_idx]['block_id']
 
 # ======================================================================
 # Code Block 65
 # ======================================================================
 
 schedule.append((block_id, period))
-        mined_blocks.add(block_id)
-        remaining_capacity -= df.iloc[block_idx]['tonnage']
+        # mined_blocks.add(block_id)
+        # remaining_capacity -= df.iloc[block_idx]['tonnage']
         
-        if remaining_capacity <= 0:
-            break
+        # if remaining_capacity <= 0:
+            # break
 
 return schedule
 
@@ -1258,26 +1259,27 @@ beams = [{'schedule': [], 'mined': set(), 'score': 0}]
 for period in range(n_periods):
     candidates = []
     for beam in beams:
+        pass
 
 # ======================================================================
 # Code Block 68
 # ======================================================================
 
 legal_mask = compute_legal_mask(df, beam['mined'], ...)
-        probs = model(x, legal_mask)
+        # probs = model(x, legal_mask)
 
 # ======================================================================
 # Code Block 69
 # ======================================================================
 
 top_k_blocks = probs.topk(beam_width)
-        for block_idx, prob in zip(top_k_blocks.indices, top_k_blocks.values):
-            new_beam = {
-                'schedule': beam['schedule'] + [(block_idx, period)],
-                'mined': beam['mined'] | {block_idx},
-                'score': beam['score'] + prob.log()
-            }
-            candidates.append(new_beam)
+        # for block_idx, prob in zip(top_k_blocks.indices, top_k_blocks.values):
+            # new_beam = {
+                # 'schedule': beam['schedule'] + [(block_idx, period)],
+                # 'mined': beam['mined'] | {block_idx},
+                # 'score': beam['score'] + prob.log()
+            # }
+            # candidates.append(new_beam)
 
 # ======================================================================
 # Code Block 70
@@ -1513,4 +1515,4 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 plt.tight_layout()
 plt.savefig('mine_schedule_demo.png', dpi=300, bbox_inches='tight')
-print('✓ Visualization saved')
+# print('✓ Visualization saved')

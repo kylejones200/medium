@@ -245,7 +245,7 @@ def extract_dinov2_embeddings_batch(spark, tiles_df, catalog_path, batch_size=32
      .mode("overwrite")
      .saveAsTable(f"{catalog_path}.silver.tile_embeddings"))
     
-    print(f"✓ Embeddings extracted: {n_tiles} tiles")
+    # print(f"✓ Embeddings extracted: {n_tiles} tiles")
     print(f"  Embedding dimension: 384")
     print(f"  Storage: Delta table")
     
@@ -522,7 +522,7 @@ def check_encroachment_alerts(spark, catalog_path, alert_threshold=5.0):
     
     if alert_count > 0:
         # Publish to notification system
-        message = f"⚠️ {alert_count} high-priority ROW encroachment alerts detected"
+        # message = f"⚠️ {alert_count} high-priority ROW encroachment alerts detected"
         
         # Send to Slack/Teams/PagerDuty
         w.workspace.create_notification(
@@ -538,9 +538,10 @@ def check_encroachment_alerts(spark, catalog_path, alert_threshold=5.0):
          .mode("append")
          .saveAsTable(f"{catalog_path}.logs.encroachment_alerts"))
         
-        print(f"✓ Sent {alert_count} encroachment alerts")
+        # print(f"✓ Sent {alert_count} encroachment alerts")
     else:
-        print("✓ No high-priority encroachments detected")
+        pass
+        # print("✓ No high-priority encroachments detected")
 
 # Schedule as Databricks Job (daily)
 check_encroachment_alerts(spark, "catalog.pipeline", alert_threshold=5.0)
@@ -692,8 +693,8 @@ def extract_embeddings_udf(image_paths_batch):
 # ======================================================================
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
-    model = model.to(device).eval()
+    # model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vits14')
+    # model = model.to(device).eval()
 
 # ======================================================================
 # Code Block 17
@@ -706,25 +707,25 @@ transform = transforms.Compose([
                            std=[0.229, 0.224, 0.225])
     ])
     
-    embeddings = []
-    with torch.no_grad():
-        for img_path in image_paths_batch:
-            try:
+    # embeddings = []
+    # with torch.no_grad():
+        # for img_path in image_paths_batch:
+            # try:
 
 # ======================================================================
 # Code Block 18
 # ======================================================================
 
 img = Image.open(img_path).convert('RGB')
-                img_tensor = transform(img).unsqueeze(0).to(device)
+                # img_tensor = transform(img).unsqueeze(0).to(device)
 
 # ======================================================================
 # Code Block 19
 # ======================================================================
 
 emb = model(img_tensor).squeeze().cpu().numpy()
-                embeddings.append(emb.tolist())
-            except Exception as e:
+                # embeddings.append(emb.tolist())
+            # except Exception as e:
 
 # ======================================================================
 # Code Block 20
@@ -732,7 +733,7 @@ emb = model(img_tensor).squeeze().cpu().numpy()
 
 embeddings.append([0.0] * 384)
     
-    return embeddings
+    # return embeddings
 
 # ======================================================================
 # Code Block 21
@@ -767,13 +768,13 @@ for i in range(n_tiles):
 
 if cluster == 0:  # Normal vegetation
         center = np.random.randn(384) * 0.1
-    elif cluster == 1:  # Maintained ROW
+    # elif cluster == 1:  # Maintained ROW
         center = np.ones(384) * 0.5 + np.random.randn(384) * 0.15
-    else:  # Encroachment
+    # else:  # Encroachment
         center = np.random.randn(384) + 2.0
     
-    embedding = center + np.random.randn(384) * 0.3
-    embeddings_list.append(embedding.tolist())
+    # embedding = center + np.random.randn(384) * 0.3
+    # embeddings_list.append(embedding.tolist())
 
 # ======================================================================
 # Code Block 26
@@ -793,7 +794,7 @@ embeddings_df = spark.createDataFrame(tiles_with_embeddings)
  .mode("overwrite")
  .saveAsTable(f"{catalog_path}.silver.tile_embeddings"))
 
-print(f"✓ Embeddings extracted: {n_tiles} tiles")
+# print(f"✓ Embeddings extracted: {n_tiles} tiles")
 print(f"  Embedding dimension: 384")
 print(f"  Storage: Delta table")
 
@@ -1070,78 +1071,78 @@ results = main()
 # Code Block 54
 # ======================================================================
 
-======================================================================
-PIPELINE ROW ENCROACHMENT DETECTION - DINOV2 + DATABRICKS
-======================================================================
+# ======================================================================
+# PIPELINE ROW ENCROACHMENT DETECTION - DINOV2 + DATABRICKS
+# ======================================================================
 
-DINOv2 Encroachment Detection Pipeline Initialized
-  Spark version: 3.5.0
-  CUDA available: True
-  GPU: NVIDIA A100-SXM4-40GB
+# DINOv2 Encroachment Detection Pipeline Initialized
+  # Spark version: 3.5.0
+  # CUDA available: True
+  # GPU: NVIDIA A100-SXM4-40GB
 
-ROW Corridor Tiling:
-  Buffer: 500m
-  Tile size: 50m
-  Total tiles: 20,000
+# ROW Corridor Tiling:
+  # Buffer: 500m
+  # Tile size: 50m
+  # Total tiles: 20,000
 
-Aerial Imagery Ingested:
-  Total tiles: 20,000
-  Resolution: 0.5m
-  Date: 2024-01-15
+# Aerial Imagery Ingested:
+  # Total tiles: 20,000
+  # Resolution: 0.5m
+  # Date: 2024-01-15
 
-Loading DINOv2 Model...
-  Model: dinov2_vits14 (ViT-Small, 384-dim embeddings)
-  Pretrained on: 142M images (ImageNet-22k + curated)
+# Loading DINOv2 Model...
+  # Model: dinov2_vits14 (ViT-Small, 384-dim embeddings)
+  # Pretrained on: 142M images (ImageNet-22k + curated)
 
-Extracting Embeddings (simulated for demo)...
-✓ Embeddings extracted: 20,000 tiles
-  Embedding dimension: 384
-  Storage: Delta table
+# Extracting Embeddings (simulated for demo)...
+# ✓ Embeddings extracted: 20,000 tiles
+  # Embedding dimension: 384
+  # Storage: Delta table
 
-Clustering with K-means (k=20)...
+# Clustering with K-means (k=20)...
 
-Clustering Results:
-  Clusters: 20
-  Total tiles: 20,000
-  Mean anomaly score: 2.456
-  Std dev: 0.823
-  95th percentile: 3.912
-  99th percentile: 4.567
+# Clustering Results:
+  # Clusters: 20
+  # Total tiles: 20,000
+  # Mean anomaly score: 2.456
+  # Std dev: 0.823
+  # 95th percentile: 3.912
+  # 99th percentile: 4.567
 
-Anomaly Detection:
-  Threshold (μ + 3σ): 4.925
-  Outliers flagged: 287 (1.44%)
+# Anomaly Detection:
+  # Threshold (μ + 3σ): 4.925
+  # Outliers flagged: 287 (1.44%)
 
-======================================================================
-GENERATING INSPECTION WORK LIST
-======================================================================
+# ======================================================================
+# GENERATING INSPECTION WORK LIST
+# ======================================================================
 
-Work List Summary:
-  Threshold (μ + 3σ): 4.925
-  Total outliers: 287
-  Top priorities for inspection: 200
+# Work List Summary:
+  # Threshold (μ + 3σ): 4.925
+  # Total outliers: 287
+  # Top priorities for inspection: 200
 
-Top 10 Inspection Priorities:
-Rank   Tile ID         Score      Lon          Lat        
-----------------------------------------------------------------------
-1      TILE_012845      6.234    -101.94123   34.28456
-2      TILE_007234      6.187    -102.08721   34.13289
-3      TILE_018923      6.094    -101.79234   34.35612
-4      TILE_003456      5.978    -102.23451   34.06234
-5      TILE_015678      5.912    -101.86789   34.31245
-6      TILE_009821      5.867    -102.01234   34.19087
-7      TILE_014532      5.823    -101.89123   34.27891
-8      TILE_011234      5.789    -101.97654   34.24312
-9      TILE_008765      5.734    -102.04567   34.15678
-10     TILE_016789      5.698    -101.83456   34.32789
+# Top 10 Inspection Priorities:
+# Rank   Tile ID         Score      Lon          Lat        
+# ----------------------------------------------------------------------
+# 1      TILE_012845      6.234    -101.94123   34.28456
+# 2      TILE_007234      6.187    -102.08721   34.13289
+# 3      TILE_018923      6.094    -101.79234   34.35612
+# 4      TILE_003456      5.978    -102.23451   34.06234
+# 5      TILE_015678      5.912    -101.86789   34.31245
+# 6      TILE_009821      5.867    -102.01234   34.19087
+# 7      TILE_014532      5.823    -101.89123   34.27891
+# 8      TILE_011234      5.789    -101.97654   34.24312
+# 9      TILE_008765      5.734    -102.04567   34.15678
+# 10     TILE_016789      5.698    -101.83456   34.32789
 
-Geographic Distribution:
-  Distinct inspection locations (~1km clusters): 42
-  Average tiles per location: 4.8
+# Geographic Distribution:
+  # Distinct inspection locations (~1km clusters): 42
+  # Average tiles per location: 4.8
 
-======================================================================
-Pipeline complete! Inspection worklist ready.
-======================================================================
+# ======================================================================
+# Pipeline complete! Inspection worklist ready.
+# ======================================================================
 
 # ======================================================================
 # Code Block 55
@@ -1217,12 +1218,13 @@ alerts = spark.sql(f"""
 alert_count = alerts.count()
 
 if alert_count > 0:
+    pass
 
 # ======================================================================
 # Code Block 64
 # ======================================================================
 
-message = f"⚠️ {alert_count} high-priority ROW encroachment alerts detected"
+# message = f"⚠️ {alert_count} high-priority ROW encroachment alerts detected"
 
 # ======================================================================
 # Code Block 65
@@ -1244,6 +1246,6 @@ w.workspace.create_notification(
      .mode("append")
      .saveAsTable(f"{catalog_path}.logs.encroachment_alerts"))
     
-    print(f"✓ Sent {alert_count} encroachment alerts")
-else:
-    print("✓ No high-priority encroachments detected")
+    # print(f"✓ Sent {alert_count} encroachment alerts")
+# else:
+    # print("✓ No high-priority encroachments detected")

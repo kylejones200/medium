@@ -496,7 +496,7 @@ for i, signal in enumerate(signals, 1):
 # Code Block 6
 # ======================================================================
 
-volatility, option_type='call', american=False):
+# volatility, option_type='call', american=False):
 """
 Calculate power option value using Black-Scholes framework.
 
@@ -644,7 +644,7 @@ american=False
 # Code Block 23
 # ======================================================================
 
-strike_price, volatility, num_exercise_rights):
+# strike_price, volatility, num_exercise_rights):
 """
 Value a swing option using simplified dynamic programming.
 
@@ -667,6 +667,7 @@ for period in range(n_periods - 1, -1, -1):
     forward_price = forward_prices[period]
     
     for exercises_left in range(num_exercise_rights + 1):
+        pass
 
 # ======================================================================
 # Code Block 26
@@ -679,7 +680,7 @@ base_payoff = max(0, forward_price - strike_price) * base_quantity_mw
 # ======================================================================
 
 swing_up_payoff = 0
-        if exercises_left > 0:
+if exercises_left > 0:
             swing_up_quantity = base_quantity_mw + swing_range_mw
             swing_up_payoff = max(0, forward_price - strike_price) * swing_up_quantity
 
@@ -688,7 +689,7 @@ swing_up_payoff = 0
 # ======================================================================
 
 swing_down_payoff = 0
-        if exercises_left > 0:
+if exercises_left > 0:
             swing_down_quantity = max(0, base_quantity_mw - swing_range_mw)
             swing_down_payoff = max(0, forward_price - strike_price) * swing_down_quantity
 
@@ -701,7 +702,7 @@ option_values[period][exercises_left] = max(
                 swing_up_payoff + option_values[period + 1][exercises_left - 1],
                 swing_down_payoff + option_values[period + 1][exercises_left - 1]
             )
-        else:
+# else:
 
 # ======================================================================
 # Code Block 30
@@ -745,7 +746,7 @@ num_exercise_rights=10       # Can swing 10 times during month
 # Code Block 34
 # ======================================================================
 
-time_to_expiry_days, option_type='call'):
+# time_to_expiry_days, option_type='call'):
 """
 Extract implied volatility from market option prices.
 
@@ -758,6 +759,7 @@ from scipy.optimize import brentq
 implied_vols = []
 
 for strike, market_price in zip(strikes, option_prices):
+    pass
 
 # ======================================================================
 # Code Block 35
@@ -776,15 +778,19 @@ def vol_objective(vol):
         except:
             return 1e6  # Large error if calculation fails
     
-    try:
+try:
+    pass
+except Exception:
+    pass
+    pass
 
 # ======================================================================
 # Code Block 36
 # ======================================================================
 
 implied_vol = brentq(vol_objective, 10, 300, maxiter=100)
-        implied_vols.append(implied_vol)
-    except:
+implied_vols.append(implied_vol)
+# except:
 
 # ======================================================================
 # Code Block 37
@@ -902,9 +908,9 @@ scenario_option = black_scholes_power_option(
 # ======================================================================
 
 pnl = (scenario_option['option_value'] - position['option']['option_value']) * spec['quantity']
-        scenario_pnl += pnl
+scenario_pnl += pnl
     
-    pnl_profile.append({
+pnl_profile.append({
         'scenario_price': scenario_price,
         'portfolio_pnl': scenario_pnl
     })

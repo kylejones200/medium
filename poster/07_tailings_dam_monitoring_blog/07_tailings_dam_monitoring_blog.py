@@ -393,7 +393,7 @@ print("=" * 60)
 print(f"Total Displacement: {deformation['total_displacement_mm']:.1f} mm")
 print(f"Overall Rate: {deformation['overall_rate_mm_year']:.1f} mm/year")
 print(f"Recent Rate: {deformation['recent_rate_mm_year']:.1f} mm/year")
-print(f"Acceleration: {deformation['acceleration_mm_year2']:+.1f} mm/year²")
+# print(f"Acceleration: {deformation['acceleration_mm_year2']:+.1f} mm/year")
 print(f"Status: {deformation['deformation_status']}")
 print(f"Urgency: {deformation['urgency']}")
 print(f"Measurement Confidence: {deformation['confidence']}")
@@ -602,22 +602,23 @@ for date in dates:
 # Code Block 8
 # ======================================================================
 
+    pass
 blue = 0.08 + np.random.normal(0, 0.01)
-        green = 0.12 + np.random.normal(0, 0.01)
-        red = 0.15 + np.random.normal(0, 0.01)
-        nir = 0.35 + np.random.normal(0, 0.02)
-        swir1 = 0.25 + np.random.normal(0, 0.015)
-        swir2 = 0.18 + np.random.normal(0, 0.012)
+green = 0.12 + np.random.normal(0, 0.01)
+red = 0.15 + np.random.normal(0, 0.01)
+nir = 0.35 + np.random.normal(0, 0.02)
+swir1 = 0.25 + np.random.normal(0, 0.015)
+swir2 = 0.18 + np.random.normal(0, 0.012)
 
 # ======================================================================
 # Code Block 9
 # ======================================================================
 
 ndvi = (nir - red) / (nir + red + 0.0001)
-        ndwi = (green - nir) / (green + nir + 0.0001)
-        ndti = (swir1 - swir2) / (swir1 + swir2 + 0.0001)  # Normalized Difference Turbidity Index
+ndwi = (green - nir) / (green + nir + 0.0001)
+ndti = (swir1 - swir2) / (swir1 + swir2 + 0.0001)  # Normalized Difference Turbidity Index
         
-        observations.append({
+observations.append({
             'date': date,
             'blue': blue,
             'green': green,

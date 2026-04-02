@@ -67,7 +67,7 @@ def ingest_tropomi_methane(spark, date_range, catalog_path):
     Ingest TROPOMI Level 2 methane products.
     
     Data source: Copernicus Sentinel-5P
-    Resolution: 7×7 km
+    # Resolution: 7×7 km
     Frequency: Daily
     
     Args:
@@ -258,7 +258,7 @@ def generate_daily_alerts(spark, threshold=3.0):
     alert_count = alerts.count()
     
     if alert_count > 0:
-        print(f"\n⚠️  {alert_count} LEAK ALERTS GENERATED")
+        # print(f"\n⚠️  {alert_count} LEAK ALERTS GENERATED")
         print(f"{'='*70}")
         
         # Display top 10
@@ -344,6 +344,7 @@ dates = pd.date_range(start_date, end_date, freq='D')
 
 rows = []
 for date in dates:
+    pass
 
 # ======================================================================
 # Code Block 9
@@ -361,7 +362,7 @@ for _ in range(100):  # 100 observations per day
 if np.random.rand() < 0.05:
             baseline_ch4 += np.random.uniform(20, 80)
         
-        rows.append({
+rows.append({
             'observation_id': f"TROPO_{date.strftime('%Y%m%d')}_{_}",
             'date': date,
             'time_utc': datetime.combine(date, datetime.min.time()),
@@ -430,14 +431,14 @@ print("Sentinel-1 SAR ingestion (simulated)")
 # Code Block 16
 # ======================================================================
 
-ON a.date = b.date AND a.cell_id = b.cell_id
+# ON a.date = b.date AND a.cell_id = b.cell_id
 
 # ======================================================================
 # Code Block 17
 # ======================================================================
 
-ON COALESCE(a.date, b.date) = c.date 
-AND COALESCE(a.cell_id, b.cell_id) = c.cell_id;
+# ON COALESCE(a.date, b.date) = c.date 
+# AND COALESCE(a.cell_id, b.cell_id) = c.cell_id;
 
 # ======================================================================
 # Code Block 18
@@ -449,15 +450,15 @@ f.ch4_mean_ppb,
 f.ndvi_mean,
 f.coh_mean,
 
--- Z-scores per sensor
-(f.ch4_mean_ppb - b.ch4_baseline_ppb) / NULLIF(b.ch4_sigma_ppb, 10) AS z_ch4,
-(b.ndvi_baseline - f.ndvi_mean) / NULLIF(b.ndvi_sigma, 0.05) AS z_ndvi_decline,  -- Invert: decline = positive anomaly
-(b.coh_baseline - f.coh_mean) / NULLIF(b.coh_sigma, 0.1) AS z_coh_loss,  -- Invert: coherence loss = positive anomaly
+# -- Z-scores per sensor
+# (f.ch4_mean_ppb - b.ch4_baseline_ppb) / NULLIF(b.ch4_sigma_ppb, 10) AS z_ch4,
+# (b.ndvi_baseline - f.ndvi_mean) / NULLIF(b.ndvi_sigma, 0.05) AS z_ndvi_decline,  -- Invert: decline = positive anomaly
+# (b.coh_baseline - f.coh_mean) / NULLIF(b.coh_sigma, 0.1) AS z_coh_loss,  -- Invert: coherence loss = positive anomaly
 
--- Composite leak score (weighted combination)
-0.50 * COALESCE((f.ch4_mean_ppb - b.ch4_baseline_ppb) / NULLIF(b.ch4_sigma_ppb, 10), 0) +
-0.30 * COALESCE((b.ndvi_baseline - f.ndvi_mean) / NULLIF(b.ndvi_sigma, 0.05), 0) +
-0.20 * COALESCE((b.coh_baseline - f.coh_mean) / NULLIF(b.coh_sigma, 0.1), 0) AS leak_score
+# -- Composite leak score (weighted combination)
+# 0.50 * COALESCE((f.ch4_mean_ppb - b.ch4_baseline_ppb) / NULLIF(b.ch4_sigma_ppb, 10), 0) +
+# 0.30 * COALESCE((b.ndvi_baseline - f.ndvi_mean) / NULLIF(b.ndvi_sigma, 0.05), 0) +
+# 0.20 * COALESCE((b.coh_baseline - f.coh_mean) / NULLIF(b.coh_sigma, 0.1), 0) AS leak_score
 
 # ======================================================================
 # Code Block 19
@@ -551,7 +552,7 @@ alerts = spark.sql(f"""
 alert_count = alerts.count()
 
 if alert_count > 0:
-    print(f"\n⚠️  {alert_count} LEAK ALERTS GENERATED")
+    # print(f"\n⚠️  {alert_count} LEAK ALERTS GENERATED")
     print(f"{'='*70}")
 
 # ======================================================================
@@ -559,7 +560,7 @@ if alert_count > 0:
 # ======================================================================
 
 top_alerts = alerts.limit(10).collect()
-    for alert in top_alerts:
+for alert in top_alerts:
         print(f"\nPriority #{alert['priority_rank']}: Cell {alert['cell_id']}")
         print(f"  Leak Score: {alert['leak_score']:.2f}σ")
         print(f"  CH4: {alert['ch4_mean_ppb']:.1f} ppb (z={alert['z_ch4']:.2f})")
@@ -576,8 +577,8 @@ top_alerts = alerts.limit(10).collect()
      .mode("append")
      .partitionBy("date")
      .saveAsTable("gold.daily_leak_alerts"))
-else:
-    print("\n✅ No leak alerts above threshold")
+# else:
+print("\n✅ No leak alerts above threshold")
 
 return alerts
 
@@ -585,26 +586,26 @@ return alerts
 # Code Block 27
 # ======================================================================
 
-Leak Score Statistics (Last 24 Hours):
-  Total tiles monitored: 8,450
-  Mean score: 0.12
-  Std dev: 0.87
-  Max score: 5.23
-  95th percentile: 1.64
+# Leak Score Statistics (Last 24 Hours):
+# Total tiles monitored: 8,450
+# Mean score: 0.12
+# Std dev: 0.87
+# Max score: 5.23
+  # 95th percentile: 1.64
 
-⚠️  12 LEAK ALERTS GENERATED
-======================================================================
+# ⚠️  12 LEAK ALERTS GENERATED
+# ======================================================================
 
 Priority #1: Cell 8a2a1072b59ffff
-  Leak Score: 5.23σ
-  CH4: 1927.3 ppb (z=4.85)
-  NDVI: 0.542 (z_decline=3.21)
-  Coherence: 0.423 (z_loss=2.87)
+# Leak Score: 5.23σ
+# CH4: 1927.3 ppb (z=4.85)
+NDVI: 0.542 (z_decline=3.21)
+Coherence: 0.423 (z_loss=2.87)
 
 Priority #2: Cell 8a2a1072c8bffff
-  Leak Score: 4.67σ
-  CH4: 1908.1 ppb (z=4.12)
-  NDVI: 0.587 (z_decline=2.34)
-  Coherence: 0.512 (z_loss=1.98)
+# Leak Score: 4.67σ
+# CH4: 1908.1 ppb (z=4.12)
+NDVI: 0.587 (z_decline=2.34)
+Coherence: 0.512 (z_loss=1.98)
 
-[... 8 more alerts ...]
+# [... 8 more alerts ...]

@@ -312,12 +312,12 @@ print(f"K={k}: Silhouette={results[-1]['silhouette']:.3f}")
 # Code Block 14
 # ======================================================================
 
-K=2: Silhouette=0.412
-K=3: Silhouette=0.389
-K=4: Silhouette=0.367
-K=5: Silhouette=0.356  <- Sweet spot
-K=6: Silhouette=0.341
-K=7: Silhouette=0.329
+# K=2: Silhouette=0.412
+# K=3: Silhouette=0.389
+# K=4: Silhouette=0.367
+# K=5: Silhouette=0.356  <- Sweet spot
+# K=6: Silhouette=0.341
+# K=7: Silhouette=0.329
 
 # ======================================================================
 # Code Block 15
@@ -348,14 +348,14 @@ metric='euclidean'
 # Code Block 18
 # ======================================================================
 
-cmap='tab10', alpha=0.6, s=20)
+# cmap='tab10', alpha=0.6, s=20
 
 # ======================================================================
 # Code Block 19
 # ======================================================================
 
 c=cluster_labels[sample_idx], 
-       cmap='tab10', alpha=0.6, s=20)
+# cmap='tab10', alpha=0.6, s=20
 
 # ======================================================================
 # Code Block 20

@@ -266,7 +266,7 @@ layers.Dense(input_dim, activation='linear')
 # Code Block 15
 # ======================================================================
 
-validation_split=0.2, verbose=0)
+# validation_split=0.2, verbose=0
 
 # ======================================================================
 # Code Block 16

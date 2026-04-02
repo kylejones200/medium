@@ -23,13 +23,13 @@ if not os.path.exists(zip_path):
     with urllib.request.urlopen(DATA_URL) as response:
         with open(zip_path, 'wb') as f:
             f.write(response.read())
-    print("✓ Download complete")
+    # print("✓ Download complete")
 
 # Extract
 with zipfile.ZipFile(zip_path, 'r') as z:
     z.extractall(DATA_DIR)
 
-print(f"✓ Extracted to {DATA_DIR}/")
+# print(f"✓ Extracted to {DATA_DIR}/")
 
 # ======================================================================
 # Code Block 2
@@ -124,7 +124,7 @@ samples = samples[['hole_id', 'easting', 'northing', 'z', 'grade', 'depth_mid']]
 samples = samples.dropna()
 samples = samples[np.isfinite(samples['grade'])]
 
-print(f"\n✓ Generated {len(samples):,} 3D sample points")
+# print(f"\n✓ Generated {len(samples):,} 3D sample points")
 samples.head()
 
 # ======================================================================
@@ -259,10 +259,10 @@ for fold, (train_idx, test_idx) in enumerate(gkf.split(X_features, residuals, gr
     r2 = r2_score(y_test, y_pred)
     
     fold_scores.append({'fold': fold, 'mae': mae, 'r2': r2})
-    print(f"Fold {fold}: MAE={mae:.4f}, R²={r2:.4f}")
+    # print(f"Fold {fold}: MAE={mae:.4f}, R²={r2:.4f}")
 
 print(f"\nCross-validation MAE: {np.mean([s['mae'] for s in fold_scores]):.4f} g/t")
-print(f"Cross-validation R²: {np.mean([s['r2'] for s in fold_scores]):.4f}")
+# print(f"Cross-validation R²: {np.mean([s['r2'] for s in fold_scores]):.4f}")
 
 # ======================================================================
 # Code Block 9
@@ -277,7 +277,7 @@ final_model = GradientBoostingRegressor(
 )
 
 final_model.fit(X_features, residuals)
-print("✓ Final model trained on all samples")
+# print("✓ Final model trained on all samples")
 
 # ======================================================================
 # Code Block 10
@@ -288,7 +288,7 @@ e_min, e_max = samples['easting'].quantile([0.05, 0.95])
 n_min, n_max = samples['northing'].quantile([0.05, 0.95])
 z_min, z_max = samples['z'].quantile([0.05, 0.95])
 
-# Block size: 25m × 25m × 10m (typical for mine planning)
+# Block size: 25m  25m  10m (typical for mine planning)
 block_size_xy = 25  # meters
 block_size_z = 10   # meters
 
@@ -297,7 +297,7 @@ nx = int((e_max - e_min) / block_size_xy)
 ny = int((n_max - n_min) / block_size_xy)
 nz = int((z_max - z_min) / block_size_z)
 
-print(f"Block model dimensions: {nx} × {ny} × {nz} = {nx*ny*nz:,} blocks")
+# print(f"Block model dimensions: {nx} × {ny} × {nz} = {nx*ny*nz:,} blocks")
 
 # Grid coordinates (block centroids)
 grid_x = np.linspace(e_min, e_max, nx)
@@ -346,7 +346,7 @@ ml_residuals = final_model.predict(X_grid)
 # Fusion: Final grade = IDW + ML residual
 final_grades = idw_grades + ml_residuals
 
-print(f"✓ Block model complete")
+# print(f"✓ Block model complete")
 print(f"  IDW grade range: {idw_grades.min():.4f} - {idw_grades.max():.4f} g/t")
 print(f"  Final grade range: {final_grades.min():.4f} - {final_grades.max():.4f} g/t")
 
@@ -367,7 +367,7 @@ block_model = pd.DataFrame({
 # Export to CSV (compatible with Vulcan, Datamine, Leapfrog)
 output_file = 'block_model_ntgs_gold.csv'
 block_model.to_csv(output_file, index=False)
-print(f"✓ Block model exported to {output_file}")
+# print(f"✓ Block model exported to {output_file}")
 
 # Summary statistics
 print("\nBlock Model Summary:")
@@ -530,7 +530,7 @@ if not os.path.exists(zip_path):
     print("Downloading NTGS data...")
     # Note: This is a large file; in production, cache it
     # urllib.request.urlretrieve(DATA_URL, zip_path)
-    print("✓ Downloaded (or use cached version)")
+    # print("✓ Downloaded (or use cached version)")
 
 # For demo, use synthetic data instead of downloading
 print("Generating synthetic drillhole data for demo...")
@@ -567,7 +567,7 @@ for hole in range(n_holes):
         })
 
 samples = pd.DataFrame(synthetic_samples)
-print(f"✓ Generated {len(samples):,} synthetic samples")
+# print(f"✓ Generated {len(samples):,} synthetic samples")
 
 # ============================================================================
 # 2. Baseline IDW interpolation
@@ -647,7 +647,7 @@ print(f"Cross-validation MAE: {np.mean(fold_maes):.4f} g/t")
 # Train final model
 final_model = GradientBoostingRegressor(n_estimators=100, max_depth=4, learning_rate=0.05)
 final_model.fit(X_features, residuals)
-print("✓ Model trained")
+# print("✓ Model trained")
 
 # ============================================================================
 # 6. Generate block model
@@ -687,7 +687,7 @@ block_model = pd.DataFrame({
 })
 
 block_model.to_csv('block_model_demo.csv', index=False)
-print("✓ Block model exported to block_model_demo.csv")
+# print("✓ Block model exported to block_model_demo.csv")
 
 print("\nSummary:")
 print(block_model[['grade_idw', 'grade_fusion']].describe())
@@ -696,53 +696,53 @@ print(block_model[['grade_idw', 'grade_fusion']].describe())
 # Code Block 18
 # ======================================================================
 
-┌─────────────────────────────────┐
-│  Public Drillhole Data (NTGS)   │
-│  • Collar coordinates (X,Y,Z)    │
-│  • Downhole assays (Au, Cu, etc)│
-│  • Lithology, alteration         │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│  Feature Engineering             │
-│  • Spatial coords (X, Y, Z)      │
-│  • Distance to structures        │
-│  • Local point density           │
-│  • Geophysical layers            │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│  Baseline: IDW Interpolation    │
-│  • K-nearest neighbors (k=16)    │
-│  • Power=2.0                     │
-│  • Provides spatial trend        │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│  Residual Learning (ML)          │
-│  • Target: grade - IDW_pred      │
-│  • Model: Gradient Boosting      │
-│  • Captures local variations     │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│  Fusion: IDW + ML Residual       │
-│  • Final grade = IDW + residual  │
-│  • Preserves spatial continuity  │
-│  • Captures complex patterns     │
-└────────────┬────────────────────┘
-             │
-             ▼
-┌─────────────────────────────────┐
-│  3D Block Model Export           │
-│  • CSV: X, Y, Z, grade, variance │
-│  • Compatible with mine planning │
-│  • Multiple realizations (MCS)   │
-└─────────────────────────────────┘
+# ┌─────────────────────────────────┐
+# │  Public Drillhole Data (NTGS)   │
+# │  • Collar coordinates (X,Y,Z)    │
+# │  • Downhole assays (Au, Cu, etc)│
+# │  • Lithology, alteration         │
+# └────────────┬────────────────────┘
+             # │
+# ▼
+# ┌─────────────────────────────────┐
+# │  Feature Engineering             │
+# │  • Spatial coords (X, Y, Z)      │
+# │  • Distance to structures        │
+# │  • Local point density           │
+# │  • Geophysical layers            │
+# └────────────┬────────────────────┘
+             # │
+# ▼
+# ┌─────────────────────────────────┐
+# │  Baseline: IDW Interpolation    │
+# │  • K-nearest neighbors (k=16)    │
+# │  • Power=2.0                     │
+# │  • Provides spatial trend        │
+# └────────────┬────────────────────┘
+             # │
+# ▼
+# ┌─────────────────────────────────┐
+# │  Residual Learning (ML)          │
+# │  • Target: grade - IDW_pred      │
+# │  • Model: Gradient Boosting      │
+# │  • Captures local variations     │
+# └────────────┬────────────────────┘
+             # │
+# ▼
+# ┌─────────────────────────────────┐
+# │  Fusion: IDW + ML Residual       │
+# │  • Final grade = IDW + residual  │
+# │  • Preserves spatial continuity  │
+# │  • Captures complex patterns     │
+# └────────────┬────────────────────┘
+             # │
+# ▼
+# ┌─────────────────────────────────┐
+# │  3D Block Model Export           │
+# │  • CSV: X, Y, Z, grade, variance │
+# │  • Compatible with mine planning │
+# │  • Multiple realizations (MCS)   │
+# └─────────────────────────────────┘
 
 # ======================================================================
 # Code Block 19
@@ -752,7 +752,7 @@ print("Downloading NTGS drillholes (warning: 500+ MB)...")
 with urllib.request.urlopen(DATA_URL) as response:
     with open(zip_path, 'wb') as f:
         f.write(response.read())
-print("✓ Download complete")
+# print("✓ Download complete")
 
 # ======================================================================
 # Code Block 20
@@ -853,20 +853,20 @@ mae = mean_absolute_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
 fold_scores.append({'fold': fold, 'mae': mae, 'r2': r2})
-print(f"Fold {fold}: MAE={mae:.4f}, R²={r2:.4f}")
+# print(f"Fold {fold}: MAE={mae:.4f}, R²={r2:.4f}")
 
 # ======================================================================
 # Code Block 29
 # ======================================================================
 
-Fold 0: MAE=0.0847, R²=0.3421
-Fold 1: MAE=0.0912, R²=0.3156
-Fold 2: MAE=0.0789, R²=0.3688
-Fold 3: MAE=0.0834, R²=0.3502
-Fold 4: MAE=0.0871, R²=0.3287
+# Fold 0: MAE=0.0847, R²=0.3421
+# Fold 1: MAE=0.0912, R²=0.3156
+# Fold 2: MAE=0.0789, R²=0.3688
+# Fold 3: MAE=0.0834, R²=0.3502
+# Fold 4: MAE=0.0871, R²=0.3287
 
-Cross-validation MAE: 0.0851 g/t
-Cross-validation R²: 0.3411
+# Cross-validation MAE: 0.0851 g/t
+# Cross-validation R²: 0.3411
 
 # ======================================================================
 # Code Block 30
@@ -882,15 +882,15 @@ random_state=42
 # Code Block 31
 # ======================================================================
 
-c=slice_data['grade_idw'], s=20, cmap='YlOrRd',
-                   vmin=0, vmax=3)
+# c=slice_data['grade_idw'], s=20, cmap='YlOrRd',
+# vmin=0, vmax=3
 
 # ======================================================================
 # Code Block 32
 # ======================================================================
 
-c=slice_data['grade_ml_fusion'], s=20, cmap='YlOrRd',
-                   vmin=0, vmax=3)
+# c=slice_data['grade_ml_fusion'], s=20, cmap='YlOrRd',
+# vmin=0, vmax=3
 
 # ======================================================================
 # Code Block 33
@@ -942,7 +942,7 @@ print("Downloading NTGS data...")
 # Code Block 39
 # ======================================================================
 
-print("✓ Downloaded (or use cached version)")
+# print("✓ Downloaded (or use cached version)")
 
 # ======================================================================
 # Code Block 40
@@ -960,11 +960,11 @@ for sample in range(n_samples_per_hole):
 # ======================================================================
 
 dist_to_center = np.sqrt((e_base - 401000)**2 + (n_base - 7501000)**2)
-    grade_base = 2.0 * np.exp(-dist_to_center / 500) + 0.3
-    grade = grade_base * (1 + 0.3 * np.sin(depth / 20)) + rng.normal(0, 0.2)
-    grade = np.clip(grade, 0.01, 10.0)
+grade_base = 2.0 * np.exp(-dist_to_center / 500) + 0.3
+grade = grade_base * (1 + 0.3 * np.sin(depth / 20)) + rng.normal(0, 0.2)
+grade = np.clip(grade, 0.01, 10.0)
     
-    synthetic_samples.append({
+synthetic_samples.append({
         'hole_id': f'DDH{hole:03d}',
         'easting': e_base + rng.normal(0, 2),
         'northing': n_base + rng.normal(0, 2),
